@@ -5,7 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/utils/cn";
 
 type ButtonVariant = "primary" | "secondary" | "ghost";
-type ButtonSize = "sm" | "md" | "lg";
+type ButtonSize = "sm" | "md" | "lg" | "icon";
 
 const base =
   "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full text-center transition duration-300 ease-out focus-visible:outline-none enabled:active:scale-95 disabled:cursor-not-allowed";
@@ -24,6 +24,7 @@ const sizeStyles: Record<ButtonSize, string> = {
   sm: "px-4 py-2.5",
   md: "px-6 py-3.5",
   lg: "px-8 py-4",
+  icon: "size-11 p-0",
 };
 
 type StyleArgs = {

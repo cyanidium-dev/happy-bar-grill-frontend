@@ -127,74 +127,62 @@
 }
 
 /* =============================================================================
-   Base / reset (ported from bravo's globals)
+   Base styles.
+   IMPORTANT: Tailwind v4's Preflight (bundled with `@import "tailwindcss"`)
+   already resets box-sizing, margins, padding, list styles, link colors and
+   images inside `@layer base`. Do NOT add an unlayered `* { padding: 0 }`
+   reset — in v4 unlayered CSS beats layered utilities, so it would strip every
+   `p-*` / `m-*` / `text-*` on links. Keep our tweaks inside a layer.
    ========================================================================== */
 
-*,
-*::after,
-*::before {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 150%;
-  overflow-x: hidden;
-  position: relative;
-}
-
-@media (min-width: 1024px) {
+@layer base {
   body {
-    font-size: 16px;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 150%;
+    overflow-x: hidden;
+    position: relative;
   }
-}
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
+  @media (min-width: 1024px) {
+    body {
+      font-size: 16px;
+    }
+  }
 
-img {
-  display: block;
-  max-width: 100%;
-}
-
-ul {
-  list-style: none;
-}
-
-/* Consistent, brand-tinted focus ring for keyboard users. */
-:focus-visible {
-  outline: none;
-  box-shadow: var(--shadow-focus);
-  border-radius: var(--radius-sm);
+  /* Consistent, brand-tinted focus ring for keyboard users. */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+    border-radius: var(--radius-sm);
+  }
 }
 
 /* =============================================================================
-   Layout helper: page container (bravo used 30px / 70px side padding)
+   Layout helper: page container (bravo used 30px / 70px side padding).
+   In `@layer components` so per-element utilities can still override it.
    ========================================================================== */
 
-.container {
-  margin-inline: auto;
-  width: 100%;
-  max-width: 1440px;
-  padding-inline: 20px;
-}
-
-@media (min-width: 768px) {
+@layer components {
   .container {
-    padding-inline: 30px;
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1440px;
+    padding-inline: 20px;
   }
-}
 
-@media (min-width: 1280px) {
-  .container {
-    padding-inline: 70px;
+  @media (min-width: 768px) {
+    .container {
+      padding-inline: 30px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container {
+      padding-inline: 70px;
+    }
   }
 }
 

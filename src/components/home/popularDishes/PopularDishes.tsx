@@ -1,0 +1,35 @@
+import { getTranslations } from "next-intl/server";
+import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrapper";
+import DishCard from "@/components/shared/cards/DishCard";
+import Section from "@/components/shared/Section";
+import SectionTitle from "@/components/shared/titles/SectionTitle";
+import { popularDishes } from "@/data/home";
+
+/**
+ * Block 4 — popular dishes. Tagged best-sellers/new items with price, weight and
+ * quick add-to-cart, to shorten the choice for undecided users.
+ */
+export default async function PopularDishes() {
+  const t = await getTranslations("HomePage.popular");
+
+  return (
+    <Section background="white">
+      <AnimatedWrapper>
+        <SectionTitle>{t("title")}</SectionTitle>
+      </AnimatedWrapper>
+
+      <ul className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:gap-6 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        {popularDishes.map((dish, index) => (
+          <AnimatedWrapper
+            key={dish.slug}
+            as="li"
+            animation={{ y: 24, delay: (index % 4) * 0.08 }}
+            className="h-full"
+          >
+            <DishCard dish={dish} />
+          </AnimatedWrapper>
+        ))}
+      </ul>
+    </Section>
+  );
+}

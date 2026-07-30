@@ -15,9 +15,6 @@ export default async function Hero() {
     <section className="overflow-x-clip bg-beige">
       <div className="container grid items-center gap-10 py-16 md:grid-cols-2 md:py-20 xl:py-24">
         <AnimatedWrapper animation={{ x: -40 }} className="flex flex-col gap-6">
-          <span className="w-fit rounded-full bg-navy/10 px-4 py-1.5 text-12semi uppercase tracking-wide text-navy">
-            {t("tagline")}
-          </span>
           <PageTitle>{t("title")}</PageTitle>
           <p className="max-w-xl text-16reg text-graphite xl:text-18reg">
             {t("description")}

@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrapper";
+import Button from "@/components/shared/buttons/Button";
 import DishCard from "@/components/shared/cards/DishCard";
 import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
@@ -14,8 +15,9 @@ export default async function PopularDishes() {
 
   return (
     <Section background="white">
-      <AnimatedWrapper>
+      <AnimatedWrapper className="flex flex-col gap-3">
         <SectionTitle>{t("title")}</SectionTitle>
+        <p className="max-w-2xl text-16reg text-graphite">{t("text")}</p>
       </AnimatedWrapper>
 
       <ul className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:gap-6 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
@@ -30,6 +32,12 @@ export default async function PopularDishes() {
           </AnimatedWrapper>
         ))}
       </ul>
+
+      <AnimatedWrapper className="mt-8 flex justify-center md:mt-10">
+        <Button href="/menu" size="lg">
+          {t("cta")}
+        </Button>
+      </AnimatedWrapper>
     </Section>
   );
 }

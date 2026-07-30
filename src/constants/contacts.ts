@@ -11,6 +11,10 @@ export const ADDRESS = "вул. Хрещатик, 22, Київ";
 
 export const SCHEDULE = "Щодня 10:00–22:00";
 
+/** [орієнтовний час] placeholder from the copy doc. */
+export const DELIVERY_TIME = "40–60 хв";
+
+/** Used on the /delivery page (not shown in the home block). */
 export const MIN_ORDER = "300 грн";
 export const DELIVERY_COST = "від 0 грн у межах міста";
 

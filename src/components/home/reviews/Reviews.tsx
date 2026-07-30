@@ -15,13 +15,12 @@ export default async function Reviews() {
 
   return (
     <Section background="navy">
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <AnimatedWrapper>
-          <SectionTitle variant="white" className="max-w-xl">
-            {t("title")}
-          </SectionTitle>
+      <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <AnimatedWrapper className="flex max-w-2xl flex-col gap-3">
+          <SectionTitle variant="white">{t("title")}</SectionTitle>
+          <p className="text-16reg text-white/80">{t("text")}</p>
         </AnimatedWrapper>
-        <AnimatedWrapper animation={{ y: 20 }}>
+        <AnimatedWrapper animation={{ y: 20 }} className="shrink-0">
           <a
             href={REVIEWS_URL}
             target="_blank"

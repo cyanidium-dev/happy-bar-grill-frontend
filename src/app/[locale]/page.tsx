@@ -6,6 +6,7 @@ import Promotions from "@/components/home/promotions/Promotions";
 import PopularDishes from "@/components/home/popularDishes/PopularDishes";
 import Reviews from "@/components/home/reviews/Reviews";
 import DeliveryInfo from "@/components/home/deliveryInfo/DeliveryInfo";
+import SeoText from "@/components/home/seoText/SeoText";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
 
@@ -13,7 +14,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  return buildPageMetadata(locale, "home");
+  return buildPageMetadata(locale, "home", { absoluteTitle: true });
 }
 
 export default async function HomePage({ params }: PageProps) {
@@ -28,6 +29,7 @@ export default async function HomePage({ params }: PageProps) {
       <PopularDishes />
       <Reviews />
       <DeliveryInfo />
+      <SeoText />
     </main>
   );
 }

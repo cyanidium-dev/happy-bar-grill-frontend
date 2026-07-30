@@ -5,9 +5,8 @@ import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
 import {
   ADDRESS,
-  DELIVERY_COST,
+  DELIVERY_TIME,
   MAP_QUERY,
-  MIN_ORDER,
   PHONE,
   PHONE_HREF,
   SCHEDULE,
@@ -21,8 +20,7 @@ export default async function DeliveryInfo() {
   const t = await getTranslations("HomePage.delivery");
 
   const rows: { label: string; value: string; href?: string }[] = [
-    { label: t("minOrder"), value: MIN_ORDER },
-    { label: t("deliveryCost"), value: DELIVERY_COST },
+    { label: t("deliveryTime"), value: DELIVERY_TIME },
     { label: t("schedule"), value: SCHEDULE },
     { label: t("address"), value: ADDRESS },
     { label: t("phone"), value: PHONE, href: `tel:${PHONE_HREF}` },
@@ -34,8 +32,9 @@ export default async function DeliveryInfo() {
 
   return (
     <Section id="delivery" background="beige">
-      <AnimatedWrapper>
+      <AnimatedWrapper className="flex flex-col gap-3">
         <SectionTitle>{t("title")}</SectionTitle>
+        <p className="max-w-2xl text-16reg text-graphite">{t("text")}</p>
       </AnimatedWrapper>
 
       <div className="mt-8 grid gap-8 md:mt-10 lg:grid-cols-2 lg:gap-12">

@@ -25,6 +25,7 @@ export default async function Categories() {
             key={category.slug}
             slug={category.slug}
             label={t(`items.${category.key}`)}
+            image={category.image}
             delay={index * 0.06}
           />
         ))}

@@ -1,8 +1,11 @@
 import { getTranslations } from "next-intl/server";
 import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrapper";
 import Button from "@/components/shared/buttons/Button";
-import ImagePlaceholder from "@/components/shared/media/ImagePlaceholder";
+import CardMedia from "@/components/shared/cards/CardMedia";
 import PageTitle from "@/components/shared/titles/PageTitle";
+
+const heroImage =
+  "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=80";
 
 /**
  * Block 1 — first screen. States what you can order and pushes into the menu.
@@ -36,9 +39,12 @@ export default async function Hero() {
         </AnimatedWrapper>
 
         <AnimatedWrapper animation={{ x: 40, delay: 0.15 }}>
-          <ImagePlaceholder
-            label={t("imageAlt")}
+          <CardMedia
+            src={heroImage}
+            alt={t("imageAlt")}
             className="aspect-[4/3] rounded-2xl shadow-card"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority
           />
         </AnimatedWrapper>
       </div>

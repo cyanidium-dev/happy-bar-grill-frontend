@@ -14,6 +14,8 @@ export type Dish = {
   /** Weight in grams. */
   weight: number;
   tag?: DishTag;
+  /** Stock photo URL (placeholder until the CMS provides real photography). */
+  image: string;
 };
 
 export type Category = {
@@ -21,6 +23,8 @@ export type Category = {
   key: string;
   /** Route segment: `/menu/[slug]`. */
   slug: string;
+  /** Stock photo URL (placeholder until the CMS provides real photography). */
+  image: string;
 };
 
 export type Review = {

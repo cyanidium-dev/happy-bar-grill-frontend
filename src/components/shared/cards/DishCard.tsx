@@ -3,7 +3,7 @@ import { Link } from "@/i18n/navigation";
 import Button from "@/components/shared/buttons/Button";
 import Badge from "@/components/shared/badges/Badge";
 import Card from "@/components/shared/cards/Card";
-import ImagePlaceholder from "@/components/shared/media/ImagePlaceholder";
+import CardMedia from "@/components/shared/cards/CardMedia";
 import PlusIcon from "@/components/shared/icons/PlusIcon";
 import type { Dish } from "@/types/content";
 
@@ -23,7 +23,6 @@ export default async function DishCard({
 }) {
   const t = await getTranslations("Product");
   const href = `/menu/${dish.categorySlug}/${dish.slug}`;
-  const imageBackground = background === "white" ? "beige" : "white";
 
   return (
     <Card
@@ -48,10 +47,11 @@ export default async function DishCard({
           href={href}
           className="relative block aspect-square w-32 shrink-0 self-start overflow-hidden rounded-lg xs:w-36 sm:w-44"
         >
-          <ImagePlaceholder
-            label={dish.name}
-            background={imageBackground}
-            className="h-full"
+          <CardMedia
+            src={dish.image}
+            alt={dish.name}
+            className="h-full w-full"
+            sizes="(max-width: 400px) 128px, (max-width: 640px) 144px, 176px"
           />
           {dish.tag && (
             <Badge variant={dish.tag} className="absolute left-2 top-2">

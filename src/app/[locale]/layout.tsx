@@ -1,19 +1,26 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Montserrat, Oswald } from "next/font/google";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import "../globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Body / UI text — geometric, excellent Cyrillic (uk/ru). Bound to --font-sans.
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin", "cyrillic"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Display / headings / prices — condensed, energetic "grill board" character.
+// Bound to --font-display.
+const oswald = Oswald({
+  variable: "--font-oswald",
   subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 type LayoutProps = {
@@ -58,7 +65,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
   return (
     <html
       lang={locale}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${montserrat.variable} ${oswald.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         {/* Header lives here later (shared across every page). */}

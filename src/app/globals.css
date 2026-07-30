@@ -124,77 +124,75 @@
 :root {
   --background: var(--color-white);
   --foreground: var(--color-graphite);
-}
 
-/* =============================================================================
-   Base / reset (ported from bravo's globals)
-   ========================================================================== */
-
-*,
-*::after,
-*::before {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 150%;
-  overflow-x: hidden;
-  position: relative;
-}
-
-@media (min-width: 1024px) {
-  body {
-    font-size: 16px;
-  }
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-img {
-  display: block;
-  max-width: 100%;
-}
-
-ul {
-  list-style: none;
-}
-
-/* Consistent, brand-tinted focus ring for keyboard users. */
-:focus-visible {
-  outline: none;
-  box-shadow: var(--shadow-focus);
-  border-radius: var(--radius-sm);
-}
-
-/* =============================================================================
-   Layout helper: page container (bravo used 30px / 70px side padding)
-   ========================================================================== */
-
-.container {
-  margin-inline: auto;
-  width: 100%;
-  max-width: 1440px;
-  padding-inline: 20px;
+  /* Header's real height, kept in sync by Header.tsx via ResizeObserver.
+     These are just first-paint fallbacks (before JS measures it) so pages
+     don't jump once the real value is set. */
+  --header-height: 68px;
 }
 
 @media (min-width: 768px) {
-  .container {
-    padding-inline: 30px;
+  :root {
+    --header-height: 76px;
   }
 }
 
-@media (min-width: 1280px) {
+/* =============================================================================
+   Base styles.
+   IMPORTANT: Tailwind v4's Preflight (bundled with `@import "tailwindcss"`)
+   already resets box-sizing, margins, padding, list styles, link colors and
+   images inside `@layer base`. Do NOT add an unlayered `* { padding: 0 }`
+   reset — in v4 unlayered CSS beats layered utilities, so it would strip every
+   `p-*` / `m-*` / `text-*` on links. Keep our tweaks inside a layer.
+   ========================================================================== */
+
+@layer base {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 150%;
+    position: relative;
+  }
+
+  @media (min-width: 1024px) {
+    body {
+      font-size: 16px;
+    }
+  }
+
+  /* Consistent, brand-tinted focus ring for keyboard users. */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+    border-radius: var(--radius-sm);
+  }
+}
+
+/* =============================================================================
+   Layout helper: page container (bravo used 30px / 70px side padding).
+   In `@layer components` so per-element utilities can still override it.
+   ========================================================================== */
+
+@layer components {
   .container {
-    padding-inline: 70px;
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1440px;
+    padding-inline: 20px;
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      padding-inline: 30px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container {
+      padding-inline: 70px;
+    }
   }
 }
 

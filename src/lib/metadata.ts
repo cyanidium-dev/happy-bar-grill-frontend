@@ -28,11 +28,15 @@ export type MetadataKey =
 export async function buildPageMetadata(
   locale: Locale,
   key: MetadataKey,
+  options: { absoluteTitle?: boolean } = {},
 ): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "Metadata" });
+  const title = t(`${key}.title`);
 
   return {
-    title: t(`${key}.title`),
+    // `absolute` opts out of the layout's "%s | Brand" template — used for the
+    // home page whose SEO title already contains the full brand.
+    title: options.absoluteTitle ? { absolute: title } : title,
     description: t(`${key}.description`),
   };
 }

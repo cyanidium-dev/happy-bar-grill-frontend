@@ -5,18 +5,18 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/utils/cn";
 
 type ButtonVariant = "primary" | "secondary" | "ghost";
-type ButtonSize = "sm" | "md" | "lg";
+type ButtonSize = "sm" | "md" | "lg" | "icon";
 
 const base =
-  "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full text-center transition duration-300 ease-out focus-visible:outline-none enabled:active:scale-95 disabled:cursor-not-allowed";
+  "group relative inline-flex cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full text-center transition duration-300 ease-out focus-visible:outline-none enabled:active:scale-95 disabled:cursor-not-allowed";
 
 const variantStyles: Record<ButtonVariant, string> = {
   // Red is the attention/CTA colour. White label stays AA only at this bold
   // 16px+ size (see design concept — verify contrast if you shrink it).
   primary:
-    "bg-red text-16semi text-white enabled:xl:hover:bg-red-dark disabled:bg-grey disabled:text-white/60",
+    "bg-red text-16semi text-white xl:hover:bg-red-dark disabled:bg-grey disabled:text-white/60",
   secondary:
-    "border border-navy bg-transparent text-14semi text-navy xl:hover:bg-navy xl:hover:text-white",
+    "border border-navy bg-navy text-14semi text-white xl:hover:bg-navy-dark xl:hover:border-navy-dark",
   ghost: "text-16med text-navy xl:hover:text-red",
 };
 
@@ -24,6 +24,7 @@ const sizeStyles: Record<ButtonSize, string> = {
   sm: "px-4 py-2.5",
   md: "px-6 py-3.5",
   lg: "px-8 py-4",
+  icon: "size-9 p-0 sm:size-11",
 };
 
 type StyleArgs = {
@@ -61,8 +62,13 @@ type ButtonProps = BaseProps &
     href?: string;
   };
 
-function Sheen() {
-  // Diagonal light sweep on desktop hover (bravo signature interaction).
+/**
+ * Diagonal light sweep on desktop hover (bravo signature interaction).
+ * Exported so raw `<a>`/`<button>` elements styled via `buttonStyles()`
+ * (e.g. `tel:` links, which can't use the localized `<Link>` in `Button`)
+ * can reuse the exact same hover effect.
+ */
+export function Sheen() {
   return (
     <span
       aria-hidden

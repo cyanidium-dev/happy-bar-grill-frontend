@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import PagePlaceholder from "@/components/shared/PagePlaceholder";
+import { setRequestLocale } from "next-intl/server";
+import Hero from "@/components/home/hero/Hero";
+import Categories from "@/components/home/categories/Categories";
+import Promotions from "@/components/home/promotions/Promotions";
+import PopularDishes from "@/components/home/popularDishes/PopularDishes";
+import Reviews from "@/components/home/reviews/Reviews";
+import DeliveryInfo from "@/components/home/deliveryInfo/DeliveryInfo";
+import SeoText from "@/components/home/seoText/SeoText";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
 
@@ -8,15 +14,22 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  return buildPageMetadata(locale, "home");
+  return buildPageMetadata(locale, "home", { absoluteTitle: true });
 }
 
 export default async function HomePage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const t = await getTranslations("Metadata");
-
-  // Sections (hero, categories, offers, bestsellers, reviews, contacts) later.
-  return <PagePlaceholder title={t("home.title")} />;
+  return (
+    <main className="flex-1">
+      <Hero />
+      <Categories />
+      <Promotions />
+      <PopularDishes />
+      <Reviews />
+      <DeliveryInfo />
+      <SeoText />
+    </main>
+  );
 }

@@ -4,6 +4,8 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing, type Locale } from "@/i18n/routing";
+import Header from "@/components/shared/header/Header";
+import Footer from "@/components/shared/footer/Footer";
 import "../globals.css";
 
 // Body / UI text — geometric, excellent Cyrillic (uk/ru). Bound to --font-sans.
@@ -68,9 +70,21 @@ export default async function RootLayout({ children, params }: LayoutProps) {
       className={`${montserrat.variable} ${oswald.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        {/* Header lives here later (shared across every page). */}
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
-        {/* Footer lives here later (shared across every page). */}
+        <NextIntlClientProvider>
+          <Header />
+          {/* `overflow-x-clip` here (not on `body`) prevents a horizontal
+              scrollbar from off-screen slide-in animations. The header is
+              `fixed` (floats over the page), so this wrapper reserves its
+              height as top padding — `Hero` cancels it back out to sit
+              behind the header instead. */}
+          <div
+            className="flex flex-1 flex-col overflow-x-clip"
+            style={{ paddingTop: "var(--header-height)" }}
+          >
+            {children}
+          </div>
+          <Footer />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

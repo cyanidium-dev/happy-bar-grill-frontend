@@ -1,9 +1,51 @@
 {
-  "HomePage": {
-    "title": "Чтобы начать, отредактируйте файл page.tsx.",
-    "description": "Ищете отправную точку или дополнительные инструкции? Перейдите к <templates>шаблонам</templates> или в учебный <learning>центр</learning>.",
-    "deploy": "Развернуть сейчас",
-    "documentation": "Документация"
+  "Metadata": {
+    "site": {
+      "name": "Happy Bar Grill",
+      "title": "Happy Bar Grill — бар-гриль и доставка блюд",
+      "description": "Happy Bar Grill — свежие блюда на гриле, бар и быстрая доставка. Заказывайте любимые блюда онлайн."
+    },
+    "home": {
+      "title": "Happy Bar Grill",
+      "description": "Бар-гриль со свежими блюдами и быстрой доставкой. Меню, акции и бестселлеры."
+    },
+    "menu": {
+      "title": "Меню",
+      "description": "Полное меню Happy Bar Grill: блюда на гриле, закуски, напитки и десерты с доставкой."
+    },
+    "about": {
+      "title": "О ресторане",
+      "description": "История, ценности и команда Happy Bar Grill."
+    },
+    "delivery": {
+      "title": "Доставка и оплата",
+      "description": "Условия доставки, зоны, время работы и способы оплаты Happy Bar Grill."
+    },
+    "contacts": {
+      "title": "Контакты",
+      "description": "Адрес, телефон, время работы и карта Happy Bar Grill."
+    },
+    "blog": {
+      "title": "Блог",
+      "description": "Новости, рецепты и истории от Happy Bar Grill."
+    },
+    "checkout": {
+      "title": "Оформление заказа",
+      "description": "Оформите заказ в Happy Bar Grill — быстро и без регистрации."
+    },
+    "confirmation": {
+      "title": "Заказ принят",
+      "description": "Спасибо за заказ в Happy Bar Grill."
+    },
+    "notFound": {
+      "title": "Страница не найдена",
+      "description": "Такой страницы не существует."
+    }
+  },
+  "NotFound": {
+    "title": "Страница не найдена",
+    "description": "Похоже, такой страницы не существует или она была перемещена.",
+    "backHome": "На главную"
   },
   "LocaleSwitcher": {
     "label": "Язык",

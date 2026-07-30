@@ -9,6 +9,17 @@ export const PHONE_HREF = "+380633000000";
 
 export const ADDRESS = "вул. Хрещатик, 22, Київ";
 
+export const EMAIL = "info@happybargrill.ua";
+
+/* Social profiles — replace with the real accounts before launch. */
+export const INSTAGRAM_URL = "https://instagram.com";
+export const TELEGRAM_URL = "https://t.me";
+export const TIKTOK_URL = "https://tiktok.com";
+
+/* Studio credit (footer). */
+export const CYANIDIUM_URL = "https://www.cyanidium.dev/";
+export const CYANIDIUM_NAME = "cyanidium.dev";
+
 export const SCHEDULE = "Щодня 10:00–22:00";
 
 /** [орієнтовний час] placeholder from the copy doc. */

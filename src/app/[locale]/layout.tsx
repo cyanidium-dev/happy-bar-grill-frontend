@@ -4,6 +4,8 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing, type Locale } from "@/i18n/routing";
+import Header from "@/components/shared/header/Header";
+import Footer from "@/components/shared/footer/Footer";
 import "../globals.css";
 
 // Body / UI text — geometric, excellent Cyrillic (uk/ru). Bound to --font-sans.
@@ -68,9 +70,11 @@ export default async function RootLayout({ children, params }: LayoutProps) {
       className={`${montserrat.variable} ${oswald.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        {/* Header lives here later (shared across every page). */}
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
-        {/* Footer lives here later (shared across every page). */}
+        <NextIntlClientProvider>
+          <Header />
+          {children}
+          <Footer />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

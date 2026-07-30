@@ -17,8 +17,8 @@ export const TELEGRAM_URL = "https://t.me";
 export const TIKTOK_URL = "https://tiktok.com";
 
 /* Studio credit (footer). */
-export const CYANIDIUM_URL = "https://www.cyanidium.dev/";
-export const CYANIDIUM_NAME = "cyanidium.dev";
+export const DEVELOPER_URL = "https://www.code-site.art/";
+export const DEVELOPER_NAME = "code-site.art";
 
 export const SCHEDULE = "Щодня 10:00–22:00";
 

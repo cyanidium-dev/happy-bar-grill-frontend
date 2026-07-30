@@ -12,7 +12,7 @@ export default async function Hero() {
   const t = await getTranslations("HomePage.hero");
 
   return (
-    <section className="overflow-x-clip bg-beige">
+    <section className="overflow-x-clip bg-gradient-to-br from-navy/15 via-beige to-sand/40">
       <div className="container grid items-center gap-10 py-16 md:grid-cols-2 md:py-20 xl:py-24">
         <AnimatedWrapper animation={{ x: -40 }} className="flex flex-col gap-6">
           <PageTitle>{t("title")}</PageTitle>

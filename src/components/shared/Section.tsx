@@ -5,7 +5,7 @@ type Background = "white" | "beige" | "navy";
 
 const backgrounds: Record<Background, string> = {
   white: "bg-white",
-  beige: "bg-beige",
+  beige: "bg-gradient-to-br from-navy/15 via-beige to-sand/40",
   navy: "bg-navy text-white",
 };
 

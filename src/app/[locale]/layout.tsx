@@ -72,7 +72,13 @@ export default async function RootLayout({ children, params }: LayoutProps) {
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider>
           <Header />
-          {children}
+          {/* `overflow-x-clip` here (not on `body`) prevents a horizontal
+              scrollbar from off-screen slide-in animations without breaking
+              the header's `position: sticky` — an ancestor with `overflow`
+              set defeats sticky positioning, most notably on iOS Safari. */}
+          <div className="flex flex-1 flex-col overflow-x-clip">
+            {children}
+          </div>
           <Footer />
         </NextIntlClientProvider>
       </body>

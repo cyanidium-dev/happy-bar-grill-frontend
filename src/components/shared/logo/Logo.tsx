@@ -2,15 +2,17 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/utils/cn";
 
 /**
- * Text logo. Colour is inherited from `className` (navy in the header, white in
- * the footer); the "Happy" word stays red for brand recognition.
+ * Text logo. "Happy" always stays red for brand recognition; "Bar & Grill"
+ * is navy by default, or white via `light` (footer, on the navy background).
  */
 export default function Logo({
   className,
   onClick,
+  light = false,
 }: {
   className?: string;
   onClick?: () => void;
+  light?: boolean;
 }) {
   return (
     <Link
@@ -22,7 +24,10 @@ export default function Logo({
         className,
       )}
     >
-      <span className="text-red">Happy</span> Bar&nbsp;&amp;&nbsp;Grill
+      <span className="text-red">Happy</span>{" "}
+      <span className={light ? "text-white" : "text-navy"}>
+        Bar&nbsp;&amp;&nbsp;Grill
+      </span>
     </Link>
   );
 }

@@ -14,9 +14,9 @@ const variantStyles: Record<ButtonVariant, string> = {
   // Red is the attention/CTA colour. White label stays AA only at this bold
   // 16px+ size (see design concept — verify contrast if you shrink it).
   primary:
-    "bg-red text-16semi text-white enabled:xl:hover:bg-red-dark disabled:bg-grey disabled:text-white/60",
+    "bg-red text-16semi text-white xl:hover:bg-red-dark disabled:bg-grey disabled:text-white/60",
   secondary:
-    "border border-navy bg-transparent text-14semi text-navy xl:hover:bg-navy xl:hover:text-white",
+    "border border-navy bg-navy text-14semi text-white xl:hover:bg-navy-dark xl:hover:border-navy-dark",
   ghost: "text-16med text-navy xl:hover:text-red",
 };
 
@@ -62,8 +62,13 @@ type ButtonProps = BaseProps &
     href?: string;
   };
 
-function Sheen() {
-  // Diagonal light sweep on desktop hover (bravo signature interaction).
+/**
+ * Diagonal light sweep on desktop hover (bravo signature interaction).
+ * Exported so raw `<a>`/`<button>` elements styled via `buttonStyles()`
+ * (e.g. `tel:` links, which can't use the localized `<Link>` in `Button`)
+ * can reuse the exact same hover effect.
+ */
+export function Sheen() {
   return (
     <span
       aria-hidden

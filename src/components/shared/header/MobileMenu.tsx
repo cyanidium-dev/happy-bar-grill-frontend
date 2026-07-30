@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import Logo from "@/components/shared/logo/Logo";
 import LocaleSwitcher from "@/components/shared/LocaleSwitcher";
-import { buttonStyles } from "@/components/shared/buttons/Button";
+import { buttonStyles, Sheen } from "@/components/shared/buttons/Button";
 import CloseIcon from "@/components/shared/icons/CloseIcon";
 import PhoneIcon from "@/components/shared/icons/PhoneIcon";
 import { navLinks } from "@/config/navigation";
@@ -92,8 +92,11 @@ export default function MobileMenu({
             onClick={onClose}
             className={buttonStyles({ variant: "primary", fullWidth: true })}
           >
-            <PhoneIcon className="size-5" />
-            {PHONE}
+            <Sheen />
+            <span className="relative z-[1] inline-flex items-center gap-2">
+              <PhoneIcon className="size-5" />
+              {PHONE}
+            </span>
           </a>
           <LocaleSwitcher />
         </div>

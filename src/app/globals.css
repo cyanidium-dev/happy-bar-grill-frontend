@@ -142,7 +142,6 @@
     font-family: var(--font-sans);
     font-size: 14px;
     line-height: 150%;
-    overflow-x: hidden;
     position: relative;
   }
 

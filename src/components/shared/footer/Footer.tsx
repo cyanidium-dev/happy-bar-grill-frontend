@@ -7,8 +7,8 @@ import TiktokIcon from "@/components/shared/icons/TiktokIcon";
 import { navLinks } from "@/config/navigation";
 import {
   ADDRESS,
-  CYANIDIUM_NAME,
-  CYANIDIUM_URL,
+  DEVELOPER_NAME,
+  DEVELOPER_URL,
   EMAIL,
   INSTAGRAM_URL,
   PHONE,
@@ -34,7 +34,7 @@ export default async function Footer() {
         <div className="flex flex-col gap-10 lg:flex-row lg:justify-between">
           {/* Brand + socials */}
           <div className="flex flex-col gap-6">
-            <Logo className="text-32semi md:text-40bold" />
+            <Logo className="text-32semi md:text-40bold" light />
             <ul className="flex items-center gap-4">
               {socials.map(({ url, label, Icon }) => (
                 <li key={label}>
@@ -101,12 +101,12 @@ export default async function Footer() {
           <p>
             {tf("developedBy")} —{" "}
             <a
-              href={CYANIDIUM_URL}
+              href={DEVELOPER_URL}
               target="_blank"
               rel="noopener noreferrer nofollow"
               className="text-white transition-colors duration-300 hover:text-red"
             >
-              {CYANIDIUM_NAME}
+              {DEVELOPER_NAME}
             </a>
           </p>
         </div>

@@ -15,7 +15,7 @@ export default function ImagePlaceholder({
   return (
     <div
       className={cn(
-        "flex items-center justify-center overflow-hidden bg-gradient-to-br from-navy/15 via-beige to-sand/40",
+        "flex items-center justify-center overflow-hidden bg-beige",
         className,
       )}
       aria-hidden

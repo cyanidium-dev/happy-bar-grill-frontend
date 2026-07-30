@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import Logo from "@/components/shared/logo/Logo";
 import LocaleSwitcher from "@/components/shared/LocaleSwitcher";
-import { buttonStyles } from "@/components/shared/buttons/Button";
+import { buttonStyles, Sheen } from "@/components/shared/buttons/Button";
 import PhoneIcon from "@/components/shared/icons/PhoneIcon";
 import CartButton from "./CartButton";
 import MobileMenu from "./MobileMenu";
@@ -32,73 +32,82 @@ export default function Header() {
   }, []);
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 border-b backdrop-blur transition-colors duration-300",
-        scrolled
-          ? "border-navy/10 bg-white/85 shadow-nav"
-          : "border-transparent bg-white/70",
-      )}
-    >
-      <div className="container flex items-center gap-4 py-3 md:py-4">
-        <Logo className="text-20semi md:text-24semi" />
+    <header className="sticky top-0 z-50">
+      {/* `backdrop-blur` lives on this inner div, not on the sticky `<header>`
+          itself: WebKit has a compositor bug where `backdrop-filter` on a
+          `position: sticky` element breaks/glitches the sticky behaviour on
+          iOS Safari (works fine on Chrome, which is why it's easy to miss). */}
+      <div
+        className={cn(
+          "border-b backdrop-blur transition-colors duration-300",
+          scrolled
+            ? "border-navy/10 bg-white/85 shadow-nav"
+            : "border-transparent bg-white/70",
+        )}
+      >
+        <div className="container flex items-center gap-4 py-3 md:py-4">
+          <Logo className="text-20semi md:text-24semi" />
 
-        <nav className="ml-8 hidden lg:block xl:ml-12">
-          <ul className="flex items-center gap-6 xl:gap-8">
-            {navLinks.map(({ href, key }) => (
-              <li key={key}>
-                <Link
-                  href={href}
-                  className="text-16med text-navy transition-colors duration-300 hover:text-red focus-visible:text-red"
-                >
-                  {t(key)}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+          <nav className="ml-8 hidden lg:block xl:ml-12">
+            <ul className="flex items-center gap-6 xl:gap-8">
+              {navLinks.map(({ href, key }) => (
+                <li key={key}>
+                  <Link
+                    href={href}
+                    className="text-16med text-navy transition-colors duration-300 hover:text-red focus-visible:text-red"
+                  >
+                    {t(key)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-        <div className="ml-auto flex items-center gap-2 sm:gap-3">
-          <LocaleSwitcher />
-          <CartButton label={th("cart")} />
+          <div className="ml-auto flex items-center gap-2 sm:gap-3">
+            <LocaleSwitcher />
+            <CartButton label={th("cart")} />
 
-          <div className="hidden xl:block">
-            <a
-              href={`tel:${PHONE_HREF}`}
-              aria-label={PHONE}
-              className={buttonStyles({ variant: "secondary", size: "sm" })}
+            <div className="hidden xl:block">
+              <a
+                href={`tel:${PHONE_HREF}`}
+                aria-label={PHONE}
+                className={buttonStyles({ variant: "secondary", size: "sm" })}
+              >
+                <Sheen />
+                <span className="relative z-[1] inline-flex items-center gap-2">
+                  <PhoneIcon className="size-4" />
+                  {PHONE}
+                </span>
+              </a>
+            </div>
+
+            <button
+              type="button"
+              aria-label={open ? th("closeMenu") : th("openMenu")}
+              aria-expanded={open}
+              onClick={() => setOpen((v) => !v)}
+              className="flex size-10 flex-col items-center justify-center gap-1.5 lg:hidden"
             >
-              <PhoneIcon className="size-4" />
-              {PHONE}
-            </a>
+              <span
+                className={cn(
+                  "block h-0.5 w-6 rounded-full bg-navy transition-transform duration-300",
+                  open && "translate-y-2 rotate-45",
+                )}
+              />
+              <span
+                className={cn(
+                  "block h-0.5 w-6 rounded-full bg-navy transition-opacity duration-300",
+                  open && "opacity-0",
+                )}
+              />
+              <span
+                className={cn(
+                  "block h-0.5 w-6 rounded-full bg-navy transition-transform duration-300",
+                  open && "-translate-y-2 -rotate-45",
+                )}
+              />
+            </button>
           </div>
-
-          <button
-            type="button"
-            aria-label={open ? th("closeMenu") : th("openMenu")}
-            aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-            className="flex size-10 flex-col items-center justify-center gap-1.5 lg:hidden"
-          >
-            <span
-              className={cn(
-                "block h-0.5 w-6 rounded-full bg-navy transition-transform duration-300",
-                open && "translate-y-2 rotate-45",
-              )}
-            />
-            <span
-              className={cn(
-                "block h-0.5 w-6 rounded-full bg-navy transition-opacity duration-300",
-                open && "opacity-0",
-              )}
-            />
-            <span
-              className={cn(
-                "block h-0.5 w-6 rounded-full bg-navy transition-transform duration-300",
-                open && "-translate-y-2 -rotate-45",
-              )}
-            />
-          </button>
         </div>
       </div>
 

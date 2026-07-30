@@ -26,7 +26,7 @@ export default function Card({
   return (
     <Tag
       className={cn(
-        "overflow-hidden rounded-lg bg-white shadow-card transition duration-300 ease-out",
+        "overflow-hidden rounded-lg bg-beige shadow-card transition duration-300 ease-out",
         interactive &&
           "group xl:hover:-translate-y-1 xl:hover:shadow-card-hover",
         className,

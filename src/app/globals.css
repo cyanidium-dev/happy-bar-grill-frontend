@@ -124,6 +124,17 @@
 :root {
   --background: var(--color-white);
   --foreground: var(--color-graphite);
+
+  /* Header's real height, kept in sync by Header.tsx via ResizeObserver.
+     These are just first-paint fallbacks (before JS measures it) so pages
+     don't jump once the real value is set. */
+  --header-height: 68px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-height: 76px;
+  }
 }
 
 /* =============================================================================

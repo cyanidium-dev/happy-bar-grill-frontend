@@ -7,12 +7,23 @@ import PageTitle from "@/components/shared/titles/PageTitle";
 /**
  * Block 1 — first screen. States what you can order and pushes into the menu.
  * (Cart + language switcher live in the persistent Header — a layout concern.)
+ *
+ * Sits *behind* the fixed Header: a negative top margin cancels the page's
+ * header-height padding so this section's own gradient background reaches
+ * the very top of the viewport (visible through the transparent header),
+ * while a matching top padding keeps its content clear of the header bar.
  */
 export default async function Hero() {
   const t = await getTranslations("HomePage.hero");
 
   return (
-    <section className="overflow-x-clip bg-gradient-to-br from-navy/15 via-beige to-sand/40">
+    <section
+      className="overflow-x-clip bg-gradient-to-br from-navy/15 via-beige to-sand/40"
+      style={{
+        marginTop: "calc(var(--header-height) * -1)",
+        paddingTop: "var(--header-height)",
+      }}
+    >
       <div className="container grid items-center gap-10 py-16 md:grid-cols-2 md:py-20 xl:py-24">
         <AnimatedWrapper animation={{ x: -40 }} className="flex flex-col gap-6">
           <PageTitle>{t("title")}</PageTitle>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import Logo from "@/components/shared/logo/Logo";
@@ -14,35 +14,62 @@ import { PHONE, PHONE_HREF } from "@/constants/contacts";
 import { cn } from "@/utils/cn";
 
 /**
- * Sticky header: logo, desktop nav, language switcher, cart and phone, plus the
- * mobile burger + slide-in menu. Gains a solid blurred background and shadow
- * once the page is scrolled (bravo's scroll behaviour, adapted to a light UI).
+ * Floating header: logo, desktop nav, language switcher, cart and phone, plus
+ * the mobile burger + slide-in menu. It's `fixed` (not `sticky`) so it floats
+ * *over* the page — the Hero section renders behind it with its own
+ * background, visible through the header while it's transparent. The header
+ * gains a solid blurred white background and shadow once the page is
+ * scrolled past 60px (bravo's scroll behaviour, adapted to a light UI).
+ *
+ * Its rendered height is published as the `--header-height` CSS variable so
+ * every page can reserve the right amount of space below it (see the locale
+ * layout and `Hero`, which cancels that space out to sit behind the header).
  */
 export default function Header() {
   const t = useTranslations("Nav");
   const th = useTranslations("Header");
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 60);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useLayoutEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+
+    const setHeight = () =>
+      document.documentElement.style.setProperty(
+        "--header-height",
+        `${el.offsetHeight}px`,
+      );
+
+    setHeight();
+    const observer = new ResizeObserver(setHeight);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50">
-      {/* `backdrop-blur` lives on this inner div, not on the sticky `<header>`
-          itself: WebKit has a compositor bug where `backdrop-filter` on a
+    <header ref={headerRef} className="fixed inset-x-0 top-0 z-50 w-full">
+      {/* `backdrop-blur` lives on this inner div, not on the `<header>` itself:
+          WebKit has a compositor bug where `backdrop-filter` on a
           `position: sticky` element breaks/glitches the sticky behaviour on
-          iOS Safari (works fine on Chrome, which is why it's easy to miss). */}
+          iOS Safari (works fine on Chrome, which is why it's easy to miss) —
+          keeping the blur on a plain child avoids relying on that behaviour.
+          The header starts fully transparent and fades in a white,
+          blurred background once the page is scrolled past 60px. */}
       <div
         className={cn(
-          "border-b backdrop-blur transition-colors duration-300",
+          "border-b transition-[background-color,backdrop-filter,box-shadow,border-color] duration-500 ease-out",
           scrolled
-            ? "border-navy/10 bg-white/85 shadow-nav"
-            : "border-transparent bg-white/70",
+            ? "border-navy/10 bg-white/45 shadow-nav backdrop-blur"
+            : "border-transparent bg-transparent backdrop-blur-0",
         )}
       >
         <div className="container flex items-center gap-4 py-3 md:py-4">

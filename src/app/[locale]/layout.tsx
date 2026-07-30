@@ -73,10 +73,14 @@ export default async function RootLayout({ children, params }: LayoutProps) {
         <NextIntlClientProvider>
           <Header />
           {/* `overflow-x-clip` here (not on `body`) prevents a horizontal
-              scrollbar from off-screen slide-in animations without breaking
-              the header's `position: sticky` — an ancestor with `overflow`
-              set defeats sticky positioning, most notably on iOS Safari. */}
-          <div className="flex flex-1 flex-col overflow-x-clip">
+              scrollbar from off-screen slide-in animations. The header is
+              `fixed` (floats over the page), so this wrapper reserves its
+              height as top padding — `Hero` cancels it back out to sit
+              behind the header instead. */}
+          <div
+            className="flex flex-1 flex-col overflow-x-clip"
+            style={{ paddingTop: "var(--header-height)" }}
+          >
             {children}
           </div>
           <Footer />

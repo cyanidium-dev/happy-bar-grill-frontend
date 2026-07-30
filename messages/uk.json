@@ -1,9 +1,51 @@
 {
-  "HomePage": {
-    "title": "Щоб почати, відредагуйте файл page.tsx.",
-    "description": "Шукаєте відправну точку чи додаткові інструкції? Перейдіть до <templates>шаблонів</templates> або навчального <learning>центру</learning>.",
-    "deploy": "Розгорнути зараз",
-    "documentation": "Документація"
+  "Metadata": {
+    "site": {
+      "name": "Happy Bar Grill",
+      "title": "Happy Bar Grill — бар-гриль та доставка страв",
+      "description": "Happy Bar Grill — свіжі страви на грилі, бар та швидка доставка. Замовляйте улюблені страви онлайн."
+    },
+    "home": {
+      "title": "Happy Bar Grill",
+      "description": "Бар-гриль зі свіжими стравами та швидкою доставкою. Меню, акції та бестселери."
+    },
+    "menu": {
+      "title": "Меню",
+      "description": "Повне меню Happy Bar Grill: страви на грилі, закуски, напої та десерти з доставкою."
+    },
+    "about": {
+      "title": "Про ресторан",
+      "description": "Історія, цінності та команда Happy Bar Grill."
+    },
+    "delivery": {
+      "title": "Доставка та оплата",
+      "description": "Умови доставки, зони, час роботи та способи оплати Happy Bar Grill."
+    },
+    "contacts": {
+      "title": "Контакти",
+      "description": "Адреса, телефон, час роботи та карта Happy Bar Grill."
+    },
+    "blog": {
+      "title": "Блог",
+      "description": "Новини, рецепти та історії від Happy Bar Grill."
+    },
+    "checkout": {
+      "title": "Оформлення замовлення",
+      "description": "Оформте замовлення в Happy Bar Grill — швидко та без реєстрації."
+    },
+    "confirmation": {
+      "title": "Замовлення прийнято",
+      "description": "Дякуємо за замовлення в Happy Bar Grill."
+    },
+    "notFound": {
+      "title": "Сторінку не знайдено",
+      "description": "Такої сторінки не існує."
+    }
+  },
+  "NotFound": {
+    "title": "Сторінку не знайдено",
+    "description": "Схоже, такої сторінки не існує або її було переміщено.",
+    "backHome": "На головну"
   },
   "LocaleSwitcher": {
     "label": "Мова",

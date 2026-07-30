@@ -31,7 +31,7 @@ export default async function DeliveryInfo() {
   )}&output=embed`;
 
   return (
-    <Section id="delivery" background="beige">
+    <Section id="delivery" background="gradient">
       <AnimatedWrapper className="flex flex-col gap-3">
         <SectionTitle>{t("title")}</SectionTitle>
         <p className="max-w-2xl text-16reg text-graphite">{t("text")}</p>
@@ -61,7 +61,11 @@ export default async function DeliveryInfo() {
               </li>
             ))}
           </ul>
-          <Button href="/delivery" variant="secondary" className="w-full sm:w-fit">
+          <Button
+            href="/delivery"
+            variant="secondary"
+            className="w-full sm:w-fit"
+          >
             {t("cta")}
           </Button>
         </AnimatedWrapper>

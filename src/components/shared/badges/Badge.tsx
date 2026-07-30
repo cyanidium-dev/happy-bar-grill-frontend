@@ -5,7 +5,7 @@ type BadgeVariant = "bestseller" | "new" | "discount";
 
 const variants: Record<BadgeVariant, string> = {
   bestseller: "bg-red text-white",
-  new: "bg-olive text-white",
+  new: "bg-sky text-white",
   discount: "bg-navy text-white",
 };
 

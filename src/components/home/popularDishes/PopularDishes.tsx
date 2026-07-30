@@ -20,7 +20,7 @@ export default async function PopularDishes() {
         <p className="max-w-2xl text-16reg text-graphite">{t("text")}</p>
       </AnimatedWrapper>
 
-      <ul className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:gap-6 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+      <ul className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {popularDishes.map((dish, index) => (
           <AnimatedWrapper
             key={dish.slug}

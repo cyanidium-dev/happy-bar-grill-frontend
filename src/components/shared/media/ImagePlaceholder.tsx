@@ -1,5 +1,12 @@
 import { cn } from "@/utils/cn";
 
+type PlaceholderBackground = "white" | "beige";
+
+const backgrounds: Record<PlaceholderBackground, string> = {
+  white: "bg-white",
+  beige: "bg-beige",
+};
+
 /**
  * Brand-tinted stand-in for real photography (not wired to the CMS yet).
  * Swap for `CardMedia` / `next/image` once assets exist. Sizing comes from
@@ -7,15 +14,19 @@ import { cn } from "@/utils/cn";
  */
 export default function ImagePlaceholder({
   label,
+  background = "white",
   className,
 }: {
   label?: string;
+  /** Pick whichever contrasts with the surrounding card's surface colour. */
+  background?: PlaceholderBackground;
   className?: string;
 }) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center overflow-hidden bg-beige",
+        "flex items-center justify-center overflow-hidden",
+        backgrounds[background],
         className,
       )}
       aria-hidden

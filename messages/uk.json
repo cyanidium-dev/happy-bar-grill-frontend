@@ -1,0 +1,13 @@
+{
+  "HomePage": {
+    "title": "Щоб почати, відредагуйте файл page.tsx.",
+    "description": "Шукаєте відправну точку чи додаткові інструкції? Перейдіть до <templates>шаблонів</templates> або навчального <learning>центру</learning>.",
+    "deploy": "Розгорнути зараз",
+    "documentation": "Документація"
+  },
+  "LocaleSwitcher": {
+    "label": "Мова",
+    "uk": "Українська",
+    "ru": "Русский"
+  }
+}

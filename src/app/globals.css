@@ -1,26 +1,235 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* =============================================================================
+   Happy Bar Grill — design tokens (Tailwind v4, CSS-first `@theme`).
+   Mirrors bravo's token approach (named colors + `<px><weight>` type scale),
+   ported from its v3 `tailwind.config.ts` to v4 `@theme`.
+   Palette: "класична схема" — Морський синій / Фірмовий червоний / Тепле бежеве / Біле.
+   ========================================================================== */
+
+@theme {
+  /* --- Breakpoints (adds bravo's `xs`) --------------------------------- */
+  --breakpoint-xs: 520px;
+
+  /* --- Brand: classic scheme ------------------------------------------- */
+  --color-navy: #003c71; /* Морський синій — основний бренд-колір */
+  --color-navy-dark: #002a50; /* hover / pressed для navy */
+  --color-red: #e31e26; /* Фірмовий червоний — акцент, CTA, промо */
+  --color-red-dark: #c21a20; /* hover / pressed для red */
+  --color-beige: #f3e9d5; /* Тепле бежеве — теплі секції / поверхні */
+  --color-white: #ffffff; /* Чисте біле — картки, текст на темному */
+
+  /* --- Secondary palette ----------------------------------------------- */
+  --color-sky: #7db9e8; /* Небесно-блакитний — легкі акценти, focus */
+  --color-teal: #00a6b4; /* Морська хвиля — вода, свіжість */
+  --color-sand: #d9b88c; /* Пісочний — теплий акцент */
+  --color-olive: #6e8b3d; /* Оливковий — «свіже/натуральне», success */
+  --color-graphite: #222831; /* Графітовий — основний текст, ціни */
+
+  /* --- Neutrals (borders, placeholders) -------------------------------- */
+  --color-grey: #a1a1aa; /* placeholder, disabled text */
+  --color-grey-dark: #545454; /* бордери інпутів, другорядний текст */
+
+  /* --- Fonts (see @theme inline below for the runtime var binding) ------ */
+
+  /* --- Type scale: `<px><weight>` (px + font-weight + line-height) ------ */
+  --text-64bold: 64px;
+  --text-64bold--font-weight: 700;
+  --text-64bold--line-height: 106%;
+  --text-48bold: 48px;
+  --text-48bold--font-weight: 700;
+  --text-48bold--line-height: 108%;
+  --text-40bold: 40px;
+  --text-40bold--font-weight: 700;
+  --text-40bold--line-height: 110%;
+  --text-36semi: 36px;
+  --text-36semi--font-weight: 600;
+  --text-36semi--line-height: 112%;
+  --text-32semi: 32px;
+  --text-32semi--font-weight: 600;
+  --text-32semi--line-height: 115%;
+  --text-28semi: 28px;
+  --text-28semi--font-weight: 600;
+  --text-28semi--line-height: 120%;
+  --text-24semi: 24px;
+  --text-24semi--font-weight: 600;
+  --text-24semi--line-height: 125%;
+  --text-20semi: 20px;
+  --text-20semi--font-weight: 600;
+  --text-20semi--line-height: 130%;
+  --text-20med: 20px;
+  --text-20med--font-weight: 500;
+  --text-20med--line-height: 140%;
+  --text-18med: 18px;
+  --text-18med--font-weight: 500;
+  --text-18med--line-height: 150%;
+  --text-18reg: 18px;
+  --text-18reg--font-weight: 400;
+  --text-18reg--line-height: 150%;
+  --text-16semi: 16px;
+  --text-16semi--font-weight: 600;
+  --text-16semi--line-height: 140%;
+  --text-16med: 16px;
+  --text-16med--font-weight: 500;
+  --text-16med--line-height: 140%;
+  --text-16reg: 16px;
+  --text-16reg--font-weight: 400;
+  --text-16reg--line-height: 150%;
+  --text-14semi: 14px;
+  --text-14semi--font-weight: 600;
+  --text-14semi--line-height: 140%;
+  --text-14med: 14px;
+  --text-14med--font-weight: 500;
+  --text-14med--line-height: 140%;
+  --text-14reg: 14px;
+  --text-14reg--font-weight: 400;
+  --text-14reg--line-height: 150%;
+  --text-12semi: 12px;
+  --text-12semi--font-weight: 600;
+  --text-12semi--line-height: 130%;
+  --text-12med: 12px;
+  --text-12med--font-weight: 500;
+  --text-12med--line-height: 130%;
+  --text-10med: 10px;
+  --text-10med--font-weight: 500;
+  --text-10med--line-height: 130%;
+
+  /* --- Radius ----------------------------------------------------------- */
+  --radius-xs: 4px;
+  --radius-sm: 6px; /* inputs (як у bravo) */
+  --radius-md: 12px;
+  --radius-lg: 20px; /* картки */
+  --radius-xl: 28px;
+  --radius-2xl: 36px; /* великі медіа-картки, hero-блоки */
+
+  /* --- Shadows (тонкі, з navy-відтінком) -------------------------------- */
+  --shadow-card: 0 4px 20px rgba(0, 60, 113, 0.08);
+  --shadow-card-hover: 0 12px 32px rgba(0, 60, 113, 0.16);
+  --shadow-nav: 0 2px 12px rgba(0, 60, 113, 0.1);
+  --shadow-focus: 0 0 0 3px rgba(125, 185, 232, 0.6);
+
+  /* --- Animations ------------------------------------------------------- */
+  --animate-rotation: rotate 1600ms linear infinite;
+  --animate-fade-up: fade-up 600ms ease-out both;
 }
 
+/* Fonts are bound at runtime by next/font (variables set on <html>).
+   `inline` makes utilities emit `font-family: var(--font-*)` directly. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-montserrat), Arial, Helvetica, sans-serif;
+  --font-display: var(--font-oswald), "Oswald", Impact, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* --- Semantic surface variables (used by base styles) ------------------ */
+:root {
+  --background: var(--color-white);
+  --foreground: var(--color-graphite);
+}
+
+/* =============================================================================
+   Base / reset (ported from bravo's globals)
+   ========================================================================== */
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 150%;
+  overflow-x: hidden;
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  body {
+    font-size: 16px;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+ul {
+  list-style: none;
+}
+
+/* Consistent, brand-tinted focus ring for keyboard users. */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-sm);
+}
+
+/* =============================================================================
+   Layout helper: page container (bravo used 30px / 70px side padding)
+   ========================================================================== */
+
+.container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1440px;
+  padding-inline: 20px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: 30px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    padding-inline: 70px;
+  }
+}
+
+/* =============================================================================
+   Keyframes
+   ========================================================================== */
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Respect users who prefer less motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

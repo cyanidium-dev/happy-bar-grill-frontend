@@ -2,6 +2,8 @@ import { getTranslations } from "next-intl/server";
 import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrapper";
 import Button from "@/components/shared/buttons/Button";
 import CardMedia from "@/components/shared/cards/CardMedia";
+import Chip from "@/components/shared/Chip";
+import CheckIcon from "@/components/shared/icons/CheckIcon";
 import PageTitle from "@/components/shared/titles/PageTitle";
 
 const heroImage =
@@ -19,20 +21,42 @@ const heroImage =
 export default async function Hero() {
   const t = await getTranslations("HomePage.hero");
 
+  const chips = [t("chips.delivery"), t("chips.portions"), t("chips.online")];
+
   return (
     <section
-      className="overflow-x-clip bg-gradient-to-br from-navy/15 via-beige to-sand/40"
+      className="relative overflow-hidden bg-gradient-to-br from-navy/15 via-beige to-sand/40"
       style={{
         marginTop: "calc(var(--header-height) * -1)",
         paddingTop: "var(--header-height)",
       }}
     >
-      <div className="container grid items-center gap-10 py-16 md:grid-cols-2 md:py-20 xl:py-24">
+      {/* Decorative depth glow behind the dish photo. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute right-[-6rem] top-1/4 size-[34rem] rounded-full bg-red/10 blur-3xl"
+      />
+      <div className="container relative grid items-center gap-10 py-16 md:grid-cols-2 md:py-20 xl:py-24">
         <AnimatedWrapper animation={{ x: -40 }} className="flex flex-col gap-6">
-          <PageTitle>{t("title")}</PageTitle>
+          <div className="flex flex-col gap-3">
+            <span className="w-fit text-14semi uppercase tracking-[0.2em] text-red">
+              {t("eyebrow")}
+            </span>
+            <PageTitle>{t("title")}</PageTitle>
+          </div>
           <p className="max-w-xl text-16reg text-graphite xl:text-18reg">
             {t("description")}
           </p>
+          <ul className="flex flex-wrap gap-2">
+            {chips.map((chip) => (
+              <li key={chip}>
+                <Chip variant="glass">
+                  <CheckIcon className="size-4 text-olive" />
+                  {chip}
+                </Chip>
+              </li>
+            ))}
+          </ul>
           <Button href="/menu" size="lg" className="w-full sm:w-fit">
             {t("cta")}
           </Button>

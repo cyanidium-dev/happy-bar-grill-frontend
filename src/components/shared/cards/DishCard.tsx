@@ -45,7 +45,7 @@ export default async function DishCard({
 
         <Link
           href={href}
-          className="relative block aspect-square w-32 shrink-0 self-start overflow-hidden rounded-lg xs:w-36 sm:w-44"
+          className="relative block aspect-square w-32 shrink-0 self-start overflow-hidden rounded-tl-xl rounded-br-xl xs:w-36 sm:w-44"
         >
           <CardMedia
             src={dish.image}
@@ -61,7 +61,7 @@ export default async function DishCard({
         </Link>
       </div>
 
-      <div className="flex items-end justify-between gap-3">
+      <div className="mt-auto flex items-end justify-between gap-3 border-t border-navy/10 pt-3">
         <div className="flex flex-col">
           <span className="flex items-baseline gap-2">
             <span className="font-display text-20semi text-navy sm:text-24semi">
@@ -78,7 +78,12 @@ export default async function DishCard({
           </span>
         </div>
 
-        <Button variant="primary" size="icon" aria-label={t("addToCart")}>
+        <Button
+          variant="primary"
+          size="icon"
+          shape="leaf"
+          aria-label={t("addToCart")}
+        >
           <PlusIcon className="size-5" />
         </Button>
       </div>

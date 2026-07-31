@@ -14,7 +14,7 @@ export default async function PopularDishes() {
   const t = await getTranslations("HomePage.popular");
 
   return (
-    <Section background="white">
+    <Section background="white" accent="cool" waveTop="beige">
       <AnimatedWrapper className="flex flex-col gap-3">
         <SectionTitle>{t("title")}</SectionTitle>
         <p className="max-w-2xl text-16reg text-graphite">{t("text")}</p>

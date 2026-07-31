@@ -10,7 +10,7 @@ export default async function SeoText() {
   const t = await getTranslations("HomePage.seo");
 
   return (
-    <Section background="white" containerClassName="py-12 md:py-14 xl:py-16">
+    <Section background="white" waveTop="gradient" containerClassName="py-12 md:py-14 xl:py-16">
       <AnimatedWrapper className="flex max-w-4xl flex-col gap-4 text-14reg text-grey-dark">
         <p>{t("paragraph1")}</p>
         <p>{t("paragraph2")}</p>

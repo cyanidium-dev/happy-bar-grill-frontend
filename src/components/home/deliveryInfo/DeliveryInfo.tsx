@@ -3,6 +3,7 @@ import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrappe
 import Button from "@/components/shared/buttons/Button";
 import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
+import { cn } from "@/utils/cn";
 import {
   ADDRESS,
   DELIVERY_TIME,
@@ -19,11 +20,16 @@ import {
 export default async function DeliveryInfo() {
   const t = await getTranslations("HomePage.delivery");
 
-  const rows: { label: string; value: string; href?: string }[] = [
+  const rows: {
+    label: string;
+    value: string;
+    href?: string;
+    wide?: boolean;
+  }[] = [
     { label: t("deliveryTime"), value: DELIVERY_TIME },
     { label: t("schedule"), value: SCHEDULE },
-    { label: t("address"), value: ADDRESS },
-    { label: t("phone"), value: PHONE, href: `tel:${PHONE_HREF}` },
+    { label: t("phone"), value: PHONE, href: `tel:${PHONE_HREF}`, wide: true },
+    { label: t("address"), value: ADDRESS, wide: true },
   ];
 
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(
@@ -31,7 +37,7 @@ export default async function DeliveryInfo() {
   )}&output=embed`;
 
   return (
-    <Section id="delivery" background="gradient">
+    <Section id="delivery" background="gradient" waveTop="navy">
       <AnimatedWrapper className="flex flex-col gap-3">
         <SectionTitle>{t("title")}</SectionTitle>
         <p className="max-w-2xl text-16reg text-graphite">{t("text")}</p>
@@ -39,24 +45,27 @@ export default async function DeliveryInfo() {
 
       <div className="mt-8 grid gap-8 md:mt-10 lg:grid-cols-2 lg:gap-12">
         <AnimatedWrapper animation={{ x: -30 }} className="flex flex-col gap-6">
-          <ul className="flex flex-col gap-4">
+          <ul className="grid gap-3 sm:grid-cols-2">
             {rows.map((row) => (
               <li
                 key={row.label}
-                className="flex items-baseline justify-between gap-4 border-b border-navy/10 pb-3"
+                className={cn(
+                  "flex flex-col gap-1 rounded-lg bg-white p-4 shadow-card",
+                  row.wide && "sm:col-span-2",
+                )}
               >
-                <span className="text-14med text-grey-dark">{row.label}</span>
+                <span className="text-12med uppercase tracking-wide text-grey-dark">
+                  {row.label}
+                </span>
                 {row.href ? (
                   <a
                     href={row.href}
-                    className="text-right text-16semi text-navy transition-colors hover:text-red"
+                    className="text-20semi text-navy transition-colors hover:text-red"
                   >
                     {row.value}
                   </a>
                 ) : (
-                  <span className="text-right text-16semi text-navy">
-                    {row.value}
-                  </span>
+                  <span className="text-20semi text-navy">{row.value}</span>
                 )}
               </li>
             ))}

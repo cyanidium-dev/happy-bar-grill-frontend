@@ -14,7 +14,7 @@ export default async function Promotions() {
   const t = await getTranslations("HomePage.promotions");
 
   return (
-    <Section background="beige">
+    <Section background="beige" accent="coolTopCenter" waveTop="white" waveFlip>
       <AnimatedWrapper className="flex flex-col gap-3">
         <SectionTitle>{t("title")}</SectionTitle>
         <p className="max-w-2xl text-16reg text-graphite">{t("text")}</p>

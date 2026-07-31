@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import Logo from "@/components/shared/logo/Logo";
+import SectionWave from "@/components/shared/SectionWave";
 import InstagramIcon from "@/components/shared/icons/InstagramIcon";
 import TelegramIcon from "@/components/shared/icons/TelegramIcon";
 import TiktokIcon from "@/components/shared/icons/TiktokIcon";
@@ -29,8 +30,9 @@ export default async function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-navy text-white">
-      <div className="container py-14 md:py-16">
+    <footer className="relative overflow-hidden bg-navy text-white">
+      <SectionWave from="white" />
+      <div className="container pb-14 pt-20 md:pb-16 md:pt-24">
         <div className="flex flex-col gap-10 lg:flex-row lg:justify-between">
           {/* Brand + socials */}
           <div className="flex flex-col gap-6">
@@ -59,9 +61,13 @@ export default async function Footer() {
                 <li key={key}>
                   <Link
                     href={href}
-                    className="text-white/90 transition-colors duration-300 hover:text-red"
+                    className="group relative inline-block text-white/90"
                   >
                     {t(key)}
+                    <span
+                      aria-hidden
+                      className="absolute inset-x-0 -bottom-1 h-0.5 origin-left scale-x-0 rounded-full bg-red transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                    />
                   </Link>
                 </li>
               ))}

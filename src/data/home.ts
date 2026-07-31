@@ -159,6 +159,8 @@ export const promotions: Dish[] = [
 export const reviews: Review[] = [
   {
     author: "Олена",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&q=80&fit=crop&crop=faces",
     rating: 5,
     source: "Google",
     url: "https://maps.google.com",
@@ -166,6 +168,8 @@ export const reviews: Review[] = [
   },
   {
     author: "Андрій",
+    avatar:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&q=80&fit=crop&crop=faces",
     rating: 5,
     source: "Google",
     url: "https://maps.google.com",
@@ -173,6 +177,8 @@ export const reviews: Review[] = [
   },
   {
     author: "Марія",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&q=80&fit=crop&crop=faces",
     rating: 5,
     source: "Google",
     url: "https://maps.google.com",

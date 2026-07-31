@@ -6,9 +6,17 @@ import { cn } from "@/utils/cn";
 
 type ButtonVariant = "primary" | "secondary" | "ghost";
 type ButtonSize = "sm" | "md" | "lg" | "icon";
+type ButtonShape = "pill" | "leaf";
 
 const base =
-  "group relative inline-flex cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full text-center transition duration-300 ease-out focus-visible:outline-none enabled:active:scale-95 disabled:cursor-not-allowed";
+  "group relative inline-flex cursor-pointer items-center justify-center gap-2 overflow-hidden text-center transition duration-300 ease-out focus-visible:outline-none enabled:active:scale-95 disabled:cursor-not-allowed";
+
+const shapes: Record<ButtonShape, string> = {
+  pill: "rounded-full",
+  // "Leaf": top-left & bottom-right rounded, the opposite two sharp — matches
+  // the card corner motif.
+  leaf: "rounded-tl-[14px] rounded-br-[14px]",
+};
 
 const variantStyles: Record<ButtonVariant, string> = {
   // Red is the attention/CTA colour. White label stays AA only at this bold
@@ -24,12 +32,13 @@ const sizeStyles: Record<ButtonSize, string> = {
   sm: "px-4 py-2.5",
   md: "px-6 py-3.5",
   lg: "px-8 py-4",
-  icon: "size-9 p-0 sm:size-11",
+  icon: "size-9 shrink-0 p-0 sm:size-11",
 };
 
 type StyleArgs = {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  shape?: ButtonShape;
   fullWidth?: boolean;
   className?: string;
 };
@@ -38,6 +47,7 @@ type StyleArgs = {
 export function buttonStyles({
   variant = "primary",
   size = "md",
+  shape = "pill",
   fullWidth = false,
   className,
 }: StyleArgs = {}): string {
@@ -45,6 +55,7 @@ export function buttonStyles({
     base,
     variantStyles[variant],
     sizeStyles[size],
+    shapes[shape],
     fullWidth && "w-full",
     className,
   );
@@ -89,6 +100,7 @@ function Spinner() {
 export default function Button({
   variant = "primary",
   size = "md",
+  shape = "pill",
   fullWidth = false,
   isLoading = false,
   href,
@@ -98,7 +110,7 @@ export default function Button({
   type = "button",
   ...rest
 }: ButtonProps) {
-  const classes = buttonStyles({ variant, size, fullWidth, className });
+  const classes = buttonStyles({ variant, size, shape, fullWidth, className });
 
   const content = (
     <>

@@ -14,7 +14,7 @@ export default async function Reviews() {
   const t = await getTranslations("HomePage.reviews");
 
   return (
-    <Section background="navy">
+    <Section background="navy" waveTop="white">
       <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <AnimatedWrapper className="flex max-w-2xl flex-col gap-3">
           <SectionTitle variant="white">{t("title")}</SectionTitle>

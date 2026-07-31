@@ -29,6 +29,8 @@ export type Category = {
 
 export type Review = {
   author: string;
+  /** Reviewer's photo (placeholder until the CMS provides real avatars). */
+  avatar: string;
   /** 1–5. */
   rating: number;
   source: string;

@@ -4,6 +4,7 @@ import Button from "@/components/shared/buttons/Button";
 import Badge from "@/components/shared/badges/Badge";
 import Card from "@/components/shared/cards/Card";
 import CardMedia from "@/components/shared/cards/CardMedia";
+import DishDescription from "@/components/shared/cards/DishDescription";
 import PlusIcon from "@/components/shared/icons/PlusIcon";
 import type { Dish } from "@/types/content";
 
@@ -34,24 +35,26 @@ export default async function DishCard({
       <div className="flex items-stretch gap-3 sm:gap-4">
         <div className="flex min-w-0 flex-1 flex-col gap-2">
           <Link href={href}>
-            <h3 className="line-clamp-2 text-20semi text-navy transition-colors duration-300 xl:group-hover:text-red sm:text-24semi">
+            <h3 className="line-clamp-3 text-18semi text-navy transition-colors duration-300 xl:group-hover:text-red sm:text-20semi">
               {dish.name}
             </h3>
           </Link>
-          <p className="line-clamp-2 flex-1 text-14reg text-grey-dark">
-            {dish.description}
-          </p>
+          <DishDescription
+            text={dish.description}
+            showMoreLabel={t("showMore")}
+            showLessLabel={t("showLess")}
+          />
         </div>
 
         <Link
           href={href}
-          className="relative block aspect-square w-32 shrink-0 self-start overflow-hidden rounded-lg xs:w-36 sm:w-44"
+          className="relative block aspect-[4/3] w-36 shrink-0 self-start overflow-hidden rounded-tl-xl rounded-br-xl xs:w-40 sm:w-48"
         >
           <CardMedia
             src={dish.image}
             alt={dish.name}
             className="h-full w-full"
-            sizes="(max-width: 400px) 128px, (max-width: 640px) 144px, 176px"
+            sizes="(max-width: 400px) 144px, (max-width: 640px) 160px, 192px"
           />
           {dish.tag && (
             <Badge variant={dish.tag} className="absolute left-2 top-2">
@@ -61,7 +64,7 @@ export default async function DishCard({
         </Link>
       </div>
 
-      <div className="flex items-end justify-between gap-3">
+      <div className="mt-auto flex items-end justify-between gap-3 border-t border-navy/10 pt-3">
         <div className="flex flex-col">
           <span className="flex items-baseline gap-2">
             <span className="font-display text-20semi text-navy sm:text-24semi">
@@ -78,7 +81,12 @@ export default async function DishCard({
           </span>
         </div>
 
-        <Button variant="primary" size="icon" aria-label={t("addToCart")}>
+        <Button
+          variant="primary"
+          size="icon"
+          shape="leaf"
+          aria-label={t("addToCart")}
+        >
           <PlusIcon className="size-5" />
         </Button>
       </div>

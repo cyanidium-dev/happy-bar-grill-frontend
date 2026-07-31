@@ -81,9 +81,13 @@ export default function Header() {
                 <li key={key}>
                   <Link
                     href={href}
-                    className="text-16med text-navy transition-colors duration-300 hover:text-red focus-visible:text-red"
+                    className="group relative inline-block text-16med text-navy"
                   >
                     {t(key)}
+                    <span
+                      aria-hidden
+                      className="absolute inset-x-0 -bottom-1 h-0.5 origin-left scale-x-0 rounded-full bg-red transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                    />
                   </Link>
                 </li>
               ))}

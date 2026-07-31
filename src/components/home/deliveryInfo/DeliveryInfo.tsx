@@ -42,6 +42,7 @@ export default async function DeliveryInfo() {
       background="beige"
       accent="navy"
       waveTop="navy"
+      waveFlip
     >
       <div className="flex flex-col gap-8 md:mt-2 lg:flex-row lg:items-center lg:gap-12">
         <div className="flex flex-col gap-6 lg:flex-1">
@@ -59,7 +60,7 @@ export default async function DeliveryInfo() {
                 <li
                   key={row.label}
                   className={cn(
-                    "flex flex-col gap-1 rounded-lg bg-white p-4 shadow-card",
+                    "flex flex-col gap-1 rounded-tl-xl rounded-br-xl bg-white p-4 shadow-card sm:rounded-tl-2xl sm:rounded-br-2xl",
                     row.wide && "sm:col-span-2",
                   )}
                 >

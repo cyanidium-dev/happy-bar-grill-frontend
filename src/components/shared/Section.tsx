@@ -33,6 +33,8 @@ type SectionProps = {
   accent?: Accent;
   /** Draw a wavy transition at the top, filled with the previous section's colour. */
   waveTop?: Background;
+  /** Mirror the top wave horizontally, so it doesn't repeat the previous one. */
+  waveFlip?: boolean;
   className?: string;
   /** Override inner container spacing/width when a section needs it. */
   containerClassName?: string;
@@ -50,6 +52,7 @@ export default function Section({
   background = "white",
   accent = "none",
   waveTop,
+  waveFlip,
   className,
   containerClassName,
   children,
@@ -79,7 +82,7 @@ export default function Section({
           )}
         />
       ))}
-      {waveTop && <SectionWave from={waveTop} />}
+      {waveTop && <SectionWave from={waveTop} flip={waveFlip} />}
       <div
         className={cn(
           "container relative pb-12 pt-28 md:pb-16 md:pt-32 xl:pb-24 xl:pt-40",

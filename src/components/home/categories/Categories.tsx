@@ -15,7 +15,7 @@ export default async function Categories() {
   return (
     <Section
       background="white"
-      accent={["warm", "coolRight"]}
+      accent="coolRight"
       waveTop="beige"
     >
       <AnimatedWrapper className="flex flex-col gap-3">

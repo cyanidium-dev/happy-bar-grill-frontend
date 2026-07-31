@@ -14,7 +14,7 @@ const heroImage =
  * (Cart + language switcher live in the persistent Header — a layout concern.)
  *
  * Sits *behind* the fixed Header: a negative top margin cancels the page's
- * header-height padding so this section's own gradient background reaches
+ * header-height padding so this section's own beige background reaches
  * the very top of the viewport (visible through the transparent header),
  * while a matching top padding keeps its content clear of the header bar.
  */
@@ -25,16 +25,22 @@ export default async function Hero() {
 
   return (
     <section
-      className="relative overflow-hidden bg-gradient-to-br from-navy/15 via-beige to-sand/40"
+      className="relative overflow-hidden bg-beige"
       style={{
         marginTop: "calc(var(--header-height) * -1)",
         paddingTop: "var(--header-height)",
       }}
     >
+      {/* Blue corner glow — echoes the site's navy brand colour, layered over
+          the flat beige fill instead of baked into a diagonal gradient. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-[-8rem] top-[-6rem] size-[32rem] rounded-full bg-navy/15 blur-3xl"
+      />
       {/* Decorative depth glow behind the dish photo. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute right-[-6rem] top-1/4 size-[34rem] rounded-full bg-red/10 blur-3xl"
+        className="pointer-events-none absolute right-[-6rem] top-1/4 size-[34rem] rounded-full bg-sand/25 blur-3xl"
       />
       <div className="container relative grid items-center gap-10 py-16 md:grid-cols-2 md:py-20 xl:py-24">
         <AnimatedWrapper animation={{ x: -40 }} className="flex flex-col gap-6">
@@ -66,7 +72,7 @@ export default async function Hero() {
           <CardMedia
             src={heroImage}
             alt={t("imageAlt")}
-            className="aspect-[4/3] rounded-2xl shadow-card"
+            className="aspect-[4/3] rounded-tl-2xl rounded-br-2xl shadow-card"
             sizes="(max-width: 768px) 100vw, 50vw"
             priority
           />

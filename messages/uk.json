@@ -104,6 +104,8 @@
     "currency": "грн",
     "weightUnit": "г",
     "rating": "Оцінка {value} з 5",
+    "showMore": "Показати",
+    "showLess": "Сховати",
     "tags": {
       "bestseller": "Хіт",
       "new": "Новинка",
@@ -112,7 +114,7 @@
   },
   "Nav": {
     "menu": "Меню",
-    "delivery": "Доставка",
+    "delivery": "Доставка та оплата",
     "about": "Про нас",
     "blog": "Блог",
     "contacts": "Контакти"

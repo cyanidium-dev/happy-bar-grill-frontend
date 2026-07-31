@@ -1,14 +1,15 @@
 import { cn } from "@/utils/cn";
 
-type WaveColor = "white" | "beige" | "navy" | "gradient";
+type WaveColor = "white" | "beige" | "navy";
 
 // Fill = the *previous* section's colour, so the wave reads as that section
-// flowing down into this one. Gradients approximate to their warm midpoint.
+// flowing down into this one. Only for flat colours — gradient sections
+// render their own `GradientWaveTail` instead, so the wave is a literal
+// continuation of their background rather than a flat approximation of it.
 const fills: Record<WaveColor, string> = {
   white: "text-white",
   beige: "text-beige",
   navy: "text-navy",
-  gradient: "text-beige",
 };
 
 /**

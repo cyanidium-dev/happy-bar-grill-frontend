@@ -35,64 +35,67 @@
   /* --- Type scale: `<px><weight>` (px + font-weight + line-height) ------ */
   --text-64bold: 64px;
   --text-64bold--font-weight: 700;
-  --text-64bold--line-height: 106%;
+  --text-64bold--line-height: 120%;
   --text-48bold: 48px;
   --text-48bold--font-weight: 700;
-  --text-48bold--line-height: 108%;
+  --text-48bold--line-height: 120%;
   --text-40bold: 40px;
   --text-40bold--font-weight: 700;
-  --text-40bold--line-height: 110%;
+  --text-40bold--line-height: 120%;
   --text-36semi: 36px;
   --text-36semi--font-weight: 600;
-  --text-36semi--line-height: 112%;
+  --text-36semi--line-height: 120%;
   --text-32semi: 32px;
   --text-32semi--font-weight: 600;
-  --text-32semi--line-height: 115%;
+  --text-32semi--line-height: 120%;
   --text-28semi: 28px;
   --text-28semi--font-weight: 600;
   --text-28semi--line-height: 120%;
   --text-24semi: 24px;
   --text-24semi--font-weight: 600;
-  --text-24semi--line-height: 125%;
+  --text-24semi--line-height: 120%;
   --text-20semi: 20px;
   --text-20semi--font-weight: 600;
-  --text-20semi--line-height: 130%;
+  --text-20semi--line-height: 120%;
   --text-20med: 20px;
   --text-20med--font-weight: 500;
-  --text-20med--line-height: 140%;
+  --text-20med--line-height: 120%;
+  --text-18semi--font-weight: 600;
+  --text-18semi: 18px;
+  --text-18semi--line-height: 120%;
   --text-18med: 18px;
   --text-18med--font-weight: 500;
-  --text-18med--line-height: 150%;
+  --text-18med--line-height: 120%;
   --text-18reg: 18px;
   --text-18reg--font-weight: 400;
-  --text-18reg--line-height: 150%;
+  --text-18reg--line-height: 120%;
   --text-16semi: 16px;
   --text-16semi--font-weight: 600;
-  --text-16semi--line-height: 140%;
+  --text-16semi--line-height: 120%;
   --text-16med: 16px;
   --text-16med--font-weight: 500;
-  --text-16med--line-height: 140%;
+  --text-16med--line-height: 120%;
   --text-16reg: 16px;
   --text-16reg--font-weight: 400;
-  --text-16reg--line-height: 150%;
+  --text-16reg--line-height: 120%;
   --text-14semi: 14px;
   --text-14semi--font-weight: 600;
-  --text-14semi--line-height: 140%;
+  --text-14semi--line-height: 120%;
   --text-14med: 14px;
   --text-14med--font-weight: 500;
-  --text-14med--line-height: 140%;
+  --text-14med--line-height: 120%;
   --text-14reg: 14px;
   --text-14reg--font-weight: 400;
-  --text-14reg--line-height: 150%;
+  --text-14reg--line-height: 120%;
   --text-12semi: 12px;
   --text-12semi--font-weight: 600;
-  --text-12semi--line-height: 130%;
+  --text-12semi--line-height: 120%;
   --text-12med: 12px;
   --text-12med--font-weight: 500;
-  --text-12med--line-height: 130%;
+  --text-12med--line-height: 120%;
   --text-10med: 10px;
   --text-10med--font-weight: 500;
-  --text-10med--line-height: 130%;
+  --text-10med--line-height: 120%;
 
   /* --- Radius ----------------------------------------------------------- */
   --radius-xs: 4px;
@@ -107,6 +110,9 @@
   --shadow-card-hover: 0 12px 32px rgba(0, 60, 113, 0.16);
   --shadow-nav: 0 2px 12px rgba(0, 60, 113, 0.1);
   --shadow-focus: 0 0 0 3px rgba(125, 185, 232, 0.6);
+  /* Stronger hover shadow for photo-heavy tiles (category cards), where the
+     regular --shadow-card-hover reads as too subtle against busy imagery. */
+  --shadow-category-hover: 0 16px 38px rgba(0, 40, 77, 0.28);
 
   /* --- Animations ------------------------------------------------------- */
   --animate-rotation: rotate 1600ms linear infinite;

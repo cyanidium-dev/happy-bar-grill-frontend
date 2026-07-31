@@ -62,9 +62,9 @@ export default function LocaleSwitcher() {
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="cursor-pointer flex items-center gap-[9px] outline-none xl:hover:text-red focus-visible:text-red transition duration-300 ease-in-out"
+        className="cursor-pointer flex items-center gap-[9px] outline-none text-navy xl:hover:text-red focus-visible:text-red transition duration-300 ease-in-out"
       >
-        <span className="text-[16px] lg:text-[14px] xl:text-[16px] font-medium leading-[125%] uppercase">
+        <span className="text-[16px] lg:text-[14px] xl:text-[16px] font-medium leading-[125%] uppercase text-navy">
           {currentLocale === "uk" ? "UA" : currentLocale}
         </span>
         <LocaleSwitcherArrowIcon

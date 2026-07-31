@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import Logo from "@/components/shared/logo/Logo";
-import LocaleSwitcher from "@/components/shared/LocaleSwitcher";
 import { buttonStyles, Sheen } from "@/components/shared/buttons/Button";
 import CloseIcon from "@/components/shared/icons/CloseIcon";
 import PhoneIcon from "@/components/shared/icons/PhoneIcon";
@@ -98,7 +97,6 @@ export default function MobileMenu({
               {PHONE}
             </span>
           </a>
-          <LocaleSwitcher />
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ import { useLocale } from "next-intl";
 import LocaleSwitcherArrowIcon from "./icons/LocaleSwitcherArrowIcon";
 import { cn } from "@/utils/cn";
 
-export default function LocaleSwitcher() {
+export default function LocaleSwitcher({ className }: { className?: string }) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const locales = routing.locales;
@@ -57,7 +57,7 @@ export default function LocaleSwitcher() {
 
   return (
     <div
-      className="relative ml-auto mt-1 lg:mt-0 lg:mb-[3px]"
+      className={cn("relative ml-auto mt-1 lg:mt-0 lg:mb-[3px]", className)}
       ref={dropdownRef}
     >
       <button

@@ -7,6 +7,7 @@ import CardMedia from "@/components/shared/cards/CardMedia";
 import DishDescription from "@/components/shared/cards/DishDescription";
 import PlusIcon from "@/components/shared/icons/PlusIcon";
 import type { Dish } from "@/types/content";
+import { cn } from "@/utils/cn";
 
 /**
  * Menu dish card, shared by the home "Popular" and "Promotions" sections and
@@ -17,10 +18,12 @@ import type { Dish } from "@/types/content";
 export default async function DishCard({
   dish,
   background,
+  className,
 }: {
   dish: Dish;
   /** Surface colour — pick whichever contrasts with the section background. */
   background?: "beige" | "white";
+  className?: string;
 }) {
   const t = await getTranslations("Product");
   const href = `/menu/${dish.categorySlug}/${dish.slug}`;
@@ -30,7 +33,7 @@ export default async function DishCard({
       as="article"
       interactive
       background={background}
-      className="flex h-full flex-col gap-3 p-3 sm:gap-4 sm:p-4"
+      className={cn("flex h-full flex-col gap-3 p-3 sm:gap-4 sm:p-4", className)}
     >
       <div className="flex items-stretch gap-3 sm:gap-4">
         <div className="flex min-w-0 flex-1 flex-col gap-2">

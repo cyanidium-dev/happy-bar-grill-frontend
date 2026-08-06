@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import Container from "@/components/shared/container/Container";
 import Logo from "@/components/shared/logo/Logo";
 import SectionWave from "@/components/shared/SectionWave";
 import InstagramIcon from "@/components/shared/icons/InstagramIcon";
@@ -17,6 +18,7 @@ import {
   TELEGRAM_URL,
   TIKTOK_URL,
 } from "@/constants/contacts";
+import { cn } from "@/utils/cn";
 
 const socials = [
   { url: INSTAGRAM_URL, label: "Instagram", Icon: InstagramIcon },
@@ -24,15 +26,15 @@ const socials = [
   { url: TIKTOK_URL, label: "TikTok", Icon: TiktokIcon },
 ];
 
-export default async function Footer() {
+export default async function Footer({ className }: { className?: string }) {
   const t = await getTranslations("Nav");
   const tf = await getTranslations("Footer");
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden bg-navy text-white">
+    <footer className={cn("relative overflow-hidden bg-navy text-white", className)}>
       <SectionWave from="white" />
-      <div className="container pb-14 pt-20 md:pb-16 md:pt-24">
+      <Container className="pb-14 pt-20 md:pb-16 md:pt-24">
         <div className="flex flex-col gap-10 lg:flex-row lg:justify-between">
           {/* Brand + socials */}
           <div className="flex flex-col gap-6">
@@ -136,7 +138,7 @@ export default async function Footer() {
             </p>
           </div>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

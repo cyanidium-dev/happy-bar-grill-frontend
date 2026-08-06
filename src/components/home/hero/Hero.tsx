@@ -1,9 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrapper";
 import Button from "@/components/shared/buttons/Button";
-import CardMedia from "@/components/shared/cards/CardMedia";
-import Chip from "@/components/shared/Chip";
-import CheckIcon from "@/components/shared/icons/CheckIcon";
+import Container from "@/components/shared/container/Container";
+import Image from "next/image";
 import PageTitle from "@/components/shared/titles/PageTitle";
 
 const heroImage =
@@ -21,63 +20,61 @@ const heroImage =
 export default async function Hero() {
   const t = await getTranslations("HomePage.hero");
 
-  const chips = [t("chips.delivery"), t("chips.portions"), t("chips.online")];
-
   return (
     <section
-      className="relative overflow-hidden bg-beige"
+      className="relative overflow-hidden rounded-b-[24px] lg:rounded-b-[36px]"
       style={{
         marginTop: "calc(var(--header-height) * -1)",
         paddingTop: "var(--header-height)",
       }}
     >
-      {/* Blue corner glow — echoes the site's navy brand colour, layered over
-          the flat beige fill instead of baked into a diagonal gradient. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-[-8rem] top-[-6rem] size-[32rem] rounded-full bg-navy/15 blur-3xl"
-      />
-      {/* Decorative depth glow behind the dish photo. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute right-[-6rem] top-1/4 size-[34rem] rounded-full bg-sand/25 blur-3xl"
-      />
-      <div className="container relative grid items-center gap-10 py-16 md:grid-cols-2 md:py-20 xl:py-24">
-        <AnimatedWrapper animation={{ x: -40 }} className="flex flex-col gap-6">
-          <div className="flex flex-col gap-3">
-            <span className="w-fit text-14semi uppercase tracking-[0.2em] text-red">
-              {t("eyebrow")}
-            </span>
-            <PageTitle>{t("title")}</PageTitle>
-          </div>
-          <p className="max-w-xl text-16reg text-graphite xl:text-18reg">
-            {t("description")}
-          </p>
-          <ul className="flex flex-wrap gap-2">
-            {chips.map((chip) => (
-              <li key={chip}>
-                <Chip variant="glass">
-                  <CheckIcon className="size-4 text-olive" />
-                  {chip}
-                </Chip>
-              </li>
-            ))}
-          </ul>
-          <Button href="/menu" size="lg" className="w-full sm:w-fit">
-            {t("cta")}
-          </Button>
-        </AnimatedWrapper>
-
-        <AnimatedWrapper animation={{ x: 40, delay: 0.15 }}>
-          <CardMedia
-            src={heroImage}
-            alt={t("imageAlt")}
-            className="aspect-[4/3] rounded-tl-2xl rounded-br-2xl shadow-card"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority
-          />
-        </AnimatedWrapper>
+      <div className="absolute -z-30 inset-0 bg-navy-dark" />
+      <div className="absolute -z-20 top-0 left-0 inset-0">
+        <Image
+          src="/images/home/hero/bg.webp"
+          alt={t("imageAlt")}
+          fill
+          className="object-cover"
+        />
       </div>
+      <Container className="relative grid items-center gap-10 py-[54px] md:grid-cols-2 md:py-20 xl:py-24">
+        <div className="flex flex-col gap-7 mb-[140px] lg:mb-[91px]">
+          {/* Own AnimatedWrapper (not the shared one below) so its `-z-15`
+              lands on the element that actually establishes the stacking
+              context (the `transform` here creates one). Nesting it on
+              PageTitle instead — inside the wrapper that groups all three
+              children — would trap the z-index inside that wrapper's own
+              context, where it can never out-rank the burger image's
+              `-z-10`, which lives one level up. */}
+          <AnimatedWrapper animation={{ x: -40 }} className="relative -z-15">
+            <PageTitle>{t("title")}</PageTitle>
+          </AnimatedWrapper>
+
+          <AnimatedWrapper animation={{ x: -40 }}>
+            <p className="max-w-[200px] lg:max-w-[181px] mb-1 text-12light text-white">
+              {t("description")}
+            </p>
+          </AnimatedWrapper>
+
+          <AnimatedWrapper animation={{ x: -40 }}>
+            <Button
+              href="/menu"
+              size="lg"
+              className="w-full sm:w-fit uppercase text-12bold font-findsans text-white"
+            >
+              {t("cta")}
+            </Button>
+          </AnimatedWrapper>
+        </div>
+        <div className="absolute -z-10 right-[-262px] bottom-[-62px] w-[590px] h-[508px] lg:w-[959px] lg:h-[827px]">
+          <Image
+            src="/images/home/hero/burger.webp"
+            alt={t("imageAlt")}
+            fill
+            className="object-cover"
+          />
+        </div>
+      </Container>
     </section>
   );
 }

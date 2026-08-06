@@ -15,9 +15,11 @@ import { cn } from "@/utils/cn";
 export default function MobileMenu({
   open,
   onClose,
+  className,
 }: {
   open: boolean;
   onClose: () => void;
+  className?: string;
 }) {
   const t = useTranslations("Nav");
   const th = useTranslations("Header");
@@ -39,7 +41,7 @@ export default function MobileMenu({
   }, [open, onClose]);
 
   return (
-    <div className="lg:hidden" aria-hidden={!open}>
+    <div className={cn("lg:hidden", className)} aria-hidden={!open}>
       <div
         onClick={onClose}
         className={cn(

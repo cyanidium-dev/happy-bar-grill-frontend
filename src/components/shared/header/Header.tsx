@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import Logo from "@/components/shared/logo/Logo";
 import LocaleSwitcher from "@/components/shared/LocaleSwitcher";
 import { buttonStyles, Sheen } from "@/components/shared/buttons/Button";
+import Container from "@/components/shared/container/Container";
 import PhoneIcon from "@/components/shared/icons/PhoneIcon";
 import CartButton from "./CartButton";
 import MobileMenu from "./MobileMenu";
@@ -25,7 +26,7 @@ import { cn } from "@/utils/cn";
  * every page can reserve the right amount of space below it (see the locale
  * layout and `Hero`, which cancels that space out to sit behind the header).
  */
-export default function Header() {
+export default function Header({ className }: { className?: string }) {
   const t = useTranslations("Nav");
   const th = useTranslations("Header");
   const [scrolled, setScrolled] = useState(false);
@@ -56,7 +57,10 @@ export default function Header() {
   }, []);
 
   return (
-    <header ref={headerRef} className="fixed inset-x-0 top-0 z-50 w-full">
+    <header
+      ref={headerRef}
+      className={cn("fixed inset-x-0 top-0 z-50 w-full", className)}
+    >
       {/* `backdrop-blur` lives on this inner div, not on the `<header>` itself:
           WebKit has a compositor bug where `backdrop-filter` on a
           `position: sticky` element breaks/glitches the sticky behaviour on
@@ -72,7 +76,7 @@ export default function Header() {
             : "border-transparent bg-transparent backdrop-blur-0",
         )}
       >
-        <div className="container flex items-center gap-4 py-3 md:py-4">
+        <Container className="flex items-center gap-4 py-3 md:py-4">
           <Logo className="text-20semi md:text-24semi" />
 
           <nav className="ml-8 hidden lg:block xl:ml-12">
@@ -139,7 +143,7 @@ export default function Header() {
               />
             </button>
           </div>
-        </div>
+        </Container>
       </div>
 
       <MobileMenu open={open} onClose={() => setOpen(false)} />

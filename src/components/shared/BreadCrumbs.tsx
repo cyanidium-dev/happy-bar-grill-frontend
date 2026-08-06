@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import Container from "@/components/shared/container/Container";
 import { cn } from "@/utils/cn";
 
 export type BreadCrumbItem = {
@@ -25,7 +26,7 @@ export default async function BreadCrumbs({
   const trail: BreadCrumbItem[] = [{ label: t("home"), href: "/" }, ...items];
 
   return (
-    <nav aria-label="Breadcrumb" className={cn("container pt-4 md:pt-6", className)}>
+    <Container as="nav" aria-label="Breadcrumb" className={cn("pt-4 md:pt-6", className)}>
       <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-14med text-grey-dark">
         {trail.map((item, index) => {
           const isLast = index === trail.length - 1;
@@ -54,6 +55,6 @@ export default async function BreadCrumbs({
           );
         })}
       </ol>
-    </nav>
+    </Container>
   );
 }

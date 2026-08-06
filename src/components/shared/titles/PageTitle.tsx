@@ -12,7 +12,7 @@ export default function PageTitle({
   return (
     <h1
       className={cn(
-        "font-findsans text-40bold uppercase text-navy xl:text-64bold",
+        "font-findsans text-32bold lg:text-48bold uppercase text-white",
         className,
       )}
     >

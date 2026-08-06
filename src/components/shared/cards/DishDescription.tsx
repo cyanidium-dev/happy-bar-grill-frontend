@@ -7,6 +7,7 @@ type DishDescriptionProps = {
   text: string;
   showMoreLabel: string;
   showLessLabel: string;
+  className?: string;
 };
 
 /**
@@ -23,6 +24,7 @@ export default function DishDescription({
   text,
   showMoreLabel,
   showLessLabel,
+  className,
 }: DishDescriptionProps) {
   const [expanded, setExpanded] = useState(false);
   const [measured, setMeasured] = useState(false);
@@ -54,7 +56,7 @@ export default function DishDescription({
   }, [text]);
 
   return (
-    <div className="relative flex flex-1 flex-col justify-center gap-1">
+    <div className={cn("relative flex flex-1 flex-col justify-center gap-1", className)}>
       <div
         className={cn(
           "overflow-hidden",

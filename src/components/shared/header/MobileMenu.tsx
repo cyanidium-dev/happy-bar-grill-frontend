@@ -55,30 +55,30 @@ export default function MobileMenu({
         aria-modal="true"
         aria-label={th("menu")}
         className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-[86%] max-w-sm flex-col bg-white shadow-2xl transition-transform duration-300 ease-out",
+          "fixed inset-y-0 right-0 z-50 flex w-[86%] max-w-sm flex-col bg-navy text-white shadow-2xl transition-transform duration-300 ease-out",
           open ? "translate-x-0" : "translate-x-full",
         )}
       >
-        <div className="flex items-center justify-between border-b border-navy/10 px-6 py-4">
-          <Logo className="h-9" onClick={onClose} />
+        <div className="flex items-center justify-between px-6">
+          <Logo onClick={onClose} />
           <button
             type="button"
             aria-label={th("closeMenu")}
             onClick={onClose}
-            className="flex size-10 items-center justify-center rounded-full text-navy transition-colors hover:text-red"
+            className="flex size-10 items-center justify-center rounded-full text-white transition-colors hover:text-red"
           >
             <CloseIcon className="size-6" />
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-6 py-4">
+        <nav className="flex-1 overflow-y-auto px-6 py-12">
           <ul className="flex flex-col">
             {navLinks.map(({ href, key }) => (
-              <li key={key} className="border-b border-navy/10">
+              <li key={key} className="border-b border-white/10">
                 <Link
                   href={href}
                   onClick={onClose}
-                  className="block py-4 text-20semi text-navy transition-colors hover:text-red"
+                  className="block py-4 text-20semi text-white transition-colors hover:text-red"
                 >
                   {t(key)}
                 </Link>
@@ -87,7 +87,7 @@ export default function MobileMenu({
           </ul>
         </nav>
 
-        <div className="flex flex-col gap-4 border-t border-navy/10 px-6 py-6">
+        <div className="flex flex-col gap-4 border-t border-white/10 px-6 py-6">
           <a
             href={`tel:${PHONE_HREF}`}
             onClick={onClose}

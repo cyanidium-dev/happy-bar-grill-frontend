@@ -124,19 +124,19 @@ export default function Header({ className }: { className?: string }) {
             >
               <span
                 className={cn(
-                  "block h-0.5 w-6 rounded-full bg-navy transition-transform duration-300",
+                  "block h-0.5 w-6 rounded-full bg-white transition-transform duration-300",
                   open && "translate-y-2 rotate-45",
                 )}
               />
               <span
                 className={cn(
-                  "block h-0.5 w-6 rounded-full bg-navy transition-opacity duration-300",
+                  "block h-0.5 w-6 rounded-full bg-white transition-opacity duration-300",
                   open && "opacity-0",
                 )}
               />
               <span
                 className={cn(
-                  "block h-0.5 w-6 rounded-full bg-navy transition-transform duration-300",
+                  "block h-0.5 w-6 rounded-full bg-white transition-transform duration-300",
                   open && "-translate-y-2 -rotate-45",
                 )}
               />

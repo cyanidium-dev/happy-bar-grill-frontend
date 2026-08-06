@@ -72,100 +72,111 @@ export default function Header({ className }: { className?: string }) {
   return (
     <header
       ref={headerRef}
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 w-full transition-transform duration-500 ease-out will-change-transform",
-        hidden && !open ? "-translate-y-full" : "translate-y-0",
-        className,
-      )}
+      className={cn("fixed inset-x-0 top-0 z-50 w-full", className)}
     >
-      {/* `backdrop-blur` lives on this inner div, not on the `<header>` itself:
-          WebKit has a compositor bug where `backdrop-filter` on a
-          `position: sticky` element breaks/glitches the sticky behaviour on
-          iOS Safari (works fine on Chrome, which is why it's easy to miss) —
-          keeping the blur on a plain child avoids relying on that behaviour.
-          The header starts fully transparent and fades in a white,
-          blurred background once the page is scrolled past 60px. */}
+      {/* The hide-on-scroll transform and the scrolled background live on two
+          separate nested divs, not on the `<header>` itself and not on the
+          same element, for two reasons:
+          1. A `transform` on the `<header>` itself would make it the
+             containing block for any `position: fixed` descendants —
+             including `MobileMenu`'s fullscreen overlay — sizing/placing
+             them relative to the header's small box instead of the
+             viewport, which clips the menu behind the page content.
+          2. Chromium/WebKit recreate an element's compositor layer whenever
+             its `backdrop-filter` toggles on/off. If that same element is
+             also mid-`transform` transition, the layer swap interrupts the
+             animation and the slide looks like an instant jump instead of
+             smooth motion. Keeping `transform` on its own wrapper (its own
+             stable compositor layer) and `backdrop-filter`/`background-color`
+             on an inner child avoids that fight entirely. */}
       <div
         className={cn(
-          "border-b transition-[background-color,backdrop-filter,box-shadow,border-color] duration-500 ease-out",
-          scrolled
-            ? "bg-navy-dark"
-            : "border-transparent bg-transparent backdrop-blur-0",
+          "transition-transform duration-500 ease-out will-change-transform",
+          hidden && !open ? "-translate-y-full" : "translate-y-0",
         )}
       >
-        <Container className="relative flex items-center gap-4">
-          <Logo className="" />
-          <nav className="ml-8 hidden lg:block xl:ml-12">
-            <ul className="flex items-center gap-6 xl:gap-8">
-              {navLinks.map(({ href, key }) => (
-                <li key={key}>
-                  <Link
-                    href={href}
-                    className="group relative inline-block text-14med text-white"
-                  >
-                    {t(key)}
-                    <span
-                      aria-hidden
-                      className="absolute inset-x-0 -bottom-1 h-0.5 origin-left scale-x-0 rounded-full bg-red transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100"
-                    />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+        <div
+          className={cn(
+            "border-b transition-[background-color,backdrop-filter,box-shadow,border-color] duration-500 ease-out",
+            scrolled
+              ? "bg-navy-dark"
+              : "border-transparent bg-transparent backdrop-blur-0",
+          )}
+        >
+          <Container className="relative flex items-center gap-4">
+            <Logo className="" />
+            <nav className="ml-8 hidden lg:block xl:ml-12">
+              <ul className="flex items-center gap-6 xl:gap-8">
+                {navLinks.map(({ href, key }) => (
+                  <li key={key}>
+                    <Link
+                      href={href}
+                      className="group relative inline-block text-14med text-white"
+                    >
+                      {t(key)}
+                      <span
+                        aria-hidden
+                        className="absolute inset-x-0 -bottom-1 h-0.5 origin-left scale-x-0 rounded-full bg-red transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                      />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
 
-          <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            <LocaleSwitcher />
+            <div className="ml-auto flex items-center gap-2 sm:gap-3">
+              <LocaleSwitcher />
 
-            <div className="hidden xl:block">
-              <a
-                href={`tel:${PHONE_HREF}`}
-                aria-label={PHONE}
-                className={buttonStyles({
-                  variant: "secondary",
-                  size: "sm",
-                  className:
-                    "border-white bg-white text-navy xl:hover:border-white xl:hover:bg-navy/30 xl:hover:text-white transition-colors duration-300 ease-in-out",
-                })}
+              <div className="hidden xl:block">
+                <a
+                  href={`tel:${PHONE_HREF}`}
+                  aria-label={PHONE}
+                  className={buttonStyles({
+                    variant: "secondary",
+                    size: "sm",
+                    className:
+                      "border-white bg-white text-navy xl:hover:border-white xl:hover:bg-navy/30 xl:hover:text-white transition-colors duration-300 ease-in-out",
+                  })}
+                >
+                  <Sheen />
+                  <span className="relative z-[1] inline-flex items-center gap-2">
+                    <PhoneIcon className="size-4" />
+                    {PHONE}
+                  </span>
+                </a>
+              </div>
+
+              <CartButton label={th("cart")} />
+
+              <button
+                type="button"
+                aria-label={open ? th("closeMenu") : th("openMenu")}
+                aria-expanded={open}
+                onClick={() => setOpen((v) => !v)}
+                className="flex size-10 flex-col items-center justify-center gap-1.5 lg:hidden"
               >
-                <Sheen />
-                <span className="relative z-[1] inline-flex items-center gap-2">
-                  <PhoneIcon className="size-4" />
-                  {PHONE}
-                </span>
-              </a>
+                <span
+                  className={cn(
+                    "block h-0.5 w-6 rounded-full bg-white transition-transform duration-300",
+                    open && "translate-y-2 rotate-45",
+                  )}
+                />
+                <span
+                  className={cn(
+                    "block h-0.5 w-6 rounded-full bg-white transition-opacity duration-300",
+                    open && "opacity-0",
+                  )}
+                />
+                <span
+                  className={cn(
+                    "block h-0.5 w-6 rounded-full bg-white transition-transform duration-300",
+                    open && "-translate-y-2 -rotate-45",
+                  )}
+                />
+              </button>
             </div>
-
-            <CartButton label={th("cart")} />
-
-            <button
-              type="button"
-              aria-label={open ? th("closeMenu") : th("openMenu")}
-              aria-expanded={open}
-              onClick={() => setOpen((v) => !v)}
-              className="flex size-10 flex-col items-center justify-center gap-1.5 lg:hidden"
-            >
-              <span
-                className={cn(
-                  "block h-0.5 w-6 rounded-full bg-white transition-transform duration-300",
-                  open && "translate-y-2 rotate-45",
-                )}
-              />
-              <span
-                className={cn(
-                  "block h-0.5 w-6 rounded-full bg-white transition-opacity duration-300",
-                  open && "opacity-0",
-                )}
-              />
-              <span
-                className={cn(
-                  "block h-0.5 w-6 rounded-full bg-white transition-transform duration-300",
-                  open && "-translate-y-2 -rotate-45",
-                )}
-              />
-            </button>
-          </div>
-        </Container>
+          </Container>
+        </div>
       </div>
 
       <MobileMenu open={open} onClose={() => setOpen(false)} />

@@ -72,7 +72,7 @@ export default function Header({ className }: { className?: string }) {
         className={cn(
           "border-b transition-[background-color,backdrop-filter,box-shadow,border-color] duration-500 ease-out",
           scrolled
-            ? "border-navy/10 bg-white/45 shadow-nav backdrop-blur"
+            ? "border-navy/10 bg-navy/65 shadow-nav backdrop-blur"
             : "border-transparent bg-transparent backdrop-blur-0",
         )}
       >

@@ -34,7 +34,7 @@ export default async function Hero() {
       <div className="absolute -z-20 top-0 left-0 inset-0">
         <Image
           src="/images/home/hero/bg.webp"
-          alt={t("imageAlt")}
+          alt={t("bgImageAlt")}
           fill
           className="object-cover object-[60%_50%]"
         />
@@ -69,7 +69,7 @@ export default async function Hero() {
         <div className="absolute -z-10 left-[69px] lg:left-[585px] bottom-[-254px] lg:bottom-[-294px] w-[590px] h-[508px] lg:w-[959px] lg:h-[827px]">
           <Image
             src="/images/home/hero/burger.webp"
-            alt={t("imageAlt")}
+            alt={t("burgerImageAlt")}
             fill
             className="object-cover"
           />
@@ -78,7 +78,7 @@ export default async function Hero() {
         <div className="lg:hidden absolute -z-5 left-[91px] bottom-[-332px] w-[550px] h-[432px]">
           <Image
             src="/images/home/hero/navy-ellipse-mob.svg"
-            alt={t("imageAlt")}
+            alt={t("ellipseMobileAlt")}
             fill
             className="object-cover"
           />
@@ -86,7 +86,7 @@ export default async function Hero() {
         <div className="hidden lg:block absolute -z-5 left-[590px] bottom-[-692px] w-[1331px] h-[900px]">
           <Image
             src="/images/home/hero/navy-ellipse-desk.svg"
-            alt={t("imageAlt")}
+            alt={t("ellipseDesktopAlt")}
             fill
             className="object-cover"
           />
@@ -94,7 +94,7 @@ export default async function Hero() {
         <div className="absolute -z-15 left-[-260px] bottom-[-532px] lg:left-[230px] xl:left-[371px] lg:bottom-[-442px] right-[-241px] bottom-[-242px] w-[1331px] h-[900px] mix-blend-plus-lighter">
           <Image
             src="/images/home/hero/lighter-small.svg"
-            alt={t("imageAlt")}
+            alt={t("lightingAlt")}
             fill
             className="object-cover"
           />

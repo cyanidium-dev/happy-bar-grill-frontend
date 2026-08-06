@@ -18,16 +18,14 @@ export default function Logo({
     <Link
       href="/"
       onClick={onClick}
-      aria-label="Happy Bar & Grill Paradise"
+      aria-label="Happy Bar"
       className={cn(
         "font-findsans uppercase leading-none tracking-tight whitespace-nowrap",
         className,
       )}
     >
       <span className="text-red">Happy</span>{" "}
-      <span className={light ? "text-white" : "text-navy"}>
-        Bar&nbsp;&amp;&nbsp;Grill
-      </span>
+      <span className={light ? "text-white" : "text-navy"}>Bar</span>
     </Link>
   );
 }

@@ -25,10 +25,9 @@ export default async function Hero() {
 
   return (
     <section
-      className="relative overflow-hidden rounded-b-[24px] lg:rounded-b-[36px]"
+      className="relative overflow-hidden rounded-b-[24px] lg:rounded-b-[36px] pt-[123px] pb-[54px] md:py-20 xl:py-24"
       style={{
         marginTop: "calc(var(--header-height) * -1)",
-        paddingTop: "var(--header-height)",
       }}
     >
       <div className="absolute -z-30 inset-0 bg-navy-dark" />
@@ -37,11 +36,11 @@ export default async function Hero() {
           src="/images/home/hero/bg.webp"
           alt={t("imageAlt")}
           fill
-          className="object-cover"
+          className="object-cover object-[60%_50%]"
         />
       </div>
-      <Container className="relative grid items-center gap-10 py-[54px] md:py-20 xl:py-24">
-        <div className="flex flex-col gap-7 mb-[140px] lg:mb-[91px]">
+      <Container className="relative items-center gap-10">
+        <div className="flex min-w-0 flex-col gap-7 mb-[140px] lg:mb-[91px]">
           <AnimatedWrapper animation={{ x: -40 }} className="relative -z-15">
             <PageTitle className="max-w-[301px] sm:max-w-[570px]">
               {t("title")}
@@ -64,16 +63,8 @@ export default async function Hero() {
             </Button>
           </AnimatedWrapper>
         </div>
-        <AnimatedWrapper animation={{ y: 24 }}>
-          <ul className="flex gap-3 overflow-x-auto">
-            {featuredDishes.map((dish) => (
-              <li key={dish.slug}>
-                <HeroDishCard dish={dish} />
-              </li>
-            ))}
-          </ul>
-        </AnimatedWrapper>
-        <div className="absolute -z-10 right-[-299px] bottom-[94px] w-[590px] h-[508px] lg:w-[959px] lg:h-[827px]">
+
+        <div className="absolute -z-10 right-[-299px] bottom-[-254px] w-[590px] h-[508px] lg:w-[959px] lg:h-[827px]">
           <Image
             src="/images/home/hero/burger.webp"
             alt={t("imageAlt")}
@@ -82,7 +73,7 @@ export default async function Hero() {
           />
         </div>
 
-        <div className="absolute -z-5 right-[-281px] bottom-[-42px] w-[550px] h-[432px]">
+        <div className="absolute -z-5 right-[-281px] bottom-[-332px] w-[550px] h-[432px]">
           <Image
             src="/images/home/hero/navy-ellipse-mob.svg"
             alt={t("imageAlt")}
@@ -91,6 +82,15 @@ export default async function Hero() {
           />
         </div>
       </Container>
+      <AnimatedWrapper animation={{ y: 24 }} className="min-w-0">
+        <ul className="flex min-w-0 gap-3 overflow-x-auto">
+          {featuredDishes.map((dish) => (
+            <li key={dish.slug}>
+              <HeroDishCard dish={dish} />
+            </li>
+          ))}
+        </ul>
+      </AnimatedWrapper>
     </section>
   );
 }

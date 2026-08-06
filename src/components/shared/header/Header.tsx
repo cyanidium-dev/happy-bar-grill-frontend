@@ -99,13 +99,17 @@ export default function Header({ className }: { className?: string }) {
 
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <LocaleSwitcher />
-            <CartButton label={th("cart")} />
 
             <div className="hidden xl:block">
               <a
                 href={`tel:${PHONE_HREF}`}
                 aria-label={PHONE}
-                className={buttonStyles({ variant: "secondary", size: "sm" })}
+                className={buttonStyles({
+                  variant: "secondary",
+                  size: "sm",
+                  className:
+                    "border-white bg-white text-navy xl:hover:border-white xl:hover:bg-navy/30 xl:hover:text-white transition-colors duration-300 ease-in-out",
+                })}
               >
                 <Sheen />
                 <span className="relative z-[1] inline-flex items-center gap-2">
@@ -114,6 +118,8 @@ export default function Header({ className }: { className?: string }) {
                 </span>
               </a>
             </div>
+
+            <CartButton label={th("cart")} />
 
             <button
               type="button"

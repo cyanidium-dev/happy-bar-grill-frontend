@@ -15,6 +15,8 @@ export type MetadataKey =
   | "blog"
   | "checkout"
   | "confirmation"
+  | "privacy"
+  | "offer"
   | "notFound";
 
 /**

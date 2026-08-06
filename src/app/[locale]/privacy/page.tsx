@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import LegalPage from "@/components/legal/LegalPage";
 import { buildPageMetadata } from "@/lib/metadata";
 import { privacyDoc } from "@/data/legal";
@@ -20,6 +21,9 @@ export default async function PrivacyPolicyPage({ params }: PageProps) {
   const t = await getTranslations("Metadata");
 
   return (
-    <LegalPage title={t("privacy.title")} doc={privacyDoc[locale as Locale]} />
+    <>
+      <BreadCrumbs items={[{ label: t("privacy.title") }]} />
+      <LegalPage title={t("privacy.title")} doc={privacyDoc[locale as Locale]} />
+    </>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import PagePlaceholder from "@/components/shared/PagePlaceholder";
 import { formatSlug } from "@/utils/formatSlug";
 import type { PageProps } from "@/types/page";
@@ -19,6 +20,19 @@ export default async function BlogArticlePage({ params }: BlogArticleProps) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
+  const t = await getTranslations("Metadata");
+  const articleTitle = formatSlug(slug);
+
   // Single article (hero + rich content) later; data comes from the CMS.
-  return <PagePlaceholder title={formatSlug(slug)} />;
+  return (
+    <>
+      <BreadCrumbs
+        items={[
+          { label: t("blog.title"), href: "/blog" },
+          { label: articleTitle },
+        ]}
+      />
+      <PagePlaceholder title={articleTitle} />
+    </>
+  );
 }

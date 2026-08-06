@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import PagePlaceholder from "@/components/shared/PagePlaceholder";
 import { formatSlug } from "@/utils/formatSlug";
 import type { PageProps } from "@/types/page";
@@ -19,6 +20,19 @@ export default async function MenuCategoryPage({ params }: MenuCategoryProps) {
   const { locale, category } = await params;
   setRequestLocale(locale);
 
+  const t = await getTranslations("Metadata");
+  const categoryTitle = formatSlug(category);
+
   // Dishes for this category (grid + add-to-cart, dish modal) later.
-  return <PagePlaceholder title={formatSlug(category)} />;
+  return (
+    <>
+      <BreadCrumbs
+        items={[
+          { label: t("menu.title"), href: "/menu" },
+          { label: categoryTitle },
+        ]}
+      />
+      <PagePlaceholder title={categoryTitle} />
+    </>
+  );
 }

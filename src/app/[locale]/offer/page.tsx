@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import LegalPage from "@/components/legal/LegalPage";
 import { buildPageMetadata } from "@/lib/metadata";
 import { offerDoc } from "@/data/legal";
@@ -19,5 +20,10 @@ export default async function PublicOfferPage({ params }: PageProps) {
 
   const t = await getTranslations("Metadata");
 
-  return <LegalPage title={t("offer.title")} doc={offerDoc[locale as Locale]} />;
+  return (
+    <>
+      <BreadCrumbs items={[{ label: t("offer.title") }]} />
+      <LegalPage title={t("offer.title")} doc={offerDoc[locale as Locale]} />
+    </>
+  );
 }

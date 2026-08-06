@@ -25,7 +25,7 @@ export default async function Hero() {
 
   return (
     <section
-      className="relative overflow-hidden rounded-b-[24px] lg:rounded-b-[36px] pt-[123px] pb-[54px] md:py-20 lg:pt-[150px] lg:pb-[38px]"
+      className="relative overflow-hidden rounded-b-[24px] lg:rounded-b-[36px] pt-[123px] pb-[54px] md:pt-30 lg:pt-[150px] md:pb-[38px]"
       style={{
         marginTop: "calc(var(--header-height) * -1)",
       }}
@@ -75,7 +75,7 @@ export default async function Hero() {
           />
         </div>
 
-        <div className="lg:hidden absolute -z-5 right-[-281px] bottom-[-332px] w-[550px] h-[432px]">
+        <div className="lg:hidden absolute -z-5 left-[91px] bottom-[-332px] w-[550px] h-[432px]">
           <Image
             src="/images/home/hero/navy-ellipse-mob.svg"
             alt={t("imageAlt")}
@@ -83,9 +83,17 @@ export default async function Hero() {
             className="object-cover"
           />
         </div>
-        <div className="hidden lg:block absolute -z-5 right-[-641px] bottom-[-692px] w-[1331px] h-[900px]">
+        <div className="hidden lg:block absolute -z-5 left-[590px] bottom-[-692px] w-[1331px] h-[900px]">
           <Image
             src="/images/home/hero/navy-ellipse-desk.svg"
+            alt={t("imageAlt")}
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="absolute -z-15 left-[-260px] bottom-[-532px] lg:left-[230px] xl:left-[371px] lg:bottom-[-442px] right-[-241px] bottom-[-242px] w-[1331px] h-[900px] mix-blend-plus-lighter">
+          <Image
+            src="/images/home/hero/lighter-small.svg"
             alt={t("imageAlt")}
             fill
             className="object-cover"

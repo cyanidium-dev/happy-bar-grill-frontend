@@ -43,7 +43,7 @@ export default async function HeroDishCard({
       </Link>
 
       <div className="flex min-w-0 flex-1 flex-col justify-between gap-1.5 py-1">
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-2.5">
           <Link href={href}>
             <h3 className="line-clamp-2 font-findsans text-12bold uppercase text-white">
               {dish.name}
@@ -67,7 +67,7 @@ export default async function HeroDishCard({
             size="icon"
             shape="pill"
             aria-label={t("addToCart")}
-            className="size-[27px] sm:size-[27px]"
+            className="size-[27px] sm:size-[27px] shrink-0"
           >
             <CartIcon className="size-4" />
           </Button>

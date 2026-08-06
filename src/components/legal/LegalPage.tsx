@@ -24,7 +24,7 @@ export default function LegalPage({
 
         {doc.sections.map((section, index) => (
           <section key={index} className="flex flex-col gap-3">
-            <h2 className="font-display text-24semi uppercase text-navy">
+            <h2 className="font-findsans text-24semi uppercase text-navy">
               {section.heading}
             </h2>
             {section.blocks.map((block, blockIndex) =>

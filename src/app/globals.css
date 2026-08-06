@@ -122,8 +122,9 @@
 /* Fonts are bound at runtime by next/font (variables set on <html>).
    `inline` makes utilities emit `font-family: var(--font-*)` directly. */
 @theme inline {
-  --font-sans: var(--font-montserrat), Arial, Helvetica, sans-serif;
-  --font-display: var(--font-oswald), "Oswald", Impact, sans-serif;
+  --font-montserrat: var(--font-montserrat), Arial, Helvetica, sans-serif;
+  --font-findsans:
+    var(--font-findsans), "FindSans Pro", Arial, Helvetica, sans-serif;
 }
 
 /* --- Semantic surface variables (used by base styles) ------------------ */
@@ -156,7 +157,7 @@
   body {
     background: var(--background);
     color: var(--foreground);
-    font-family: var(--font-sans);
+    font-family: var(--font-montserrat);
     font-size: 14px;
     line-height: 150%;
     position: relative;

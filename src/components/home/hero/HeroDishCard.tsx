@@ -26,13 +26,13 @@ export default async function HeroDishCard({
   return (
     <article
       className={cn(
-        "relative flex w-[250px] shrink-0 gap-3 rounded-[14px] bg-white/10 backdrop-blur-[48px] shadow-[inset_0px_4px_12.6px_rgba(255,255,255,0.22)] p-3 pl-2  sm:w-[270px]",
+        "relative flex shrink-0 gap-3 w-[279px] rounded-[14px] bg-white/10 backdrop-blur-[18px] shadow-[inset_0px_4px_12.6px_rgba(255,255,255,0.22)] p-3",
         className,
       )}
     >
       <Link
         href={href}
-        className="relative -my-4 aspect-square w-[104px] h-[107px] shrink-0 self-center overflow-hidden rounded-[7px] bg-white"
+        className="relative w-[104px] h-[107px] shrink-0 self-center overflow-hidden rounded-[7px] bg-white"
       >
         <CardMedia
           src={dish.image}
@@ -42,21 +42,22 @@ export default async function HeroDishCard({
         />
       </Link>
 
-      <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5 py-1">
-        <Link href={href}>
-          <h3 className="line-clamp-2 font-findsans text-12bold uppercase text-white">
-            {dish.name}
-          </h3>
-        </Link>
+      <div className="flex min-w-0 flex-1 flex-col justify-between gap-1.5 py-1">
+        <div className="flex flex-col gap-1.5">
+          <Link href={href}>
+            <h3 className="line-clamp-2 font-findsans text-12bold uppercase text-white">
+              {dish.name}
+            </h3>
+          </Link>
+          <p className="line-clamp-4 text-8light text-white">
+            {dish.description}
+          </p>
+        </div>
 
-        <p className="line-clamp-2 text-12light text-white/85">
-          {dish.description}
-        </p>
-
-        <div className="mt-1.5 flex items-center gap-2">
+        <div className="mt-1.5 flex items-center gap-1.5">
           <Link
             href={href}
-            className="inline-flex items-center whitespace-nowrap rounded-full bg-white px-3.5 py-2 text-10med uppercase tracking-wide text-navy transition-colors duration-300 xl:hover:bg-beige"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-white w-full text-center px-3.5 h-[27px] sm:h-[27px] text-8bold uppercase tracking-wide text-navy transition-colors duration-300 xl:hover:bg-beige"
           >
             {t("details")}
           </Link>
@@ -66,7 +67,7 @@ export default async function HeroDishCard({
             size="icon"
             shape="pill"
             aria-label={t("addToCart")}
-            className="ml-auto size-9"
+            className="size-[27px] sm:size-[27px]"
           >
             <CartIcon className="size-4" />
           </Button>

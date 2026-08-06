@@ -105,6 +105,12 @@
   --text-10med: 10px;
   --text-10med--font-weight: 500;
   --text-10med--line-height: 120%;
+  --text-8bold: 8px;
+  --text-8bold--font-weight: 700;
+  --text-8bold--line-height: 120%;
+  --text-8light: 8px;
+  --text-8light--font-weight: 300;
+  --text-8light--line-height: 120%;
 
   /* --- Radius ----------------------------------------------------------- */
   --radius-xs: 4px;

@@ -38,7 +38,7 @@ export default async function Footer({ className }: { className?: string }) {
         <div className="flex flex-col gap-10 lg:flex-row lg:justify-between">
           {/* Brand + socials */}
           <div className="flex flex-col gap-6">
-            <Logo className="text-32semi md:text-40bold" light />
+            <Logo className="h-14 md:h-16" />
             <ul className="flex items-center gap-4">
               {socials.map(({ url, label, Icon }) => (
                 <li key={label}>

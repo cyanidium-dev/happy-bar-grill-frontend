@@ -76,16 +76,15 @@ export default function Header({ className }: { className?: string }) {
             : "border-transparent bg-transparent backdrop-blur-0",
         )}
       >
-        <Container className="flex items-center gap-4 py-3 md:py-4">
-          <Logo className="text-20semi md:text-24semi" />
-
+        <Container className="relative flex items-center gap-4">
+          <Logo className="" />
           <nav className="ml-8 hidden lg:block xl:ml-12">
             <ul className="flex items-center gap-6 xl:gap-8">
               {navLinks.map(({ href, key }) => (
                 <li key={key}>
                   <Link
                     href={href}
-                    className="group relative inline-block text-16med text-navy"
+                    className="group relative inline-block text-14med text-white"
                   >
                     {t(key)}
                     <span

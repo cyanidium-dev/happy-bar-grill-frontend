@@ -60,7 +60,7 @@ export default function MobileMenu({
         )}
       >
         <div className="flex items-center justify-between border-b border-navy/10 px-6 py-4">
-          <Logo className="text-20semi" onClick={onClose} />
+          <Logo className="h-9" onClick={onClose} />
           <button
             type="button"
             aria-label={th("closeMenu")}

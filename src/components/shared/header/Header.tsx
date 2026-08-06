@@ -25,16 +25,29 @@ import { cn } from "@/utils/cn";
  * Its rendered height is published as the `--header-height` CSS variable so
  * every page can reserve the right amount of space below it (see the locale
  * layout and `Hero`, which cancels that space out to sit behind the header).
+ *
+ * It also hides itself (slides up) on scroll down and slides back into view
+ * on scroll up, so it doesn't stay in the way while reading the page.
  */
 export default function Header({ className }: { className?: string }) {
   const t = useTranslations("Nav");
   const th = useTranslations("Header");
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
+    const onScroll = () => {
+      const currentY = window.scrollY;
+      setScrolled(currentY > 60);
+
+      const isScrollingDown = currentY > lastScrollY.current;
+      setHidden(isScrollingDown && currentY > 100);
+
+      lastScrollY.current = currentY;
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -59,7 +72,11 @@ export default function Header({ className }: { className?: string }) {
   return (
     <header
       ref={headerRef}
-      className={cn("fixed inset-x-0 top-0 z-50 w-full", className)}
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 w-full transition-transform duration-500 ease-out will-change-transform",
+        hidden && !open ? "-translate-y-full" : "translate-y-0",
+        className,
+      )}
     >
       {/* `backdrop-blur` lives on this inner div, not on the `<header>` itself:
           WebKit has a compositor bug where `backdrop-filter` on a
@@ -72,7 +89,7 @@ export default function Header({ className }: { className?: string }) {
         className={cn(
           "border-b transition-[background-color,backdrop-filter,box-shadow,border-color] duration-500 ease-out",
           scrolled
-            ? "border-navy/10 bg-navy/65 shadow-nav backdrop-blur"
+            ? "bg-navy-dark"
             : "border-transparent bg-transparent backdrop-blur-0",
         )}
       >

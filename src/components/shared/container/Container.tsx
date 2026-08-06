@@ -29,7 +29,7 @@ export default function Container<T extends ElementType = "div">({
   return (
     <Tag
       className={cn(
-        "xs:max-w-full sm:max-w-[640px] md:max-w-3xl lg:max-w-5xl xl:max-w-7xl px-6 lg:px-15 mx-auto",
+        "xs:max-w-full sm:max-w-[640px] md:max-w-3xl lg:max-w-5xl xl:max-w-7xl px-6 lg:px-20 mx-auto",
         className,
       )}
       {...rest}

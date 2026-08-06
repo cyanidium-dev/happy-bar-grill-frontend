@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import PagePlaceholder from "@/components/shared/PagePlaceholder";
 import { formatSlug } from "@/utils/formatSlug";
 import type { PageProps } from "@/types/page";
@@ -16,10 +17,25 @@ export async function generateMetadata({
 }
 
 export default async function DishPage({ params }: DishProps) {
-  const { locale, dish } = await params;
+  const { locale, category, dish } = await params;
   setRequestLocale(locale);
+
+  const t = await getTranslations("Metadata");
+  const categoryTitle = formatSlug(category);
+  const dishTitle = formatSlug(dish);
 
   // Single dish page (gallery, description, weight, price, add-to-cart) later;
   // data comes from the CMS, resolved by the `[category]`/`[dish]` slugs.
-  return <PagePlaceholder title={formatSlug(dish)} />;
+  return (
+    <>
+      <BreadCrumbs
+        items={[
+          { label: t("menu.title"), href: "/menu" },
+          { label: categoryTitle, href: `/menu/${category}` },
+          { label: dishTitle },
+        ]}
+      />
+      <PagePlaceholder title={dishTitle} />
+    </>
+  );
 }

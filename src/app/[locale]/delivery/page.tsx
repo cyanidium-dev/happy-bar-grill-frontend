@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import PagePlaceholder from "@/components/shared/PagePlaceholder";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
@@ -17,5 +18,10 @@ export default async function DeliveryPage({ params }: PageProps) {
 
   const t = await getTranslations("Metadata");
 
-  return <PagePlaceholder title={t("delivery.title")} />;
+  return (
+    <>
+      <BreadCrumbs items={[{ label: t("delivery.title") }]} />
+      <PagePlaceholder title={t("delivery.title")} />
+    </>
+  );
 }

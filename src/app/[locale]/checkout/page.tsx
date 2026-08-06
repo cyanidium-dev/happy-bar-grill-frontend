@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import PagePlaceholder from "@/components/shared/PagePlaceholder";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
@@ -18,5 +19,10 @@ export default async function CheckoutPage({ params }: PageProps) {
   const t = await getTranslations("Metadata");
 
   // Single-page order flow (cart summary + order form) later.
-  return <PagePlaceholder title={t("checkout.title")} />;
+  return (
+    <>
+      <BreadCrumbs items={[{ label: t("checkout.title") }]} />
+      <PagePlaceholder title={t("checkout.title")} />
+    </>
+  );
 }

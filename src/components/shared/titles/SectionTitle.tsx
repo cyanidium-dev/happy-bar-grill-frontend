@@ -19,7 +19,7 @@ export default function SectionTitle({
   return (
     <Tag
       className={cn(
-        "font-display text-28semi uppercase xl:text-40bold",
+        "font-findsans text-28semi uppercase xl:text-40bold",
         variant === "white" ? "text-white" : "text-navy",
         className,
       )}

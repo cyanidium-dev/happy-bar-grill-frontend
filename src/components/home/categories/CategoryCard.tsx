@@ -31,7 +31,7 @@ export default function CategoryCard({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent transition-colors duration-300 xl:group-hover:from-black/85" />
           <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 px-4 py-1 lg:p-4">
-            <h3 className="font-display text-16semi xl:text-20semi uppercase text-white transition-transform duration-300 xl:group-hover:-translate-y-0.5 xl:text-24semi">
+            <h3 className="font-findsans text-16semi xl:text-20semi uppercase text-white transition-transform duration-300 xl:group-hover:-translate-y-0.5 xl:text-24semi">
               {label}
             </h3>
             <span

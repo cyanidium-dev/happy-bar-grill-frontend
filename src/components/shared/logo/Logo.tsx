@@ -20,7 +20,7 @@ export default function Logo({
       onClick={onClick}
       aria-label="Happy Bar & Grill Paradise"
       className={cn(
-        "font-display uppercase leading-none tracking-tight whitespace-nowrap",
+        "font-findsans uppercase leading-none tracking-tight whitespace-nowrap",
         className,
       )}
     >

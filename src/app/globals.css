@@ -51,9 +51,15 @@
   --text-32semi: 32px;
   --text-32semi--font-weight: 600;
   --text-32semi--line-height: 120%;
+  --text-28bold: 28px;
+  --text-28bold--font-weight: 700;
+  --text-28bold--line-height: 120%;
   --text-28semi: 28px;
   --text-28semi--font-weight: 600;
   --text-28semi--line-height: 120%;
+  --text-24bold: 24px;
+  --text-24bold--font-weight: 700;
+  --text-24bold--line-height: 120%;
   --text-24semi: 24px;
   --text-24semi--font-weight: 600;
   --text-24semi--line-height: 120%;

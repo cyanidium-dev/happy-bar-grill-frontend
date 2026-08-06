@@ -1,10 +1,11 @@
 import { getTranslations } from "next-intl/server";
 import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrapper";
 import Button from "@/components/shared/buttons/Button";
-import CardMedia from "@/components/shared/cards/CardMedia";
-import Chip from "@/components/shared/Chip";
-import CheckIcon from "@/components/shared/icons/CheckIcon";
+import Container from "@/components/shared/container/Container";
+import HeroDishCard from "@/components/home/hero/HeroDishCard";
+import Image from "next/image";
 import PageTitle from "@/components/shared/titles/PageTitle";
+import { popularDishes } from "@/data/home";
 
 const heroImage =
   "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=80";
@@ -20,64 +21,97 @@ const heroImage =
  */
 export default async function Hero() {
   const t = await getTranslations("HomePage.hero");
-
-  const chips = [t("chips.delivery"), t("chips.portions"), t("chips.online")];
+  const featuredDishes = popularDishes.slice(0, 3);
 
   return (
     <section
-      className="relative overflow-hidden bg-beige"
+      className="relative overflow-hidden rounded-b-[24px] lg:rounded-b-[36px] pt-[123px] pb-[54px] md:pt-30 lg:pt-[150px] md:pb-[38px]"
       style={{
         marginTop: "calc(var(--header-height) * -1)",
-        paddingTop: "var(--header-height)",
       }}
     >
-      {/* Blue corner glow — echoes the site's navy brand colour, layered over
-          the flat beige fill instead of baked into a diagonal gradient. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-[-8rem] top-[-6rem] size-[32rem] rounded-full bg-navy/15 blur-3xl"
-      />
-      {/* Decorative depth glow behind the dish photo. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute right-[-6rem] top-1/4 size-[34rem] rounded-full bg-sand/25 blur-3xl"
-      />
-      <div className="container relative grid items-center gap-10 py-16 md:grid-cols-2 md:py-20 xl:py-24">
-        <AnimatedWrapper animation={{ x: -40 }} className="flex flex-col gap-6">
-          <div className="flex flex-col gap-3">
-            <span className="w-fit text-14semi uppercase tracking-[0.2em] text-red">
-              {t("eyebrow")}
-            </span>
-            <PageTitle>{t("title")}</PageTitle>
-          </div>
-          <p className="max-w-xl text-16reg text-graphite xl:text-18reg">
-            {t("description")}
-          </p>
-          <ul className="flex flex-wrap gap-2">
-            {chips.map((chip) => (
-              <li key={chip}>
-                <Chip variant="glass">
-                  <CheckIcon className="size-4 text-olive" />
-                  {chip}
-                </Chip>
-              </li>
-            ))}
-          </ul>
-          <Button href="/menu" size="lg" className="w-full sm:w-fit">
-            {t("cta")}
-          </Button>
-        </AnimatedWrapper>
-
-        <AnimatedWrapper animation={{ x: 40, delay: 0.15 }}>
-          <CardMedia
-            src={heroImage}
-            alt={t("imageAlt")}
-            className="aspect-[4/3] rounded-tl-2xl rounded-br-2xl shadow-card"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority
-          />
-        </AnimatedWrapper>
+      <div className="absolute -z-30 inset-0 bg-navy-dark" />
+      <div className="absolute -z-20 top-0 left-0 inset-0">
+        <Image
+          src="/images/home/hero/bg.webp"
+          alt={t("bgImageAlt")}
+          fill
+          className="object-cover object-[60%_50%]"
+        />
       </div>
+      <Container className="relative items-center gap-10">
+        <div className="flex min-w-0 flex-col gap-7 mb-[140px] xs:mb-[91px]">
+          <AnimatedWrapper animation={{ x: -40 }} className="relative -z-15">
+            <PageTitle className="max-w-[301px] sm:max-w-[570px]">
+              {t("title")}
+            </PageTitle>
+          </AnimatedWrapper>
+
+          <div className="flex flex-col gap-10 lg:flex-row-reverse lg:justify-between lg:items-center lg:max-w-[460px]">
+            {" "}
+            <AnimatedWrapper animation={{ x: 40 }}>
+              <p className="max-w-[200px] lg:max-w-[181px] mb-1 text-12light text-white">
+                {t("description")}
+              </p>
+            </AnimatedWrapper>
+            <AnimatedWrapper animation={{ x: -40 }}>
+              <Button
+                href="/menu"
+                size="lg"
+                className="w-full xs:w-fit uppercase text-12bold font-findsans text-white"
+              >
+                {t("cta")}
+              </Button>
+            </AnimatedWrapper>
+          </div>
+        </div>
+
+        <div className="absolute -z-10 left-[69px] lg:left-[585px] bottom-[-254px] lg:bottom-[-294px] w-[590px] h-[508px] lg:w-[959px] lg:h-[827px]">
+          <Image
+            src="/images/home/hero/burger.webp"
+            alt={t("burgerImageAlt")}
+            fill
+            className="object-cover"
+          />
+        </div>
+
+        <div className="lg:hidden absolute -z-5 left-[91px] bottom-[-332px] w-[550px] h-[432px]">
+          <Image
+            src="/images/home/hero/navy-ellipse-mob.svg"
+            alt={t("ellipseMobileAlt")}
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="hidden lg:block absolute -z-5 left-[590px] bottom-[-692px] w-[1331px] h-[900px]">
+          <Image
+            src="/images/home/hero/navy-ellipse-desk.svg"
+            alt={t("ellipseDesktopAlt")}
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="absolute -z-15 left-[-260px] bottom-[-532px] lg:left-[230px] xl:left-[371px] lg:bottom-[-442px] right-[-241px] bottom-[-242px] w-[1331px] h-[900px] mix-blend-plus-lighter">
+          <Image
+            src="/images/home/hero/lighter-small.svg"
+            alt={t("lightingAlt")}
+            fill
+            className="object-cover"
+          />
+        </div>
+      </Container>
+      <AnimatedWrapper
+        animation={{ y: 24 }}
+        className="min-w-0 xs:max-w-full lg:max-w-[1024px] xl:max-w-[1280px] lg:px-20 sm:ml-[calc(50%-320px)] md:ml-[calc(50%-384px)] lg:ml-[calc(50%-512px)] xl:ml-[calc(50%-640px)] mx-auto"
+      >
+        <ul className="flex min-w-0 gap-3 overflow-x-auto pl-6 lg:pl-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {featuredDishes.map((dish) => (
+            <li key={dish.slug}>
+              <HeroDishCard dish={dish} />
+            </li>
+          ))}
+        </ul>
+      </AnimatedWrapper>
     </section>
   );
 }

@@ -7,7 +7,7 @@ import { useLocale } from "next-intl";
 import LocaleSwitcherArrowIcon from "./icons/LocaleSwitcherArrowIcon";
 import { cn } from "@/utils/cn";
 
-export default function LocaleSwitcher() {
+export default function LocaleSwitcher({ className }: { className?: string }) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const locales = routing.locales;
@@ -57,18 +57,18 @@ export default function LocaleSwitcher() {
 
   return (
     <div
-      className="relative ml-auto mt-1 lg:mt-0 lg:mb-[3px]"
+      className={cn("relative ml-auto mt-1 lg:mt-0 lg:mb-[3px]", className)}
       ref={dropdownRef}
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="cursor-pointer flex items-center gap-[9px] outline-none text-navy xl:hover:text-red focus-visible:text-red transition duration-300 ease-in-out"
+        className="cursor-pointer outline-none flex items-center gap-[9px] outline-none text-navy xl:hover:text-red focus-visible:text-red transition duration-300 ease-in-out"
       >
-        <span className="text-[16px] lg:text-[14px] xl:text-[16px] font-medium leading-[125%] uppercase text-navy">
+        <span className="text-[16px] lg:text-[14px] xl:text-[16px] font-medium leading-[125%] uppercase text-white">
           {currentLocale === "uk" ? "UA" : currentLocale}
         </span>
         <LocaleSwitcherArrowIcon
-          className={`size-3 xl:size-4 mb-[1px] ${
+          className={`size-3 xl:size-4 mb-[1px] text-white ${
             isOpen ? "rotate-180" : "rotate-0"
           } transition duration-300 ease-in-out`}
         />
@@ -80,7 +80,7 @@ export default function LocaleSwitcher() {
       <div
         aria-hidden={!isOpen}
         className={cn(
-          "absolute right-0 mt-1 w-[65px] xl:w-[72px] rounded-[8px] bg-white shadow-md z-50 transition-all duration-300 ease-in-out",
+          "absolute right-0 mt-1 w-[65px] xl:w-[72px] rounded-[8px] bg-white shadow-md z-50 transition duration-300 ease-in-out",
           isOpen
             ? "translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-[10px] opacity-0",

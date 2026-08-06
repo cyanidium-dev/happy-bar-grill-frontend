@@ -1,5 +1,6 @@
 import type { ElementType, ReactNode } from "react";
 import { cn } from "@/utils/cn";
+import Container from "@/components/shared/container/Container";
 import SectionWave from "@/components/shared/SectionWave";
 
 type Background = "white" | "beige" | "navy";
@@ -83,14 +84,14 @@ export default function Section({
         />
       ))}
       {waveTop && <SectionWave from={waveTop} flip={waveFlip} />}
-      <div
+      <Container
         className={cn(
-          "container relative pb-12 pt-28 md:pb-16 md:pt-32 xl:pb-24 xl:pt-40",
+          "relative pb-12 pt-28 md:pb-16 md:pt-32 xl:pb-24 xl:pt-40",
           containerClassName,
         )}
       >
         {children}
-      </div>
+      </Container>
     </Tag>
   );
 }

@@ -13,11 +13,7 @@ export default async function Categories() {
   const t = await getTranslations("HomePage.categories");
 
   return (
-    <Section
-      background="white"
-      accent="coolRight"
-      waveTop="beige"
-    >
+    <Section background="white" accent="coolRight">
       <AnimatedWrapper className="flex flex-col gap-3">
         <SectionTitle>{t("title")}</SectionTitle>
         <p className="max-w-2xl text-16reg text-graphite">{t("text")}</p>

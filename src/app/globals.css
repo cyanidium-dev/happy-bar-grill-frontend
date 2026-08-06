@@ -13,7 +13,7 @@
 
   /* --- Brand: classic scheme ------------------------------------------- */
   --color-navy: #003c71; /* Морський синій — основний бренд-колір */
-  --color-navy-dark: #002a50; /* hover / pressed для navy */
+  --color-navy-dark: #002755; /* hover / pressed для navy */
   --color-red: #e31e26; /* Фірмовий червоний — акцент, CTA, промо */
   --color-red-dark: #c21a20; /* hover / pressed для red */
   --color-beige: #f3e9d5; /* Тепле бежеве — теплі секції / поверхні */
@@ -45,6 +45,9 @@
   --text-36semi: 36px;
   --text-36semi--font-weight: 600;
   --text-36semi--line-height: 120%;
+  --text-32bold: 32px;
+  --text-32bold--font-weight: 700;
+  --text-32bold--line-height: 120%;
   --text-32semi: 32px;
   --text-32semi--font-weight: 600;
   --text-32semi--line-height: 120%;
@@ -87,15 +90,27 @@
   --text-14reg: 14px;
   --text-14reg--font-weight: 400;
   --text-14reg--line-height: 120%;
+  --text-12bold: 12px;
+  --text-12bold--font-weight: 700;
+  --text-12bold--line-height: 120%;
   --text-12semi: 12px;
   --text-12semi--font-weight: 600;
   --text-12semi--line-height: 120%;
   --text-12med: 12px;
   --text-12med--font-weight: 500;
   --text-12med--line-height: 120%;
+  --text-12light: 12px;
+  --text-12light--font-weight: 300;
+  --text-12light--line-height: 120%;
   --text-10med: 10px;
   --text-10med--font-weight: 500;
   --text-10med--line-height: 120%;
+  --text-8bold: 8px;
+  --text-8bold--font-weight: 700;
+  --text-8bold--line-height: 120%;
+  --text-8light: 8px;
+  --text-8light--font-weight: 300;
+  --text-8light--line-height: 120%;
 
   /* --- Radius ----------------------------------------------------------- */
   --radius-xs: 4px;
@@ -200,6 +215,17 @@
     .container {
       padding-inline: 70px;
     }
+  }
+
+  /* Horizontal scroll rows (e.g. hero dish cards) — keep the swipe gesture,
+     hide the scrollbar so it doesn't read like a desktop widget. */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
 

@@ -1,5 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import CartIcon from "@/components/shared/icons/CartIcon";
+import { cn } from "@/utils/cn";
 
 /**
  * Cart entry point. Links to the single-page checkout. `count` drives the
@@ -8,17 +9,22 @@ import CartIcon from "@/components/shared/icons/CartIcon";
 export default function CartButton({
   label,
   count = 0,
+  className,
 }: {
   label: string;
   count?: number;
+  className?: string;
 }) {
   return (
     <Link
       href="/checkout"
       aria-label={label}
-      className="relative flex size-11 items-center justify-center rounded-full text-navy transition-colors duration-300 hover:text-red focus-visible:text-red"
+      className={cn(
+        "relative flex size-8 lg:size-[41px] items-center justify-center rounded-full bg-red transition-colors duration-300 hover:text-red focus-visible:text-red",
+        className,
+      )}
     >
-      <CartIcon className="size-6" />
+      <CartIcon className="size-4.5 lg:size-6 text-white" />
       {count > 0 && (
         <span className="absolute -right-0.5 -top-0.5 flex min-w-5 items-center justify-center rounded-full bg-red px-1 text-10med text-white">
           {count}

@@ -100,21 +100,41 @@ export default async function Footer() {
           </ul>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-white/15 pt-6 text-14reg text-white/70 md:flex-row md:items-center md:justify-between">
-          <p>
-            © {year} Happy Bar &amp; Grill Paradise. {tf("rights")}.
-          </p>
-          <p>
-            {tf("developedBy")} —{" "}
-            <a
-              href={DEVELOPER_URL}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-              className="text-white transition-colors duration-300 hover:text-red"
+        <div className="mt-12 flex flex-col gap-4 border-t border-white/15 pt-6 text-14reg text-white/70">
+          <nav
+            aria-label="Правова інформація"
+            className="flex flex-wrap gap-x-6 gap-y-2"
+          >
+            <Link
+              href="/privacy"
+              className="transition-colors duration-300 hover:text-red"
             >
-              {DEVELOPER_NAME}
-            </a>
-          </p>
+              {tf("privacy")}
+            </Link>
+            <Link
+              href="/offer"
+              className="transition-colors duration-300 hover:text-red"
+            >
+              {tf("offer")}
+            </Link>
+          </nav>
+
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <p>
+              © {year} Happy Bar &amp; Grill Paradise. {tf("rights")}.
+            </p>
+            <p>
+              {tf("developedBy")} —{" "}
+              <a
+                href={DEVELOPER_URL}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                className="text-white transition-colors duration-300 hover:text-red"
+              >
+                {DEVELOPER_NAME}
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>

@@ -210,6 +210,17 @@
       padding-inline: 70px;
     }
   }
+
+  /* Horizontal scroll rows (e.g. hero dish cards) — keep the swipe gesture,
+     hide the scrollbar so it doesn't read like a desktop widget. */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* =============================================================================

@@ -2,8 +2,10 @@ import { getTranslations } from "next-intl/server";
 import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrapper";
 import Button from "@/components/shared/buttons/Button";
 import Container from "@/components/shared/container/Container";
+import HeroDishCard from "@/components/home/hero/HeroDishCard";
 import Image from "next/image";
 import PageTitle from "@/components/shared/titles/PageTitle";
+import { popularDishes } from "@/data/home";
 
 const heroImage =
   "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=80";
@@ -19,6 +21,7 @@ const heroImage =
  */
 export default async function Hero() {
   const t = await getTranslations("HomePage.hero");
+  const featuredDishes = popularDishes.slice(0, 3);
 
   return (
     <section
@@ -37,20 +40,15 @@ export default async function Hero() {
           className="object-cover"
         />
       </div>
-      <Container className="relative grid items-center gap-10 py-[54px] md:grid-cols-2 md:py-20 xl:py-24">
+      <Container className="relative grid items-center gap-10 py-[54px] md:py-20 xl:py-24">
         <div className="flex flex-col gap-7 mb-[140px] lg:mb-[91px]">
-          {/* Own AnimatedWrapper (not the shared one below) so its `-z-15`
-              lands on the element that actually establishes the stacking
-              context (the `transform` here creates one). Nesting it on
-              PageTitle instead — inside the wrapper that groups all three
-              children — would trap the z-index inside that wrapper's own
-              context, where it can never out-rank the burger image's
-              `-z-10`, which lives one level up. */}
           <AnimatedWrapper animation={{ x: -40 }} className="relative -z-15">
-            <PageTitle>{t("title")}</PageTitle>
+            <PageTitle className="max-w-[301px] sm:max-w-[570px]">
+              {t("title")}
+            </PageTitle>
           </AnimatedWrapper>
 
-          <AnimatedWrapper animation={{ x: -40 }}>
+          <AnimatedWrapper animation={{ x: 40 }}>
             <p className="max-w-[200px] lg:max-w-[181px] mb-1 text-12light text-white">
               {t("description")}
             </p>
@@ -66,9 +64,27 @@ export default async function Hero() {
             </Button>
           </AnimatedWrapper>
         </div>
-        <div className="absolute -z-10 right-[-262px] bottom-[-62px] w-[590px] h-[508px] lg:w-[959px] lg:h-[827px]">
+        <AnimatedWrapper animation={{ y: 24 }}>
+          <ul className="flex gap-3 overflow-x-auto">
+            {featuredDishes.map((dish) => (
+              <li key={dish.slug}>
+                <HeroDishCard dish={dish} />
+              </li>
+            ))}
+          </ul>
+        </AnimatedWrapper>
+        <div className="absolute -z-10 right-[-299px] bottom-[94px] w-[590px] h-[508px] lg:w-[959px] lg:h-[827px]">
           <Image
             src="/images/home/hero/burger.webp"
+            alt={t("imageAlt")}
+            fill
+            className="object-cover"
+          />
+        </div>
+
+        <div className="absolute -z-5 right-[-281px] bottom-[-42px] w-[550px] h-[432px]">
+          <Image
+            src="/images/home/hero/navy-ellipse-mob.svg"
             alt={t("imageAlt")}
             fill
             className="object-cover"

@@ -104,6 +104,7 @@
   },
   "Product": {
     "addToCart": "Добавить в корзину",
+    "details": "Подробнее",
     "currency": "грн",
     "weightUnit": "г",
     "rating": "Оценка {value} из 5",

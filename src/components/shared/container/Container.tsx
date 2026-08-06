@@ -27,7 +27,13 @@ export default function Container<T extends ElementType = "div">({
   const Tag = as || "div";
 
   return (
-    <Tag className={cn("container", className)} {...rest}>
+    <Tag
+      className={cn(
+        "xs:max-w-full sm:max-w-[640px] md:max-w-3xl lg:max-w-5xl xl:max-w-7xl px-6 lg:px-15 mx-auto",
+        className,
+      )}
+      {...rest}
+    >
       {children}
     </Tag>
   );

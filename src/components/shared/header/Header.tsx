@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import Logo from "@/components/shared/logo/Logo";
 import LocaleSwitcher from "@/components/shared/LocaleSwitcher";
 import { buttonStyles, Sheen } from "@/components/shared/buttons/Button";
@@ -17,10 +17,10 @@ import { cn } from "@/utils/cn";
 /**
  * Floating header: logo, desktop nav, language switcher, cart and phone, plus
  * the mobile burger + slide-in menu. It's `fixed` (not `sticky`) so it floats
- * *over* the page — the Hero section renders behind it with its own
- * background, visible through the header while it's transparent. The header
- * gains a solid blurred white background and shadow once the page is
- * scrolled past 60px (bravo's scroll behaviour, adapted to a light UI).
+ * *over* the page — on the home page the Hero renders behind it with its own
+ * background, visible through the header while it's transparent. On every
+ * other page the header is solid `navy-dark` from the start. On home it
+ * gains a solid navy-dark background once scrolled past 60px.
  *
  * Its rendered height is published as the `--header-height` CSS variable so
  * every page can reserve the right amount of space below it (see the locale
@@ -32,11 +32,14 @@ import { cn } from "@/utils/cn";
 export default function Header({ className }: { className?: string }) {
   const t = useTranslations("Nav");
   const th = useTranslations("Header");
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const lastScrollY = useRef(0);
+  const solid = !isHome || scrolled;
 
   useEffect(() => {
     const onScroll = () => {
@@ -98,7 +101,7 @@ export default function Header({ className }: { className?: string }) {
         <div
           className={cn(
             "border-b transition-[background-color,backdrop-filter,box-shadow,border-color] duration-500 ease-out",
-            scrolled
+            solid
               ? "bg-navy-dark"
               : "border-transparent bg-transparent backdrop-blur-0",
           )}

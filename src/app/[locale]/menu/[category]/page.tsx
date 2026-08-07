@@ -1,38 +1,50 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { notFound } from "next/navigation";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
-import PagePlaceholder from "@/components/shared/PagePlaceholder";
-import { formatSlug } from "@/utils/formatSlug";
+import MenuView from "@/components/menu/MenuView";
+import { getCategories, getCategoryBySlug } from "@/data/menu";
 import type { PageProps } from "@/types/page";
 
 type MenuCategoryProps = PageProps<{ category: string }>;
 
-// Metadata will come from the CMS category document later; the slug is a
-// temporary, SEO-safe stand-in.
+// Pre-render every known category (dynamic slugs still 404 via notFound below).
+// Slugs are language-agnostic — pass a fixed locale for generateStaticParams.
+export async function generateStaticParams() {
+  const categories = await getCategories("uk");
+  return categories.map((category) => ({ category: category.slug }));
+}
+
 export async function generateMetadata({
   params,
 }: MenuCategoryProps): Promise<Metadata> {
-  const { category } = await params;
-  return { title: formatSlug(category) };
+  const { locale, category } = await params;
+  setRequestLocale(locale);
+
+  const found = await getCategoryBySlug(category, locale);
+  if (!found) return {};
+
+  return { title: found.name };
 }
 
 export default async function MenuCategoryPage({ params }: MenuCategoryProps) {
   const { locale, category } = await params;
   setRequestLocale(locale);
 
-  const t = await getTranslations("Metadata");
-  const categoryTitle = formatSlug(category);
+  const found = await getCategoryBySlug(category, locale);
+  if (!found) notFound();
 
-  // Dishes for this category (grid + add-to-cart, dish modal) later.
+  const tMenu = await getTranslations("Metadata");
+
   return (
     <>
       <BreadCrumbs
         items={[
-          { label: t("menu.title"), href: "/menu" },
-          { label: categoryTitle },
+          { label: tMenu("menu.title"), href: "/menu" },
+          { label: found.name },
         ]}
       />
-      <PagePlaceholder title={categoryTitle} />
+      <MenuView activeSlug={category} />
     </>
   );
 }

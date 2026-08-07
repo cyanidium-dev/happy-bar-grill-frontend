@@ -1,41 +1,47 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { notFound } from "next/navigation";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import PagePlaceholder from "@/components/shared/PagePlaceholder";
-import { formatSlug } from "@/utils/formatSlug";
+import { getCategoryBySlug, getDishBySlug } from "@/data/menu";
 import type { PageProps } from "@/types/page";
 
 type DishProps = PageProps<{ category: string; dish: string }>;
 
-// Metadata will come from the CMS dish document later (name, description,
-// price, image → OpenGraph); the slug is a temporary, SEO-safe stand-in.
 export async function generateMetadata({
   params,
 }: DishProps): Promise<Metadata> {
-  const { dish } = await params;
-  return { title: formatSlug(dish) };
+  const { locale, category, dish } = await params;
+  setRequestLocale(locale);
+
+  const found = await getDishBySlug(category, dish, locale);
+  if (!found) return {};
+
+  return { title: found.name };
 }
 
 export default async function DishPage({ params }: DishProps) {
   const { locale, category, dish } = await params;
   setRequestLocale(locale);
 
-  const t = await getTranslations("Metadata");
-  const categoryTitle = formatSlug(category);
-  const dishTitle = formatSlug(dish);
+  const [t, categoryDoc, dishDoc] = await Promise.all([
+    getTranslations("Metadata"),
+    getCategoryBySlug(category, locale),
+    getDishBySlug(category, dish, locale),
+  ]);
 
-  // Single dish page (gallery, description, weight, price, add-to-cart) later;
-  // data comes from the CMS, resolved by the `[category]`/`[dish]` slugs.
+  if (!categoryDoc || !dishDoc) notFound();
+
   return (
     <>
       <BreadCrumbs
         items={[
           { label: t("menu.title"), href: "/menu" },
-          { label: categoryTitle, href: `/menu/${category}` },
-          { label: dishTitle },
+          { label: categoryDoc.name, href: `/menu/${category}` },
+          { label: dishDoc.name },
         ]}
       />
-      <PagePlaceholder title={dishTitle} />
+      <PagePlaceholder title={dishDoc.name} />
     </>
   );
 }

@@ -4,15 +4,15 @@ import Button from "@/components/shared/buttons/Button";
 import DishCard from "@/components/shared/cards/DishCard";
 import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
-import { promotions } from "@/data/home";
+import { getPromotions } from "@/data/menu";
 import Image from "next/image";
 
 /**
- * Block 3 — promotions. A few current deals to show value and nudge the order.
- * (Managed via the admin panel / CMS later.)
+ * Block 3 — promotions. Discount-tagged dishes from Sanity (`tag: discount`).
  */
 export default async function Promotions() {
   const t = await getTranslations("HomePage.promotions");
+  const promotions = await getPromotions();
 
   return (
     <Section
@@ -48,15 +48,15 @@ export default async function Promotions() {
         />
       </div>
 
-      <div className="flex flex-col gap-3 lg:flex-row lg:justify-between">
+      <div className="flex flex-col gap-3 lg:flex-row lg:justify-between lg:items-end">
         <AnimatedWrapper className="flex flex-col gap-3">
-          <SectionTitle>{t("title")}</SectionTitle>
+          <SectionTitle className="max-w-[540px] xl:max-w-[672px]">{t("title")}</SectionTitle>
           <p className="lg:max-w-[420px] xl:max-w-2xl text-16reg text-graphite">
             {t("text")}
           </p>
         </AnimatedWrapper>
         <AnimatedWrapper className="mt-8 flex md:mt-10">
-          <Button href="/menu" variant="secondary" size="lg">
+          <Button href="/menu" variant="secondary" size="lg" className="max-h-[58px]">
             {t("cta")}
           </Button>
         </AnimatedWrapper>

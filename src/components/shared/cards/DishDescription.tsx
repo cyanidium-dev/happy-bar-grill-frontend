@@ -88,7 +88,7 @@ export default function DishDescription({
         <button
           type="button"
           onClick={() => setExpanded((prev) => !prev)}
-          className="self-start text-12med text-navy underline-offset-2 transition-colors duration-300 hover:underline"
+          className="cursor-pointer self-start text-12med text-navy underline-offset-2 transition-colors duration-300 hover:underline"
         >
           {expanded ? showLessLabel : showMoreLabel}
         </button>

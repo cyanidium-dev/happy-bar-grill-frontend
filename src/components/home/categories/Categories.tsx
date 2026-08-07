@@ -4,7 +4,7 @@ import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
 import CategoryCard from "./CategoryCard";
 import Image from "next/image";
-import { categories } from "@/data/home";
+import { getCategories } from "@/data/menu";
 
 /**
  * Block 2 — menu categories. Large visual tiles let the user jump straight to
@@ -12,6 +12,7 @@ import { categories } from "@/data/home";
  */
 export default async function Categories() {
   const t = await getTranslations("HomePage.categories");
+  const categories = await getCategories();
 
   return (
     <Section background="white">
@@ -46,7 +47,7 @@ export default async function Categories() {
             <CategoryCard
               key={category.slug}
               slug={category.slug}
-              label={t(`items.${category.key}`)}
+              label={category.name}
               image={category.image}
               delay={index * 0.06}
             />

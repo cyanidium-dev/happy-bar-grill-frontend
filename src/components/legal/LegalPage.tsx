@@ -17,7 +17,7 @@ export default function LegalPage({
     <Section background="white">
       <article className="mx-auto flex max-w-3xl flex-col gap-8">
         <header className="flex flex-col gap-3">
-          <PageTitle>{title}</PageTitle>
+          <PageTitle className="text-navy">{title}</PageTitle>
           <p className="text-14med text-grey-dark">{doc.updated}</p>
           <p className="text-16reg text-graphite">{doc.intro}</p>
         </header>

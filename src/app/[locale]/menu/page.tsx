@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
-import PagePlaceholder from "@/components/shared/PagePlaceholder";
+import MenuView from "@/components/menu/MenuView";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
 
@@ -18,11 +18,10 @@ export default async function MenuPage({ params }: PageProps) {
 
   const t = await getTranslations("Metadata");
 
-  // Full catalog / default category view (dishes open in a modal) later.
   return (
     <>
       <BreadCrumbs items={[{ label: t("menu.title") }]} />
-      <PagePlaceholder title={t("menu.title")} />
+      <MenuView activeSlug="all" />
     </>
   );
 }

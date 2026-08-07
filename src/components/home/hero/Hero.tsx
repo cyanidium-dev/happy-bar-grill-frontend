@@ -4,10 +4,7 @@ import Container from "@/components/shared/container/Container";
 import HeroDishCard from "@/components/home/hero/HeroDishCard";
 import Image from "next/image";
 import PageTitle from "@/components/shared/titles/PageTitle";
-import { popularDishes } from "@/data/home";
-
-const heroImage =
-  "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=80";
+import { getHeroDishes } from "@/data/menu";
 
 /**
  * Block 1 — first screen. States what you can order and pushes into the menu.
@@ -20,7 +17,7 @@ const heroImage =
  */
 export default async function Hero() {
   const t = await getTranslations("HomePage.hero");
-  const featuredDishes = popularDishes.slice(0, 3);
+  const featuredDishes = await getHeroDishes();
 
   return (
     <section
@@ -41,14 +38,14 @@ export default async function Hero() {
       <Container className="relative items-center gap-10">
         <div className="flex min-w-0 flex-col gap-7 mb-[140px] xs:mb-[91px]">
           <div className="relative -z-15">
-            <PageTitle className="max-w-[301px] sm:max-w-[570px]">
+            <PageTitle className="max-w-[301px] sm:max-w-[540px]">
               {t("title")}
             </PageTitle>
           </div>
 
-          <div className="flex flex-col gap-10 lg:flex-row-reverse lg:justify-between lg:items-center lg:max-w-[460px]">
+          <div className="flex flex-col gap-10 lg:flex-row-reverse lg:justify-between lg:items-center lg:max-w-[500px]">
             {" "}
-            <p className="max-w-[200px] lg:max-w-[181px] mb-1 text-12light text-white">
+            <p className="max-w-[220px] lg:max-w-[221px] mb-1 text-12light text-white">
               {t("description")}
             </p>
             <Button

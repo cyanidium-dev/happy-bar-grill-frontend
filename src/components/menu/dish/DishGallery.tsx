@@ -140,7 +140,7 @@ export default function DishGallery({
                 "active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy/50",
               )}
             >
-              <ChevronIcon className="size-5" />
+              <ChevronIcon className="size-5 rotate-180" />
             </button>
             <button
               type="button"
@@ -154,7 +154,7 @@ export default function DishGallery({
                 "active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy/50",
               )}
             >
-              <ChevronIcon className="size-5 rotate-180" />
+              <ChevronIcon className="size-5" />
             </button>
             <div className="absolute right-3 top-3 z-20 rounded-full bg-navy/80 px-2.5 py-1 text-12semi text-white backdrop-blur">
               {formatCounter(index + 1)}

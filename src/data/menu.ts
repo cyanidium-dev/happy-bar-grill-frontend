@@ -1,5 +1,7 @@
 import { cache } from "react";
+import { getLocale } from "next-intl/server";
 import type { Category, Dish } from "@/types/content";
+import { routing, type Locale } from "@/i18n/routing";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import {
   ALL_DISHES_QUERY,
@@ -15,6 +17,8 @@ import {
  * Menu data access layer.
  *
  * Components call these accessors and never touch Sanity queries directly.
+ * Localized CMS fields (`name`, `description`) are resolved to the active
+ * request locale inside GROQ via `$locale`.
  */
 
 export type MenuBanner = {
@@ -36,57 +40,82 @@ export function getMenuBanner(): MenuBanner {
   return menuBanner;
 }
 
-export const getCategories = cache(async (): Promise<Category[]> => {
-  return sanityFetch<Category[]>({
-    query: CATEGORIES_QUERY,
-    tags: ["menuCategory"],
-  });
-});
+async function resolveLocale(override?: Locale): Promise<Locale> {
+  if (override) return override;
+  try {
+    return (await getLocale()) as Locale;
+  } catch {
+    return routing.defaultLocale;
+  }
+}
+
+async function localeParams(
+  extra: Record<string, string> = {},
+  localeOverride?: Locale,
+) {
+  return { locale: await resolveLocale(localeOverride), ...extra };
+}
+
+export const getCategories = cache(
+  async (locale?: Locale): Promise<Category[]> => {
+    return sanityFetch<Category[]>({
+      query: CATEGORIES_QUERY,
+      params: await localeParams({}, locale),
+      tags: ["menuCategory"],
+    });
+  },
+);
 
 export const getCategoryBySlug = cache(
-  async (slug: string): Promise<Category | null> => {
+  async (slug: string, locale?: Locale): Promise<Category | null> => {
     return sanityFetch<Category | null>({
       query: CATEGORY_BY_SLUG_QUERY,
-      params: { slug },
+      params: await localeParams({ slug }, locale),
       tags: ["menuCategory", `menuCategory:${slug}`],
     });
   },
 );
 
-export const getAllDishes = cache(async (): Promise<Dish[]> => {
+export const getAllDishes = cache(async (locale?: Locale): Promise<Dish[]> => {
   return sanityFetch<Dish[]>({
     query: ALL_DISHES_QUERY,
+    params: await localeParams({}, locale),
     tags: ["menuDish"],
   });
 });
 
 export const getDishesByCategory = cache(
-  async (slug: string): Promise<Dish[]> => {
+  async (slug: string, locale?: Locale): Promise<Dish[]> => {
     return sanityFetch<Dish[]>({
       query: DISHES_BY_CATEGORY_QUERY,
-      params: { slug },
+      params: await localeParams({ slug }, locale),
       tags: ["menuDish", `menuCategory:${slug}`],
     });
   },
 );
 
-export const getPopularDishes = cache(async (): Promise<Dish[]> => {
-  return sanityFetch<Dish[]>({
-    query: POPULAR_DISHES_QUERY,
-    tags: ["menuDish"],
-  });
-});
+export const getPopularDishes = cache(
+  async (locale?: Locale): Promise<Dish[]> => {
+    return sanityFetch<Dish[]>({
+      query: POPULAR_DISHES_QUERY,
+      params: await localeParams({}, locale),
+      tags: ["menuDish"],
+    });
+  },
+);
 
-export const getHeroDishes = cache(async (): Promise<Dish[]> => {
+export const getHeroDishes = cache(async (locale?: Locale): Promise<Dish[]> => {
   return sanityFetch<Dish[]>({
     query: HERO_DISHES_QUERY,
+    params: await localeParams({}, locale),
     tags: ["menuDish"],
   });
 });
 
-export const getPromotions = cache(async (): Promise<Dish[]> => {
+export const getPromotions = cache(async (locale?: Locale): Promise<Dish[]> => {
   return sanityFetch<Dish[]>({
     query: PROMOTIONS_QUERY,
+    params: await localeParams({}, locale),
     tags: ["menuDish"],
   });
 });

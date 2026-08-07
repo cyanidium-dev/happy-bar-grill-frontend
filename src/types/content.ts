@@ -1,4 +1,8 @@
-/** Content types shaped to match Sanity `menuDish` / `menuCategory` projections. */
+/**
+ * Content types shaped to match Sanity `menuDish` / `menuCategory` projections.
+ * Localized CMS fields (`name`, `description`) arrive already resolved to the
+ * active locale string by GROQ (`coalesce(...[$locale], ...)`).
+ */
 
 export type DishTag = "bestseller" | "new" | "discount";
 

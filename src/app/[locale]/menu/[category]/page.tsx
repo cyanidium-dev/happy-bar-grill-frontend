@@ -9,16 +9,19 @@ import type { PageProps } from "@/types/page";
 type MenuCategoryProps = PageProps<{ category: string }>;
 
 // Pre-render every known category (dynamic slugs still 404 via notFound below).
+// Slugs are language-agnostic — pass a fixed locale for generateStaticParams.
 export async function generateStaticParams() {
-  const categories = await getCategories();
+  const categories = await getCategories("uk");
   return categories.map((category) => ({ category: category.slug }));
 }
 
 export async function generateMetadata({
   params,
 }: MenuCategoryProps): Promise<Metadata> {
-  const { category } = await params;
-  const found = await getCategoryBySlug(category);
+  const { locale, category } = await params;
+  setRequestLocale(locale);
+
+  const found = await getCategoryBySlug(category, locale);
   if (!found) return {};
 
   return { title: found.name };
@@ -28,7 +31,7 @@ export default async function MenuCategoryPage({ params }: MenuCategoryProps) {
   const { locale, category } = await params;
   setRequestLocale(locale);
 
-  const found = await getCategoryBySlug(category);
+  const found = await getCategoryBySlug(category, locale);
   if (!found) notFound();
 
   const tMenu = await getTranslations("Metadata");

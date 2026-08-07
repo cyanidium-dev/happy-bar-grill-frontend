@@ -1,10 +1,14 @@
 import { defineQuery } from "next-sanity";
 
+/** Pick the active locale from a bilingual `{ uk, ru }` field (falls back to uk → ru → raw). */
+const localized = (field: string) =>
+  /* groq */ `coalesce(${field}[$locale], ${field}.uk, ${field}.ru, ${field})`;
+
 const dishFields = /* groq */ `
   "slug": slug.current,
   "categorySlug": category->slug.current,
-  name,
-  description,
+  "name": ${localized("name")},
+  "description": ${localized("description")},
   price,
   oldPrice,
   weight,
@@ -15,7 +19,7 @@ const dishFields = /* groq */ `
 export const CATEGORIES_QUERY = defineQuery(/* groq */ `
   *[_type == "menuCategory"] | order(order asc) {
     "slug": slug.current,
-    name,
+    "name": ${localized("name")},
     "image": image.asset->url
   }
 `);
@@ -23,7 +27,7 @@ export const CATEGORIES_QUERY = defineQuery(/* groq */ `
 export const CATEGORY_BY_SLUG_QUERY = defineQuery(/* groq */ `
   *[_type == "menuCategory" && slug.current == $slug][0] {
     "slug": slug.current,
-    name,
+    "name": ${localized("name")},
     "image": image.asset->url
   }
 `);

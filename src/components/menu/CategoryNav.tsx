@@ -29,13 +29,12 @@ export default async function CategoryNav({
   variant,
 }: CategoryNavProps) {
   const t = await getTranslations("Menu");
-  const tc = await getTranslations("HomePage.categories.items");
-  const categories = getCategories();
+  const categories = await getCategories();
 
   const items: NavItem[] = [
     { label: t("allDishes"), href: "/menu", active: activeSlug === "all" },
     ...categories.map((category) => ({
-      label: tc(category.key),
+      label: category.name,
       href: `/menu/${category.slug}`,
       active: activeSlug === category.slug,
     })),

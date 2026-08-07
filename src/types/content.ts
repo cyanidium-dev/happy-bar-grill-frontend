@@ -1,4 +1,4 @@
-/** Placeholder content types. These mirror the shape the CMS will return. */
+/** Content types shaped to match Sanity `menuDish` / `menuCategory` projections. */
 
 export type DishTag = "bestseller" | "new" | "discount";
 
@@ -10,20 +10,20 @@ export type Dish = {
   /** Price in UAH. */
   price: number;
   /** Previous price (promotions), shown struck through. */
-  oldPrice?: number;
+  oldPrice?: number | null;
   /** Weight in grams. */
   weight: number;
-  tag?: DishTag;
-  /** Stock photo URL (placeholder until the CMS provides real photography). */
+  tag?: DishTag | null;
+  /** Image URL from Sanity CDN. */
   image: string;
 };
 
 export type Category = {
-  /** i18n key under `HomePage.categories.items`. */
-  key: string;
+  /** Display name from CMS. */
+  name: string;
   /** Route segment: `/menu/[slug]`. */
   slug: string;
-  /** Stock photo URL (placeholder until the CMS provides real photography). */
+  /** Image URL from Sanity CDN. */
   image: string;
 };
 

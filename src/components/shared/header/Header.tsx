@@ -19,9 +19,8 @@ import { cn } from "@/utils/cn";
  * the mobile burger + slide-in menu. It's `fixed` (not `sticky`) so it floats
  * *over* the page — on the home page the Hero renders behind it with its own
  * background, visible through the header while it's transparent (white chrome).
- * On other pages the unscrolled header stays transparent with navy-dark chrome.
- * Once scrolled past 60px, every page shares the same solid `navy-dark` bar
- * and white chrome.
+ * On every other page the header is solid `navy-dark` with white chrome from
+ * the start. Once scrolled past 60px on home, it joins that same solid bar.
  *
  * Its rendered height is published as the `--header-height` CSS variable so
  * every page can reserve the right amount of space below it (see the locale
@@ -40,10 +39,10 @@ export default function Header({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const lastScrollY = useRef(0);
-  // Solid navy-dark + white chrome once scrolled — same on every page.
-  const solid = scrolled;
-  // White chrome on home (over hero) and whenever the solid bar is on.
-  const onDark = isHome || scrolled;
+  // Solid navy-dark on non-home pages always; on home only after scroll.
+  const solid = !isHome || scrolled;
+  // White chrome over the home hero, and on the solid bar everywhere else.
+  const onDark = isHome || solid;
 
   useEffect(() => {
     const onScroll = () => {

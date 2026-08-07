@@ -12,6 +12,7 @@ import {
   HERO_DISHES_QUERY,
   POPULAR_DISHES_QUERY,
   PROMOTIONS_QUERY,
+  SIMILAR_DISHES_QUERY,
 } from "@/sanity/lib/queries";
 
 /**
@@ -106,6 +107,35 @@ export const getDishBySlug = cache(
       params: await localeParams({ category, slug }, locale),
       tags: ["menuDish", `menuDish:${slug}`, `menuCategory:${category}`],
     });
+  },
+);
+
+/**
+ * Dishes for the "similar dishes" block on a dish page: same category, current
+ * dish excluded, capped at `limit`. Tops up from popular dishes when a category
+ * is too thin to fill the row.
+ */
+export const getSimilarDishes = cache(
+  async (
+    category: string,
+    excludeSlug: string,
+    locale?: Locale,
+    limit = 4,
+  ): Promise<Dish[]> => {
+    const resolved = await resolveLocale(locale);
+    const similar = await sanityFetch<Dish[]>({
+      query: SIMILAR_DISHES_QUERY,
+      params: { locale: resolved, category, slug: excludeSlug },
+      tags: ["menuDish", `menuCategory:${category}`],
+    });
+    if (similar.length >= limit) return similar.slice(0, limit);
+
+    // Thin category — top up from popular dishes, skipping the current dish
+    // and anything already listed.
+    const popular = await getPopularDishes(resolved);
+    const seen = new Set([excludeSlug, ...similar.map((dish) => dish.slug)]);
+    const topUp = popular.filter((dish) => !seen.has(dish.slug));
+    return [...similar, ...topUp].slice(0, limit);
   },
 );
 

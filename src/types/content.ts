@@ -6,6 +6,12 @@
 
 export type DishTag = "bestseller" | "new" | "discount";
 
+/** A gallery photo with its own locale-resolved alt text. */
+export type GalleryImage = {
+  url: string;
+  alt: string;
+};
+
 export type Dish = {
   slug: string;
   categorySlug: string;
@@ -18,8 +24,18 @@ export type Dish = {
   /** Weight in grams. */
   weight: number;
   tag?: DishTag | null;
-  /** Image URL from Sanity CDN. */
+  /** Card/catalog thumbnail URL from Sanity CDN. */
   image: string;
+  /**
+   * Extra photos for the dish detail page (Sanity `gallery` field). Only the
+   * `DISH_BY_SLUG_QUERY` projects this — catalog/card queries omit it.
+   */
+  gallery?: GalleryImage[];
+  /**
+   * Dish composition/ingredients list (Sanity `ingredients` field). Only the
+   * `DISH_BY_SLUG_QUERY` projects this — catalog/card queries omit it.
+   */
+  ingredients?: string;
 };
 
 export type Category = {

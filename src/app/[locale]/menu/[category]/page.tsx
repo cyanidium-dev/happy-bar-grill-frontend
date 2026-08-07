@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
+import MenuBanner from "@/components/menu/MenuBanner";
 import MenuView from "@/components/menu/MenuView";
 import { getCategories, getCategoryBySlug } from "@/data/menu";
 import type { PageProps } from "@/types/page";
@@ -38,6 +39,7 @@ export default async function MenuCategoryPage({ params }: MenuCategoryProps) {
 
   return (
     <>
+      <MenuBanner />
       <BreadCrumbs
         items={[
           { label: tMenu("menu.title"), href: "/menu" },

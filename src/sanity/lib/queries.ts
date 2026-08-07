@@ -45,6 +45,13 @@ export const DISHES_BY_CATEGORY_QUERY = defineQuery(/* groq */ `
     }
 `);
 
+export const DISH_BY_SLUG_QUERY = defineQuery(/* groq */ `
+  *[_type == "menuDish" && slug.current == $slug
+    && category->slug.current == $category][0] {
+    ${dishFields}
+  }
+`);
+
 /** Bestsellers for the homepage popular block. */
 export const POPULAR_DISHES_QUERY = defineQuery(/* groq */ `
   *[_type == "menuDish" && available != false && tag == "bestseller"]

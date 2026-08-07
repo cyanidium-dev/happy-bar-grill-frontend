@@ -7,6 +7,7 @@ import {
   ALL_DISHES_QUERY,
   CATEGORIES_QUERY,
   CATEGORY_BY_SLUG_QUERY,
+  DISH_BY_SLUG_QUERY,
   DISHES_BY_CATEGORY_QUERY,
   HERO_DISHES_QUERY,
   POPULAR_DISHES_QUERY,
@@ -90,6 +91,20 @@ export const getDishesByCategory = cache(
       query: DISHES_BY_CATEGORY_QUERY,
       params: await localeParams({ slug }, locale),
       tags: ["menuDish", `menuCategory:${slug}`],
+    });
+  },
+);
+
+export const getDishBySlug = cache(
+  async (
+    category: string,
+    slug: string,
+    locale?: Locale,
+  ): Promise<Dish | null> => {
+    return sanityFetch<Dish | null>({
+      query: DISH_BY_SLUG_QUERY,
+      params: await localeParams({ category, slug }, locale),
+      tags: ["menuDish", `menuDish:${slug}`, `menuCategory:${category}`],
     });
   },
 );

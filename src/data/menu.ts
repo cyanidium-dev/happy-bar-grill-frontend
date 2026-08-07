@@ -113,14 +113,14 @@ export const getDishBySlug = cache(
 /**
  * Dishes for the "similar dishes" block on a dish page: same category, current
  * dish excluded, capped at `limit`. Tops up from popular dishes when a category
- * is too thin to fill the row.
+ * is too thin to fill the carousel.
  */
 export const getSimilarDishes = cache(
   async (
     category: string,
     excludeSlug: string,
     locale?: Locale,
-    limit = 4,
+    limit = 6,
   ): Promise<Dish[]> => {
     const resolved = await resolveLocale(locale);
     const similar = await sanityFetch<Dish[]>({

@@ -174,13 +174,12 @@ export default async function DishPage({ params }: DishProps) {
       <SimilarDishes dishes={similar} />
 
       <Section
-        background="navy"
-        waveTop={similar.length > 0 ? "beige" : "white"}
+        background="white"
         className="text-center"
       >
         <AnimatedWrapper animation={{ y: 20 }} className="flex flex-col items-center gap-6">
-          <SectionTitle variant="white">{t("ctaTitle")}</SectionTitle>
-          <Button href="/menu" variant="primary" shape="leaf" size="lg">
+          <SectionTitle variant="navy">{t("ctaTitle")}</SectionTitle>
+          <Button href="/menu" size="lg">
             {t("ctaButton")}
           </Button>
         </AnimatedWrapper>

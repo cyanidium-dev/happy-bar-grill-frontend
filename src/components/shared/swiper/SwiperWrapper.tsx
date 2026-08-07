@@ -103,35 +103,44 @@ export default function SwiperWrapper({
 
   return (
     <>
-      <Swiper
-        onSwiper={(swiper) => {
-          swiperInstanceRef.current = swiper;
-          syncSlideState(swiper);
-          const sync = () => syncSlideState(swiper);
-          swiper.on("lock", sync);
-          swiper.on("unlock", sync);
-          swiper.on("resize", sync);
-          onSwiper?.(swiper);
-        }}
-        onSlideChange={(swiper) => {
-          syncSlideState(swiper);
-          onSlideChange?.(swiper);
-        }}
-        breakpoints={breakpoints}
-        spaceBetween={spaceBetween}
-        slidesPerView={slidesPerView}
-        loop={loop}
-        speed={600}
-        modules={additionalModules}
-        className={swiperClassName}
-        {...additionalOptions}
-      >
-        {Children.map(slides, (slide, index) => (
-          <SwiperSlide key={isValidElement(slide) ? (slide.key ?? index) : index}>
-            {slide}
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      {/*
+        Outer clip + tight padding so DishCard shadows aren't cut, without
+        leaving a wide gap on the right that peeks the next slide.
+      */}
+      <div className="-mx-3 -my-5 overflow-hidden px-3 py-5">
+        <Swiper
+          onSwiper={(swiper) => {
+            swiperInstanceRef.current = swiper;
+            syncSlideState(swiper);
+            const sync = () => syncSlideState(swiper);
+            swiper.on("lock", sync);
+            swiper.on("unlock", sync);
+            swiper.on("resize", sync);
+            onSwiper?.(swiper);
+          }}
+          onSlideChange={(swiper) => {
+            syncSlideState(swiper);
+            onSlideChange?.(swiper);
+          }}
+          breakpoints={breakpoints}
+          spaceBetween={spaceBetween}
+          slidesPerView={slidesPerView}
+          loop={loop}
+          speed={600}
+          modules={additionalModules}
+          className={cn("!overflow-visible", swiperClassName)}
+          {...additionalOptions}
+        >
+          {Children.map(slides, (slide, index) => (
+            <SwiperSlide
+              key={isValidElement(slide) ? (slide.key ?? index) : index}
+              className="!h-auto overflow-visible"
+            >
+              {slide}
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
 
       {showNavigation && !isLocked && (
         <div className={cn("flex items-center gap-2 sm:gap-3", buttonsClassName)}>

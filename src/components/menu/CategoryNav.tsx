@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getCategories } from "@/data/menu";
 import { cn } from "@/utils/cn";
+import MobileCategoryChips from "@/components/menu/MobileCategoryChips";
 
 type CategoryNavProps = {
   /** Active category slug, or "all" for the full catalog (`/menu`). */
@@ -40,31 +41,7 @@ export default async function CategoryNav({
   ];
 
   if (variant === "mobile") {
-    return (
-      <nav
-        aria-label={t("categoriesLabel")}
-        className="sticky z-30 -mx-6 bg-white px-6 py-3 xl:hidden"
-        style={{ top: "var(--header-height)" }}
-      >
-        <ul className="flex gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {items.map((item) => (
-            <li key={item.href} className="shrink-0 py-0.5 px-0.5">
-              <Link
-                href={item.href}
-                aria-current={item.active ? "page" : undefined}
-                className={cn(
-                  itemBase,
-                  "inline-flex whitespace-nowrap rounded-full px-4 py-3 text-14med",
-                  item.active ? activeCls : inactiveCls,
-                )}
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    );
+    return <MobileCategoryChips items={items} ariaLabel={t("categoriesLabel")} />;
   }
 
   return (

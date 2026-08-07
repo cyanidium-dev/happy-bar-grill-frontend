@@ -69,7 +69,7 @@ export default async function DishCard({
       <div className="mt-auto flex items-end justify-between gap-3 border-t border-navy/10 pt-3">
         <div className="flex flex-col">
           <span className="flex items-baseline gap-2">
-            <span className="font-findsans text-20semi text-navy">
+            <span className="font-findsans text-16semi sm:text-20semi text-navy">
               {dish.price} {t("currency")}
             </span>
             {dish.oldPrice && (

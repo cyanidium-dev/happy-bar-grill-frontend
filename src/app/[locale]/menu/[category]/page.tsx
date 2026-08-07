@@ -9,41 +9,36 @@ import type { PageProps } from "@/types/page";
 type MenuCategoryProps = PageProps<{ category: string }>;
 
 // Pre-render every known category (dynamic slugs still 404 via notFound below).
-export function generateStaticParams() {
-  return getCategories().map((category) => ({ category: category.slug }));
+export async function generateStaticParams() {
+  const categories = await getCategories();
+  return categories.map((category) => ({ category: category.slug }));
 }
 
 export async function generateMetadata({
   params,
 }: MenuCategoryProps): Promise<Metadata> {
-  const { locale, category } = await params;
-  const found = getCategoryBySlug(category);
+  const { category } = await params;
+  const found = await getCategoryBySlug(category);
   if (!found) return {};
 
-  const tc = await getTranslations({
-    locale,
-    namespace: "HomePage.categories.items",
-  });
-  return { title: tc(found.key) };
+  return { title: found.name };
 }
 
 export default async function MenuCategoryPage({ params }: MenuCategoryProps) {
   const { locale, category } = await params;
   setRequestLocale(locale);
 
-  const found = getCategoryBySlug(category);
+  const found = await getCategoryBySlug(category);
   if (!found) notFound();
 
   const tMenu = await getTranslations("Metadata");
-  const tc = await getTranslations("HomePage.categories.items");
-  const label = tc(found.key);
 
   return (
     <>
       <BreadCrumbs
         items={[
           { label: tMenu("menu.title"), href: "/menu" },
-          { label },
+          { label: found.name },
         ]}
       />
       <MenuView activeSlug={category} />

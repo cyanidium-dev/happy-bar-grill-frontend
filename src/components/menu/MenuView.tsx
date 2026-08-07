@@ -14,7 +14,9 @@ import { getAllDishes, getDishesByCategory } from "@/data/menu";
 export default async function MenuView({ activeSlug }: { activeSlug: string }) {
   const t = await getTranslations("Menu");
   const dishes =
-    activeSlug === "all" ? getAllDishes() : getDishesByCategory(activeSlug);
+    activeSlug === "all"
+      ? await getAllDishes()
+      : await getDishesByCategory(activeSlug);
 
   return (
     <section className="relative overflow-x-clip bg-white">

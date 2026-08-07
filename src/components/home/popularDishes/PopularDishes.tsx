@@ -4,14 +4,15 @@ import Button from "@/components/shared/buttons/Button";
 import DishCard from "@/components/shared/cards/DishCard";
 import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
-import { popularDishes } from "@/data/home";
+import { getPopularDishes } from "@/data/menu";
 
 /**
- * Block 4 — popular dishes. Tagged best-sellers/new items with price, weight and
+ * Block 4 — popular dishes. Bestseller-tagged items with price, weight and
  * quick add-to-cart, to shorten the choice for undecided users.
  */
 export default async function PopularDishes() {
   const t = await getTranslations("HomePage.popular");
+  const popularDishes = await getPopularDishes();
 
   return (
     <Section background="white" waveFlip>

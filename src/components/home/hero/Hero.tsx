@@ -38,14 +38,14 @@ export default async function Hero() {
       <Container className="relative items-center gap-10">
         <div className="flex min-w-0 flex-col gap-7 mb-[140px] xs:mb-[91px]">
           <div className="relative -z-15">
-            <PageTitle className="max-w-[301px] sm:max-w-[570px]">
+            <PageTitle className="max-w-[301px] sm:max-w-[540px]">
               {t("title")}
             </PageTitle>
           </div>
 
-          <div className="flex flex-col gap-10 lg:flex-row-reverse lg:justify-between lg:items-center lg:max-w-[460px]">
+          <div className="flex flex-col gap-10 lg:flex-row-reverse lg:justify-between lg:items-center lg:max-w-[500px]">
             {" "}
-            <p className="max-w-[200px] lg:max-w-[181px] mb-1 text-12light text-white">
+            <p className="max-w-[220px] lg:max-w-[221px] mb-1 text-12light text-white">
               {t("description")}
             </p>
             <Button

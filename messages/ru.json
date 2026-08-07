@@ -129,6 +129,17 @@
       "discount": "Акция"
     }
   },
+  "Menu": {
+    "allDishes": "Все блюда",
+    "emptyCategory": "В этой категории пока нет блюд.",
+    "bannerAlt": "Акционное предложение Happy Bar & Grill Paradise",
+    "categoriesLabel": "Категории меню",
+    "alts": {
+      "tomatoTop": "Декоративное изображение помидора",
+      "tomatoBottom": "Декоративное изображение помидора",
+      "pizza": "Декоративное изображение пиццы"
+    }
+  },
   "Nav": {
     "home": "Главная",
     "menu": "Меню",

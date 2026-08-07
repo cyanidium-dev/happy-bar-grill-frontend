@@ -7,7 +7,14 @@ import { useLocale } from "next-intl";
 import LocaleSwitcherArrowIcon from "./icons/LocaleSwitcherArrowIcon";
 import { cn } from "@/utils/cn";
 
-export default function LocaleSwitcher({ className }: { className?: string }) {
+export default function LocaleSwitcher({
+  className,
+  /** White labels on dark header chrome; navy-dark on light pages. */
+  onDark = true,
+}: {
+  className?: string;
+  onDark?: boolean;
+}) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const locales = routing.locales;
@@ -64,13 +71,20 @@ export default function LocaleSwitcher({ className }: { className?: string }) {
         onClick={() => setIsOpen(!isOpen)}
         className="cursor-pointer outline-none flex items-center gap-[9px] outline-none text-navy xl:hover:text-red focus-visible:text-red transition duration-300 ease-in-out"
       >
-        <span className="text-[16px] lg:text-[14px] xl:text-[16px] font-medium leading-[125%] uppercase text-white">
+        <span
+          className={cn(
+            "text-[16px] lg:text-[14px] xl:text-[16px] font-medium leading-[125%] uppercase",
+            onDark ? "text-white" : "text-navy-dark",
+          )}
+        >
           {currentLocale === "uk" ? "UA" : currentLocale}
         </span>
         <LocaleSwitcherArrowIcon
-          className={`size-3 xl:size-4 mb-[1px] text-white ${
-            isOpen ? "rotate-180" : "rotate-0"
-          } transition duration-300 ease-in-out`}
+          className={cn(
+            "size-3 xl:size-4 mb-[1px] transition duration-300 ease-in-out",
+            onDark ? "text-white" : "text-navy-dark",
+            isOpen ? "rotate-180" : "rotate-0",
+          )}
         />
       </button>
 

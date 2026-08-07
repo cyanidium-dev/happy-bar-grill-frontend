@@ -10,14 +10,28 @@ import { cn } from "@/utils/cn";
  *
  * `className` controls the rendered height (e.g. `h-8 md:h-10`) — width
  * follows automatically from each SVG's own aspect ratio.
+ *
+ * `onDark`: white ribbon for dark surfaces (home hero / solid navy header).
+ * Off: same geometry with an exact 4px navy-dark border on the sides and
+ * bottom (no top edge), so the wordmark stays aligned with the home logo.
  */
 export default function Logo({
   className,
   onClick,
+  /** White ribbon for dark surfaces; bordered white ribbon on light pages. */
+  onDark = true,
 }: {
   className?: string;
   onClick?: () => void;
+  onDark?: boolean;
 }) {
+  const mobSrc = onDark
+    ? "/images/header/logo-mob.svg"
+    : "/images/header/logo-mob-navy.svg";
+  const deskSrc = onDark
+    ? "/images/header/logo-desk.svg"
+    : "/images/header/logo-desk-navy.svg";
+
   return (
     <Link
       href="/"
@@ -29,7 +43,7 @@ export default function Logo({
       )}
     >
       <Image
-        src="/images/header/logo-mob.svg"
+        src={mobSrc}
         alt=""
         width={74}
         height={66}
@@ -37,7 +51,7 @@ export default function Logo({
         priority
       />
       <Image
-        src="/images/header/logo-desk.svg"
+        src={deskSrc}
         alt=""
         width={144}
         height={98}

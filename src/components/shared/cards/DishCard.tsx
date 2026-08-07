@@ -17,12 +17,9 @@ import { cn } from "@/utils/cn";
  */
 export default async function DishCard({
   dish,
-  background,
   className,
 }: {
   dish: Dish;
-  /** Surface colour — pick whichever contrasts with the section background. */
-  background?: "beige" | "white";
   className?: string;
 }) {
   const t = await getTranslations("Product");
@@ -32,9 +29,8 @@ export default async function DishCard({
     <Card
       as="article"
       interactive
-      background={background}
       className={cn(
-        "flex h-full flex-col gap-3 p-3 sm:gap-4 sm:p-4",
+        "flex h-full flex-col gap-3 bg-white/34 p-3 backdrop-blur-[20px] sm:gap-4 sm:p-4",
         className,
       )}
     >

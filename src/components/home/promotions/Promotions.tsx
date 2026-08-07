@@ -16,7 +16,6 @@ export default async function Promotions() {
   return (
     <Section background="beige" waveTop="white" waveFlip>
       <div className="flex flex-col gap-3 lg:flex-row lg:justify-between">
-        {" "}
         <AnimatedWrapper className="flex flex-col gap-3">
           <SectionTitle>{t("title")}</SectionTitle>
           <p className="max-w-[500px] xl:max-w-2xl text-16reg text-graphite">
@@ -38,7 +37,7 @@ export default async function Promotions() {
             animation={{ y: 24, delay: index * 0.08 }}
             className="h-full"
           >
-            <DishCard dish={dish} background="white" />
+            <DishCard dish={dish} />
           </AnimatedWrapper>
         ))}
       </ul>

@@ -18,9 +18,10 @@ import { cn } from "@/utils/cn";
  * Floating header: logo, desktop nav, language switcher, cart and phone, plus
  * the mobile burger + slide-in menu. It's `fixed` (not `sticky`) so it floats
  * *over* the page — on the home page the Hero renders behind it with its own
- * background, visible through the header while it's transparent. On every
- * other page the header is solid `navy-dark` from the start. On home it
- * gains a solid navy-dark background once scrolled past 60px.
+ * background, visible through the header while it's transparent (white chrome).
+ * On other pages the unscrolled header stays transparent with navy-dark chrome.
+ * Once scrolled past 60px, every page shares the same solid `navy-dark` bar
+ * and white chrome.
  *
  * Its rendered height is published as the `--header-height` CSS variable so
  * every page can reserve the right amount of space below it (see the locale
@@ -39,7 +40,10 @@ export default function Header({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const lastScrollY = useRef(0);
-  const solid = !isHome || scrolled;
+  // Solid navy-dark + white chrome once scrolled — same on every page.
+  const solid = scrolled;
+  // White chrome on home (over hero) and whenever the solid bar is on.
+  const onDark = isHome || scrolled;
 
   useEffect(() => {
     const onScroll = () => {
@@ -100,21 +104,24 @@ export default function Header({ className }: { className?: string }) {
       >
         <div
           className={cn(
-            "border-b transition-[background-color,backdrop-filter,box-shadow,border-color] duration-500 ease-out",
+            "border-b border-transparent transition-[background-color,backdrop-filter,box-shadow,border-color] duration-500 ease-out",
             solid
               ? "bg-navy-dark"
-              : "border-transparent bg-transparent backdrop-blur-0",
+              : "bg-transparent backdrop-blur-0",
           )}
         >
           <Container className="relative flex items-center gap-4">
-            <Logo className="" />
+            <Logo onDark={onDark} className="" />
             <nav className="ml-8 hidden lg:block xl:ml-12">
               <ul className="flex items-center gap-6 xl:gap-8">
                 {navLinks.map(({ href, key }) => (
                   <li key={key}>
                     <Link
                       href={href}
-                      className="group relative inline-block text-14med text-white"
+                      className={cn(
+                        "group relative inline-block text-14med",
+                        onDark ? "text-white" : "text-navy-dark",
+                      )}
                     >
                       {t(key)}
                       <span
@@ -128,7 +135,7 @@ export default function Header({ className }: { className?: string }) {
             </nav>
 
             <div className="ml-auto flex items-center gap-2 sm:gap-3">
-              <LocaleSwitcher />
+              <LocaleSwitcher onDark={onDark} />
 
               <div className="hidden xl:block">
                 <a
@@ -137,8 +144,9 @@ export default function Header({ className }: { className?: string }) {
                   className={buttonStyles({
                     variant: "secondary",
                     size: "sm",
-                    className:
-                      "border-white bg-white text-navy xl:hover:border-white xl:hover:bg-navy/30 xl:hover:text-white transition-colors duration-300 ease-in-out",
+                    className: onDark
+                      ? "border-white bg-white text-navy xl:hover:border-white xl:hover:bg-navy/30 xl:hover:text-white transition-colors duration-300 ease-in-out"
+                      : "border-navy-dark bg-navy-dark text-white xl:hover:border-navy xl:hover:bg-navy xl:hover:text-white transition-colors duration-300 ease-in-out",
                   })}
                 >
                   <Sheen />
@@ -160,19 +168,22 @@ export default function Header({ className }: { className?: string }) {
               >
                 <span
                   className={cn(
-                    "block h-0.5 w-6 rounded-full bg-white transition-transform duration-300",
+                    "block h-0.5 w-6 rounded-full transition-transform duration-300",
+                    onDark ? "bg-white" : "bg-navy-dark",
                     open && "translate-y-2 rotate-45",
                   )}
                 />
                 <span
                   className={cn(
-                    "block h-0.5 w-6 rounded-full bg-white transition-opacity duration-300",
+                    "block h-0.5 w-6 rounded-full transition-opacity duration-300",
+                    onDark ? "bg-white" : "bg-navy-dark",
                     open && "opacity-0",
                   )}
                 />
                 <span
                   className={cn(
-                    "block h-0.5 w-6 rounded-full bg-white transition-transform duration-300",
+                    "block h-0.5 w-6 rounded-full transition-transform duration-300",
+                    onDark ? "bg-white" : "bg-navy-dark",
                     open && "-translate-y-2 -rotate-45",
                   )}
                 />

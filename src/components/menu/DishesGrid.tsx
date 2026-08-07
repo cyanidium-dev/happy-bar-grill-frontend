@@ -15,7 +15,9 @@ export default function DishesGrid({
 }) {
   if (dishes.length === 0) {
     return (
-      <p className="py-16 text-center text-16reg text-grey-dark">{emptyLabel}</p>
+      <p className="py-16 text-center text-16reg text-grey-dark">
+        {emptyLabel}
+      </p>
     );
   }
 

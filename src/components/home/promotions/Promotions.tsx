@@ -14,13 +14,23 @@ export default async function Promotions() {
   const t = await getTranslations("HomePage.promotions");
 
   return (
-    <Section background="beige" accent="coolTopCenter" waveTop="white" waveFlip>
-      <AnimatedWrapper className="flex flex-col gap-3">
-        <SectionTitle>{t("title")}</SectionTitle>
-        <p className="max-w-2xl text-16reg text-graphite">{t("text")}</p>
-      </AnimatedWrapper>
+    <Section background="beige" waveTop="white" waveFlip>
+      <div className="flex flex-col gap-3 lg:flex-row lg:justify-between">
+        {" "}
+        <AnimatedWrapper className="flex flex-col gap-3">
+          <SectionTitle>{t("title")}</SectionTitle>
+          <p className="max-w-[500px] xl:max-w-2xl text-16reg text-graphite">
+            {t("text")}
+          </p>
+        </AnimatedWrapper>
+        <AnimatedWrapper className="mt-8 flex md:mt-10">
+          <Button href="/menu" variant="secondary" size="lg">
+            {t("cta")}
+          </Button>
+        </AnimatedWrapper>
+      </div>
 
-      <ul className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:gap-6 md:grid-cols-2 xl:grid-cols-3">
         {promotions.map((dish, index) => (
           <AnimatedWrapper
             key={dish.slug}
@@ -32,12 +42,6 @@ export default async function Promotions() {
           </AnimatedWrapper>
         ))}
       </ul>
-
-      <AnimatedWrapper className="mt-8 flex justify-center md:mt-10">
-        <Button href="/menu" variant="secondary" size="lg">
-          {t("cta")}
-        </Button>
-      </AnimatedWrapper>
     </Section>
   );
 }

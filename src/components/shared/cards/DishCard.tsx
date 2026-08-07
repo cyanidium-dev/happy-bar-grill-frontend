@@ -33,7 +33,10 @@ export default async function DishCard({
       as="article"
       interactive
       background={background}
-      className={cn("flex h-full flex-col gap-3 p-3 sm:gap-4 sm:p-4", className)}
+      className={cn(
+        "flex h-full flex-col gap-3 p-3 sm:gap-4 sm:p-4",
+        className,
+      )}
     >
       <div className="flex items-stretch gap-3 sm:gap-4">
         <div className="flex min-w-0 flex-1 flex-col gap-2">
@@ -51,7 +54,7 @@ export default async function DishCard({
 
         <Link
           href={href}
-          className="relative block aspect-[4/3] w-36 shrink-0 self-start overflow-hidden rounded-tl-xl rounded-br-xl xs:w-40 sm:w-48"
+          className="relative block aspect-[4/3] w-36 shrink-0 self-start overflow-hidden rounded-tl-xl rounded-br-xl xs:w-50 sm:w-60 md:w-42 lg:w-50 xl:w-40"
         >
           <CardMedia
             src={dish.image}
@@ -70,7 +73,7 @@ export default async function DishCard({
       <div className="mt-auto flex items-end justify-between gap-3 border-t border-navy/10 pt-3">
         <div className="flex flex-col">
           <span className="flex items-baseline gap-2">
-            <span className="font-findsans text-20semi text-navy sm:text-24semi">
+            <span className="font-findsans text-20semi text-navy">
               {dish.price} {t("currency")}
             </span>
             {dish.oldPrice && (

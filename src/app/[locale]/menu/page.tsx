@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
+import MenuBanner from "@/components/menu/MenuBanner";
 import MenuView from "@/components/menu/MenuView";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
@@ -20,6 +21,7 @@ export default async function MenuPage({ params }: PageProps) {
 
   return (
     <>
+      <MenuBanner />
       <BreadCrumbs items={[{ label: t("menu.title") }]} />
       <MenuView activeSlug="all" />
     </>

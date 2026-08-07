@@ -48,8 +48,26 @@ export const DISHES_BY_CATEGORY_QUERY = defineQuery(/* groq */ `
 export const DISH_BY_SLUG_QUERY = defineQuery(/* groq */ `
   *[_type == "menuDish" && slug.current == $slug
     && category->slug.current == $category][0] {
-    ${dishFields}
+    ${dishFields},
+    "ingredients": ${localized("ingredients")},
+    "gallery": gallery[]{
+      "url": asset->url,
+      "alt": ${localized("alt")}
+    }
   }
+`);
+
+/**
+ * Other dishes in the same category (for the "similar dishes" block), current
+ * dish excluded. The detail page tops this up from popular dishes if a category
+ * is thin.
+ */
+export const SIMILAR_DISHES_QUERY = defineQuery(/* groq */ `
+  *[_type == "menuDish" && available != false
+    && category->slug.current == $category
+    && slug.current != $slug] | order(order asc) {
+      ${dishFields}
+    }
 `);
 
 /** Bestsellers for the homepage popular block. */

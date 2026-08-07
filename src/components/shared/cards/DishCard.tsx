@@ -60,7 +60,7 @@ export default async function DishCard({
         <div className="flex items-stretch gap-3 sm:gap-4">
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             <Link href={href}>
-              <h3 className="line-clamp-3 text-18semi text-navy transition-colors duration-300 xl:group-hover:text-red sm:text-20semi">
+              <h3 className="font-findsans line-clamp-3 text-18bold text-navy transition-colors duration-300 xl:group-hover:text-red sm:text-20bold">
                 {dish.name}
               </h3>
             </Link>
@@ -92,7 +92,7 @@ export default async function DishCard({
         <div className="mt-auto flex items-end justify-between gap-3 border-t border-navy/10 pt-3">
           <div className="flex flex-col">
             <span className="flex items-baseline gap-2">
-              <span className="inline-block mb-1 font-findsans text-16semi sm:text-18semi text-navy">
+              <span className="inline-block mb-1 font-findsans text-14semi sm:text-16semi  text-navy">
                 {dish.price} {t("currency")}
               </span>
               {dish.oldPrice && (

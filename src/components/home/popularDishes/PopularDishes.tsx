@@ -14,13 +14,13 @@ export default async function PopularDishes() {
   const t = await getTranslations("HomePage.popular");
 
   return (
-    <Section background="white" accent="cool" waveTop="beige" waveFlip>
+    <Section background="white" waveFlip>
       <AnimatedWrapper className="flex flex-col gap-3">
         <SectionTitle>{t("title")}</SectionTitle>
         <p className="max-w-2xl text-16reg text-graphite">{t("text")}</p>
       </AnimatedWrapper>
 
-      <ul className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:gap-6 md:grid-cols-2 xl:grid-cols-3">
         {popularDishes.map((dish, index) => (
           <AnimatedWrapper
             key={dish.slug}

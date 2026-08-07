@@ -19,7 +19,7 @@ export default async function Categories() {
         <div className="hidden lg:block absolute lg:left-0 lg:top-[40px] xl:top-[80px] w-[275px] h-[187px]">
           <Image
             src="/images/home/categories/fork.webp"
-            alt="fork"
+            alt={t("alts.fork")}
             fill
             className="object-cover"
           />
@@ -36,7 +36,7 @@ export default async function Categories() {
         <div className="hidden lg:block absolute lg:right-[-110px] xl:right-[-201px] lg:bottom-[-40px] w-[715px] h-[484px]">
           <Image
             src="/images/home/categories/bg-image.webp"
-            alt="bg image"
+            alt={t("alts.bgImage")}
             fill
             className="object-cover"
           />

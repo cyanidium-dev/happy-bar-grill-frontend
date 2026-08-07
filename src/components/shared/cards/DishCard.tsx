@@ -25,73 +25,79 @@ export default async function DishCard({
   const t = await getTranslations("Product");
   const href = `/menu/${dish.categorySlug}/${dish.slug}`;
 
+  // Lift lives on an outer wrapper — never on the same node as
+  // `backdrop-blur`. Sibling transforms + backdrop-filter leave paint
+  // smudges on neighboring cards (Chrome/Safari compositing bug).
   return (
-    <Card
-      as="article"
-      interactive
+    <div
       className={cn(
-        "flex h-full flex-col gap-3 bg-white/34 p-3 backdrop-blur-[20px] sm:gap-4 sm:p-4",
+        "group isolate h-full transition duration-300 ease-out xl:hover:-translate-y-1",
         className,
       )}
     >
-      <div className="flex items-stretch gap-3 sm:gap-4">
-        <div className="flex min-w-0 flex-1 flex-col gap-2">
-          <Link href={href}>
-            <h3 className="line-clamp-3 text-18semi text-navy transition-colors duration-300 xl:group-hover:text-red sm:text-20semi">
-              {dish.name}
-            </h3>
-          </Link>
-          <DishDescription
-            text={dish.description}
-            showMoreLabel={t("showMore")}
-            showLessLabel={t("showLess")}
-          />
-        </div>
+      <Card
+        as="article"
+        className="flex h-full flex-col gap-3 bg-white/34 p-3 shadow-[0_16px_48px_rgba(0,40,77,0.32)] backdrop-blur-[20px] transition-[box-shadow] duration-300 ease-out sm:gap-4 sm:p-4 xl:group-hover:shadow-card-hover"
+      >
+        <div className="flex items-stretch gap-3 sm:gap-4">
+          <div className="flex min-w-0 flex-1 flex-col gap-2">
+            <Link href={href}>
+              <h3 className="line-clamp-3 text-18semi text-navy transition-colors duration-300 xl:group-hover:text-red sm:text-20semi">
+                {dish.name}
+              </h3>
+            </Link>
+            <DishDescription
+              text={dish.description}
+              showMoreLabel={t("showMore")}
+              showLessLabel={t("showLess")}
+            />
+          </div>
 
-        <Link
-          href={href}
-          className="relative block aspect-[4/3] w-36 shrink-0 self-start overflow-hidden rounded-tl-xl rounded-br-xl xs:w-50 sm:w-60 md:w-42 lg:w-50 xl:w-40"
-        >
-          <CardMedia
-            src={dish.image}
-            alt={dish.name}
-            className="h-full w-full"
-            sizes="(max-width: 400px) 144px, (max-width: 640px) 160px, 192px"
-          />
-          {dish.tag && (
-            <Badge variant={dish.tag} className="absolute left-2 top-2">
-              {t(`tags.${dish.tag}`)}
-            </Badge>
-          )}
-        </Link>
-      </div>
-
-      <div className="mt-auto flex items-end justify-between gap-3 border-t border-navy/10 pt-3">
-        <div className="flex flex-col">
-          <span className="flex items-baseline gap-2">
-            <span className="font-findsans text-16semi sm:text-20semi text-navy">
-              {dish.price} {t("currency")}
-            </span>
-            {dish.oldPrice && (
-              <span className="text-14med text-grey line-through">
-                {dish.oldPrice} {t("currency")}
-              </span>
+          <Link
+            href={href}
+            className="relative block aspect-[4/3] w-36 shrink-0 self-start overflow-hidden rounded-tl-xl rounded-br-xl xs:w-50 sm:w-60 md:w-42 lg:w-50 xl:w-40"
+          >
+            <CardMedia
+              src={dish.image}
+              alt={dish.name}
+              className="h-full w-full"
+              sizes="(max-width: 400px) 144px, (max-width: 640px) 160px, 192px"
+            />
+            {dish.tag && (
+              <Badge variant={dish.tag} className="absolute left-2 top-2">
+                {t(`tags.${dish.tag}`)}
+              </Badge>
             )}
-          </span>
-          <span className="text-12med text-grey-dark">
-            {dish.weight} {t("weightUnit")}
-          </span>
+          </Link>
         </div>
 
-        <Button
-          variant="primary"
-          size="icon"
-          shape="leaf"
-          aria-label={t("addToCart")}
-        >
-          <PlusIcon className="size-5" />
-        </Button>
-      </div>
-    </Card>
+        <div className="mt-auto flex items-end justify-between gap-3 border-t border-navy/10 pt-3">
+          <div className="flex flex-col">
+            <span className="flex items-baseline gap-2">
+              <span className="font-findsans text-16semi sm:text-20semi text-navy">
+                {dish.price} {t("currency")}
+              </span>
+              {dish.oldPrice && (
+                <span className="text-14med text-grey line-through">
+                  {dish.oldPrice} {t("currency")}
+                </span>
+              )}
+            </span>
+            <span className="text-12med text-grey-dark">
+              {dish.weight} {t("weightUnit")}
+            </span>
+          </div>
+
+          <Button
+            variant="primary"
+            size="icon"
+            shape="leaf"
+            aria-label={t("addToCart")}
+          >
+            <PlusIcon className="size-5" />
+          </Button>
+        </div>
+      </Card>
+    </div>
   );
 }

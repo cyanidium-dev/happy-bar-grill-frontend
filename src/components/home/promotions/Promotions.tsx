@@ -5,6 +5,7 @@ import DishCard from "@/components/shared/cards/DishCard";
 import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
 import { promotions } from "@/data/home";
+import Image from "next/image";
 
 /**
  * Block 3 — promotions. A few current deals to show value and nudge the order.
@@ -14,11 +15,43 @@ export default async function Promotions() {
   const t = await getTranslations("HomePage.promotions");
 
   return (
-    <Section background="beige" waveTop="white" waveFlip>
+    <Section
+      background="beige"
+      waveTop="white"
+      waveFlip
+      className="rounded-b-[24px] lg:rounded-b-[36px] overflow-hidden"
+    >
+      <div className="hidden lg:block absolute lg:bottom-[0px] right-0 lg:w-[390px] lg:h-[268px]">
+        <Image
+          src="/images/home/promotions/pizza.webp"
+          alt={t("alts.pizza")}
+          fill
+          className="object-cover"
+        />
+      </div>
+
+      <div className="hidden lg:block absolute lg:right-[320px] lg:top-[80px] w-[199px] h-[223px]">
+        <Image
+          src="/images/home/promotions/tomato-top.webp"
+          alt={t("alts.tomatoTop")}
+          fill
+          className="object-cover"
+        />
+      </div>
+
+      <div className="hidden lg:block absolute lg:left-[-60px] bottom-[-40px] lg:w-[261px] lg:h-[166px]">
+        <Image
+          src="/images/home/promotions/tomato-bottom.webp"
+          alt={t("alts.tomatoBottom")}
+          fill
+          className="object-cover"
+        />
+      </div>
+
       <div className="flex flex-col gap-3 lg:flex-row lg:justify-between">
         <AnimatedWrapper className="flex flex-col gap-3">
           <SectionTitle>{t("title")}</SectionTitle>
-          <p className="max-w-[500px] xl:max-w-2xl text-16reg text-graphite">
+          <p className="lg:max-w-[420px] xl:max-w-2xl text-16reg text-graphite">
             {t("text")}
           </p>
         </AnimatedWrapper>

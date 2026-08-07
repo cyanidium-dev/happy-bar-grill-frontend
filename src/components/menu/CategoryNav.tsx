@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getCategories } from "@/data/menu";
@@ -20,8 +21,8 @@ const inactiveCls =
 
 /**
  * Menu category navigation. Same links + active state in two layouts:
- * sticky scrollable chips on the top (mobile → below xl) and a sticky vertical
- * sidebar from xl (matching bravo's structure), styled in the project's system.
+ * sticky scrollable chips on the top (< xl) and a sticky vertical sidebar
+ * from xl, top-aligned with the dishes grid.
  */
 export default async function CategoryNav({
   activeSlug,
@@ -43,6 +44,8 @@ export default async function CategoryNav({
   if (variant === "mobile") {
     return <MobileCategoryChips items={items} ariaLabel={t("categoriesLabel")} />;
   }
+
+  const tAlts = await getTranslations("Menu.alts");
 
   return (
     <nav
@@ -67,6 +70,16 @@ export default async function CategoryNav({
           </li>
         ))}
       </ul>
+
+      <div className="pointer-events-none relative mt-8 h-[140px] w-[210px] -translate-x-6">
+        <Image
+          src="/images/home/promotions/tomato-bottom.webp"
+          alt={tAlts("tomatoBottom")}
+          fill
+          className="object-contain object-left"
+          sizes="210px"
+        />
+      </div>
     </nav>
   );
 }

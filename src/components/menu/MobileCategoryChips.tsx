@@ -122,33 +122,37 @@ export default function MobileCategoryChips({
   return (
     <nav
       aria-label={ariaLabel}
-      className="sticky z-30 -mx-6 bg-white px-6 py-3 xl:hidden"
+      className="sticky z-30 bg-white py-3 xl:hidden"
       style={{ top: "var(--header-height)" }}
     >
-      <ul
-        ref={scrollerRef}
-        className="flex gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {items.map((item) => (
-          <li
-            key={item.href}
-            data-active={item.active || undefined}
-            className="shrink-0 py-0.5 px-0.5"
-          >
-            <Link
-              href={item.href}
-              aria-current={item.active ? "page" : undefined}
-              className={cn(
-                itemBase,
-                "inline-flex whitespace-nowrap rounded-full px-4 py-3 text-14med",
-                item.active ? activeCls : inactiveCls,
-              )}
+      {/* Same left-edge alignment as Hero’s horizontal dish strip — outside
+          `.container` so chips can scroll to the viewport edge on mobile. */}
+      <div className="mx-auto min-w-0 xs:max-w-full sm:ml-[calc(50%-320px)] md:ml-[calc(50%-384px)] lg:ml-[calc(50%-512px)] xl:ml-[calc(50%-640px)] xl:max-w-[1280px]">
+        <ul
+          ref={scrollerRef}
+          className="flex gap-2 overflow-x-auto pl-6 lg:pl-20 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {items.map((item) => (
+            <li
+              key={item.href}
+              data-active={item.active || undefined}
+              className="shrink-0 px-0.5 py-0.5"
             >
-              {item.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
+              <Link
+                href={item.href}
+                aria-current={item.active ? "page" : undefined}
+                className={cn(
+                  itemBase,
+                  "inline-flex whitespace-nowrap rounded-full px-4 py-3 text-14med",
+                  item.active ? activeCls : inactiveCls,
+                )}
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </nav>
   );
 }

@@ -133,7 +133,12 @@
     "allDishes": "Усі страви",
     "emptyCategory": "У цій категорії поки немає страв.",
     "bannerAlt": "Акційна пропозиція Happy Bar & Grill Paradise",
-    "categoriesLabel": "Категорії меню"
+    "categoriesLabel": "Категорії меню",
+    "alts": {
+      "tomatoTop": "Декоративне зображення помідора",
+      "tomatoBottom": "Декоративне зображення помідора",
+      "pizza": "Декоративне зображення піци"
+    }
   },
   "Nav": {
     "home": "Головна",

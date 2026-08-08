@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Button from "@/components/shared/buttons/Button";
 import CartIcon from "@/components/shared/icons/CartIcon";
+import { flyToCart } from "@/lib/cartFly";
 import { cn } from "@/utils/cn";
 
 export type DishQuantityAddLabels = {
@@ -22,8 +23,11 @@ const stepBtn =
  */
 export default function DishQuantityAdd({
   labels,
+  image,
 }: {
   labels: DishQuantityAddLabels;
+  /** Dish image URL — the thumbnail that flies to the cart. */
+  image?: string;
 }) {
   const [quantity, setQuantity] = useState(1);
 
@@ -61,6 +65,7 @@ export default function DishQuantityAdd({
         variant="primary"
         shape="leaf"
         className={cn("flex-1", "sm:flex-none sm:min-w-56")}
+        onClick={(event) => flyToCart(event.currentTarget, image)}
       >
         <CartIcon className="size-5" />
         {labels.addToCart}

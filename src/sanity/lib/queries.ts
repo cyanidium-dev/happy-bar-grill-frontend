@@ -93,3 +93,19 @@ export const PROMOTIONS_QUERY = defineQuery(/* groq */ `
       ${dishFields}
     }
 `);
+
+/**
+ * Menu catalog promo banner singleton (`menuPageBanner`). Mobile image falls
+ * back to desktop when not set; alt prefers the required desktop field.
+ */
+export const MENU_PAGE_BANNER_QUERY = defineQuery(/* groq */ `
+  *[_type == "menuPageBanner"][0] {
+    "imageDesktop": imageDesktop.asset->url,
+    "imageMobile": coalesce(imageMobile.asset->url, imageDesktop.asset->url),
+    "alt": coalesce(
+      ${localized("imageDesktop.alt")},
+      ${localized("imageMobile.alt")}
+    ),
+    href
+  }
+`);

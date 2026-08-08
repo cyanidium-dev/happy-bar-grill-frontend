@@ -1,5 +1,6 @@
 import { cache } from "react";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { SPECIAL_OFFERS_SLUG } from "@/constants/menu";
 import type { Category, Dish } from "@/types/content";
 import { routing, type Locale } from "@/i18n/routing";
 import { sanityFetch } from "@/sanity/lib/fetch";
@@ -10,6 +11,7 @@ import {
   DISH_BY_SLUG_QUERY,
   DISHES_BY_CATEGORY_QUERY,
   HERO_DISHES_QUERY,
+  MENU_PAGE_BANNER_QUERY,
   POPULAR_DISHES_QUERY,
   PROMOTIONS_QUERY,
   SIMILAR_DISHES_QUERY,
@@ -24,23 +26,26 @@ import {
  */
 
 export type MenuBanner = {
-  /** Wide promo image (comes from the admin panel later). */
   imageMobile: string;
   imageDesktop: string;
-  /** Optional click-through target for the banner. */
-  href?: string;
+  /** Locale-resolved alt from Sanity (`imageDesktop.alt` / `imageMobile.alt`). */
+  alt: string;
+  /** Optional click-through: relative path or absolute URL. */
+  href?: string | null;
 };
 
-const menuBanner: MenuBanner = {
-  imageDesktop:
-    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&q=80",
-  imageMobile:
-    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
-};
+export const getMenuBanner = cache(
+  async (locale?: Locale): Promise<MenuBanner | null> => {
+    const banner = await sanityFetch<MenuBanner | null>({
+      query: MENU_PAGE_BANNER_QUERY,
+      params: await localeParams({}, locale),
+      tags: ["menuPageBanner"],
+    });
 
-export function getMenuBanner(): MenuBanner {
-  return menuBanner;
-}
+    if (!banner?.imageDesktop) return null;
+    return banner;
+  },
+);
 
 async function resolveLocale(override?: Locale): Promise<Locale> {
   if (override) return override;
@@ -70,6 +75,18 @@ export const getCategories = cache(
 
 export const getCategoryBySlug = cache(
   async (slug: string, locale?: Locale): Promise<Category | null> => {
+    // Virtual category: discount-tagged dishes stay in their food categories
+    // in Sanity and are also listed here via PROMOTIONS_QUERY.
+    if (slug === SPECIAL_OFFERS_SLUG) {
+      const resolved = await resolveLocale(locale);
+      const t = await getTranslations({ locale: resolved, namespace: "Menu" });
+      return {
+        slug: SPECIAL_OFFERS_SLUG,
+        name: t("specialOffers"),
+        image: "",
+      };
+    }
+
     return sanityFetch<Category | null>({
       query: CATEGORY_BY_SLUG_QUERY,
       params: await localeParams({ slug }, locale),
@@ -88,6 +105,10 @@ export const getAllDishes = cache(async (locale?: Locale): Promise<Dish[]> => {
 
 export const getDishesByCategory = cache(
   async (slug: string, locale?: Locale): Promise<Dish[]> => {
+    if (slug === SPECIAL_OFFERS_SLUG) {
+      return getPromotions(locale);
+    }
+
     return sanityFetch<Dish[]>({
       query: DISHES_BY_CATEGORY_QUERY,
       params: await localeParams({ slug }, locale),

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef } from "react";
-import { Link } from "@/i18n/navigation";
+import CategoryNavLink from "@/components/menu/CategoryNavLink";
 import { cn } from "@/utils/cn";
 
 export type CategoryChip = { label: string; href: string; active: boolean };
@@ -138,7 +138,7 @@ export default function MobileCategoryChips({
               data-active={item.active || undefined}
               className="shrink-0 px-0.5 py-0.5"
             >
-              <Link
+              <CategoryNavLink
                 href={item.href}
                 aria-current={item.active ? "page" : undefined}
                 className={cn(
@@ -148,7 +148,7 @@ export default function MobileCategoryChips({
                 )}
               >
                 {item.label}
-              </Link>
+              </CategoryNavLink>
             </li>
           ))}
         </ul>

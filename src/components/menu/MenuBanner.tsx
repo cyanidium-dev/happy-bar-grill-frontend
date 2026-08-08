@@ -4,38 +4,66 @@ import { Link } from "@/i18n/navigation";
 import Container from "@/components/shared/container/Container";
 import { getMenuBanner } from "@/data/menu";
 
+function isExternalHref(href: string) {
+  return /^https?:\/\//i.test(href);
+}
+
 /**
  * Promo banner shown on the menu catalog views (`/menu` and every
  * `/menu/[category]`) but NOT on a dish detail page — so it's rendered by those
  * pages directly rather than a parent layout (which would also wrap the dish
- * route). Content is a static placeholder for now and will come from the admin
- * panel later — see `getMenuBanner()` in `data/menu.ts`.
+ * route). Content comes from the Sanity `menuPageBanner` singleton.
  */
 export default async function MenuBanner() {
-  const banner = getMenuBanner();
+  const banner = await getMenuBanner();
+  if (!banner) return null;
+
   const t = await getTranslations("Menu");
+  const alt = banner.alt || t("bannerAlt");
 
   const media = (
-    <Image
-      src={banner.imageDesktop}
-      alt={t("bannerAlt")}
-      fill
-      priority
-      sizes="(max-width: 1280px) 100vw, 1140px"
-      className="object-cover"
-    />
+    <>
+      <Image
+        src={banner.imageMobile}
+        alt={alt}
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover lg:hidden"
+      />
+      <Image
+        src={banner.imageDesktop}
+        alt={alt}
+        fill
+        priority
+        sizes="(max-width: 1280px) 100vw, 1140px"
+        className="hidden object-cover lg:block"
+      />
+    </>
   );
+
+  const content =
+    banner.href && isExternalHref(banner.href) ? (
+      <a
+        href={banner.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block h-full w-full"
+      >
+        {media}
+      </a>
+    ) : banner.href ? (
+      <Link href={banner.href} className="block h-full w-full">
+        {media}
+      </Link>
+    ) : (
+      media
+    );
 
   return (
     <Container className="w-full pt-14">
       <div className="relative aspect-[3/2] overflow-hidden rounded-tl-2xl rounded-br-2xl shadow-card xs:aspect-[2/1] lg:aspect-[1140/360]">
-        {banner.href ? (
-          <Link href={banner.href} className="block h-full w-full">
-            {media}
-          </Link>
-        ) : (
-          media
-        )}
+        {content}
       </div>
     </Container>
   );

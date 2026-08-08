@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import MenuBanner from "@/components/menu/MenuBanner";
 import MenuView from "@/components/menu/MenuView";
+import { SPECIAL_OFFERS_SLUG } from "@/constants/menu";
 import { getCategories, getCategoryBySlug } from "@/data/menu";
 import type { PageProps } from "@/types/page";
 
@@ -13,7 +14,10 @@ type MenuCategoryProps = PageProps<{ category: string }>;
 // Slugs are language-agnostic — pass a fixed locale for generateStaticParams.
 export async function generateStaticParams() {
   const categories = await getCategories("uk");
-  return categories.map((category) => ({ category: category.slug }));
+  return [
+    { category: SPECIAL_OFFERS_SLUG },
+    ...categories.map((category) => ({ category: category.slug })),
+  ];
 }
 
 export async function generateMetadata({

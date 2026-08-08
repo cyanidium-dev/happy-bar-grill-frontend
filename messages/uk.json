@@ -128,6 +128,7 @@
   },
   "Menu": {
     "allDishes": "Усі страви",
+    "specialOffers": "Спеціальні пропозиції",
     "emptyCategory": "У цій категорії поки немає страв.",
     "bannerAlt": "Акційна пропозиція Happy Bar & Grill Paradise",
     "categoriesLabel": "Категорії меню",

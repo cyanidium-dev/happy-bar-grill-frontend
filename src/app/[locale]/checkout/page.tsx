@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
-import PagePlaceholder from "@/components/shared/PagePlaceholder";
+import CheckoutView, {
+  type UpsellCard,
+} from "@/components/checkout/CheckoutView";
+import DishCard from "@/components/shared/cards/DishCard";
+import { getUpsellDishes } from "@/data/menu";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
 
@@ -16,13 +20,24 @@ export default async function CheckoutPage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const t = await getTranslations("Metadata");
+  const [t, upsell] = await Promise.all([
+    getTranslations("Metadata"),
+    getUpsellDishes(locale),
+  ]);
 
-  // Single-page order flow (cart summary + order form) later.
+  // DishCard is a server component, so render the recommended cards here and
+  // hand them to the client checkout view (which filters/orders them).
+  const upsellCards: UpsellCard[] = upsell.map((dish) => ({
+    slug: dish.slug,
+    node: <DishCard dish={dish} variant="beige" />,
+  }));
+
   return (
     <>
       <BreadCrumbs items={[{ label: t("checkout.title") }]} />
-      <PagePlaceholder title={t("checkout.title")} />
+      <section className="bg-white">
+        <CheckoutView upsellCards={upsellCards} />
+      </section>
     </>
   );
 }

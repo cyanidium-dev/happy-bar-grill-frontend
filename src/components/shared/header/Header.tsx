@@ -10,6 +10,7 @@ import Container from "@/components/shared/container/Container";
 import PhoneIcon from "@/components/shared/icons/PhoneIcon";
 import CartButton from "./CartButton";
 import MobileMenu from "./MobileMenu";
+import CartModal from "@/components/cart/CartModal";
 import { navLinks } from "@/config/navigation";
 import { PHONE, PHONE_HREF } from "@/constants/contacts";
 import { cn } from "@/utils/cn";
@@ -35,6 +36,7 @@ export default function Header({ className }: { className?: string }) {
     pathname === "/" || pathname === "/blog" || pathname.startsWith("/blog/");
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   // Solid navy-dark on non-hero pages always; on hero pages only after scroll.
   const solid = !isHeroPage || scrolled;
@@ -124,7 +126,7 @@ export default function Header({ className }: { className?: string }) {
               </a>
             </div>
 
-            <CartButton label={th("cart")} />
+            <CartButton label={th("cart")} onOpen={() => setCartOpen(true)} />
 
             <button
               type="button"
@@ -160,6 +162,7 @@ export default function Header({ className }: { className?: string }) {
       </div>
 
       <MobileMenu open={open} onClose={() => setOpen(false)} />
+      <CartModal open={cartOpen} onClose={() => setCartOpen(false)} />
     </header>
   );
 }

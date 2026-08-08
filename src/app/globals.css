@@ -84,6 +84,9 @@
   --text-18reg: 18px;
   --text-18reg--font-weight: 400;
   --text-18reg--line-height: 120%;
+  --text-16bold: 16px;
+  --text-16bold--font-weight: 700;
+  --text-16bold--line-height: 120%;
   --text-16semi: 16px;
   --text-16semi--font-weight: 600;
   --text-16semi--line-height: 120%;
@@ -93,6 +96,9 @@
   --text-16reg: 16px;
   --text-16reg--font-weight: 400;
   --text-16reg--line-height: 120%;
+  --text-14bold: 14px;
+  --text-14bold--font-weight: 700;
+  --text-14bold--line-height: 120%;
   --text-14semi: 14px;
   --text-14semi--font-weight: 600;
   --text-14semi--line-height: 120%;
@@ -111,6 +117,9 @@
   --text-12med: 12px;
   --text-12med--font-weight: 500;
   --text-12med--line-height: 120%;
+  --text-12reg: 12px;
+  --text-12reg--font-weight: 400;
+  --text-12reg--line-height: 120%;
   --text-12light: 12px;
   --text-12light--font-weight: 300;
   --text-12light--line-height: 120%;

@@ -69,11 +69,11 @@ export default function LocaleSwitcher({
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="cursor-pointer outline-none flex items-center gap-[9px] outline-none text-navy xl:hover:text-red focus-visible:text-red transition duration-300 ease-in-out"
+        className="group flex cursor-pointer items-center gap-[9px] outline-none transition duration-300 ease-in-out"
       >
         <span
           className={cn(
-            "text-[16px] lg:text-[14px] xl:text-[16px] font-medium leading-[125%] uppercase",
+            "text-[16px] font-medium leading-[125%] uppercase transition duration-300 ease-in-out lg:text-[14px] xl:text-[16px] xl:group-hover:text-red group-focus-visible:text-red",
             onDark ? "text-white" : "text-navy-dark",
           )}
         >
@@ -81,7 +81,7 @@ export default function LocaleSwitcher({
         </span>
         <LocaleSwitcherArrowIcon
           className={cn(
-            "size-3 xl:size-4 mb-[1px] transition duration-300 ease-in-out",
+            "mb-[1px] size-3 transition duration-300 ease-in-out xl:size-4 xl:group-hover:text-red group-focus-visible:text-red",
             onDark ? "text-white" : "text-navy-dark",
             isOpen ? "rotate-180" : "rotate-0",
           )}

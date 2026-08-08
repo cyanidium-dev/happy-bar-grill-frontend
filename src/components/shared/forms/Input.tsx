@@ -37,7 +37,9 @@ export default function Input({
   const describedBy = error ? errorId : hint ? hintId : undefined;
 
   return (
-    <div className={cn("flex w-full flex-col gap-1.5", wrapperClassName)}>
+    <div
+      className={cn("relative flex w-full flex-col gap-1.5", wrapperClassName)}
+    >
       {label && (
         <label htmlFor={inputId} className="text-14med text-graphite">
           {label}
@@ -56,7 +58,7 @@ export default function Input({
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy}
         className={cn(
-          "w-full rounded-sm border bg-white py-3 pl-6 pr-5 text-16reg text-graphite placeholder-grey outline-none transition duration-300 ease-out",
+          "w-full rounded-sm border bg-white py-3 pl-6 pr-5 text-14reg text-graphite placeholder-grey outline-none transition duration-300 ease-out md:text-16reg",
           error
             ? "border-red focus:border-red"
             : "border-grey-dark focus:border-navy",
@@ -66,7 +68,10 @@ export default function Input({
       />
 
       {error ? (
-        <p id={errorId} className="text-12med text-red">
+        <p
+          id={errorId}
+          className="absolute top-full left-0 mt-1 text-12med text-red"
+        >
           {error}
         </p>
       ) : hint ? (

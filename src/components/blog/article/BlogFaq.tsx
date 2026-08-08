@@ -10,7 +10,7 @@ import { cn } from "@/utils/cn";
 /**
  * FAQ accordion built from `customFaq`. Each answer is Portable Text (it can
  * contain the `faqAnswerButton` CTA), rendered with the shared serializers.
- * The first item starts open.
+ * All items start collapsed.
  */
 export default function BlogFaq({
   title,
@@ -19,7 +19,7 @@ export default function BlogFaq({
   title: string;
   items: BlogFaqItem[];
 }) {
-  const [openKey, setOpenKey] = useState<string | null>(items[0]?._key ?? null);
+  const [openKey, setOpenKey] = useState<string | null>(null);
 
   if (items.length === 0) return null;
 

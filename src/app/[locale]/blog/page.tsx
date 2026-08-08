@@ -28,7 +28,7 @@ export default async function BlogPage({ params }: PageProps) {
   return (
     <>
       <section
-        className="relative flex items-end overflow-hidden pt-[250px] pb-40 rounded-b-[24px] lg:rounded-b-[36px]"
+        className="relative flex items-end overflow-hidden pt-[200px] pb-40 rounded-b-[24px] lg:rounded-b-[36px]"
         style={{ marginTop: "calc(var(--header-height) * -1)" }}
       >
         <div className="absolute inset-0 -z-20 bg-navy-dark" />

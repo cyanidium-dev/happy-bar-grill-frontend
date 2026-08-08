@@ -19,9 +19,10 @@ const surfaces: Record<DishCardVariant, string> = {
 
 /**
  * Menu dish card, shared by the home "Popular" and "Promotions" sections and
- * the catalog. Top row: text on the left, image on the right. Bottom row:
- * price/weight and the quick add-to-cart button span the full card width under
- * the photo (wired to the cart store in a later step).
+ * the catalog. A stretched link covers the whole card so any click opens the
+ * dish page; "show more" and the quick-add button keep their own handlers via
+ * `pointer-events-auto`. Top row: text on the left, image on the right. Bottom
+ * row: price/weight and the add-to-cart button (wired to the cart store later).
  *
  * Glass (`backdrop-blur` + translucent fill) lives on a dedicated plate, never
  * on the same node as `overflow-hidden` or a hover `transform` — that combo
@@ -56,14 +57,23 @@ export default async function DishCard({
         )}
       />
 
-      <div className="relative flex h-full flex-col gap-3 overflow-hidden rounded-[inherit] p-3 sm:gap-4 sm:p-4">
+      {/*
+        Stretched link makes the whole card open the dish page. Content sits
+        above it with pointer-events-none so clicks fall through; interactive
+        controls (show more, add to cart) opt back in with pointer-events-auto.
+      */}
+      <Link
+        href={href}
+        className="absolute inset-0 z-[1] rounded-[inherit]"
+        aria-label={dish.name}
+      />
+
+      <div className="pointer-events-none relative z-[2] flex h-full flex-col gap-3 overflow-hidden rounded-[inherit] p-3 sm:gap-4 sm:p-4">
         <div className="flex items-stretch gap-3 sm:gap-4">
           <div className="flex min-w-0 flex-1 flex-col gap-2">
-            <Link href={href}>
-              <h3 className="font-findsans line-clamp-3 text-18bold text-navy transition-colors duration-300 xl:group-hover:text-red sm:text-20bold">
-                {dish.name}
-              </h3>
-            </Link>
+            <h3 className="font-findsans line-clamp-3 text-18bold text-navy transition-colors duration-300 xl:group-hover:text-red sm:text-20bold">
+              {dish.name}
+            </h3>
             <DishDescription
               text={dish.description}
               showMoreLabel={t("showMore")}
@@ -71,10 +81,7 @@ export default async function DishCard({
             />
           </div>
 
-          <Link
-            href={href}
-            className="relative block aspect-[4/3] w-36 shrink-0 self-start overflow-hidden rounded-tl-xl rounded-br-xl xs:w-50 sm:w-60 md:w-42 lg:w-50 xl:w-40"
-          >
+          <div className="relative aspect-[4/3] w-36 shrink-0 self-start overflow-hidden rounded-tl-xl rounded-br-xl xs:w-50 sm:w-60 md:w-42 lg:w-50 xl:w-40">
             <CardMedia
               src={dish.image}
               alt={dish.name}
@@ -86,13 +93,13 @@ export default async function DishCard({
                 {t(`tags.${dish.tag}`)}
               </Badge>
             )}
-          </Link>
+          </div>
         </div>
 
         <div className="mt-auto flex items-end justify-between gap-3 border-t border-navy/10 pt-3">
           <div className="flex flex-col">
             <span className="flex items-baseline gap-2">
-              <span className="inline-block mb-1 font-findsans text-14semi sm:text-16semi  text-navy">
+              <span className="mb-1 inline-block font-findsans text-14semi text-navy sm:text-16semi">
                 {dish.price} {t("currency")}
               </span>
               {dish.oldPrice && (
@@ -111,6 +118,7 @@ export default async function DishCard({
             size="icon"
             shape="leaf"
             aria-label={t("addToCart")}
+            className="pointer-events-auto"
           >
             <PlusIcon className="size-5" />
           </Button>

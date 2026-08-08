@@ -109,3 +109,61 @@ export const MENU_PAGE_BANNER_QUERY = defineQuery(/* groq */ `
     href
   }
 `);
+
+/* --------------------------------- Blog ---------------------------------- */
+
+/** Card fields shared by the blog list and the "other posts" block. */
+const blogPreviewFields = /* groq */ `
+  "slug": slug.current,
+  "title": ${localized("heroTitle")},
+  "description": ${localized("heroDescription")},
+  "image": heroMobileImage.asset->url,
+  "imageAlt": ${localized("heroMobileImage.alt")},
+  "createdAt": _createdAt,
+  "author": author->{ "name": ${localized("name")} }
+`;
+
+export const ALL_BLOG_POSTS_QUERY = defineQuery(/* groq */ `
+  *[_type == "blogPost" && defined(slug.current)] | order(_createdAt desc) {
+    ${blogPreviewFields}
+  }
+`);
+
+/** Full article. Localized Portable Text (`content`) keeps raw image asset refs
+ *  so the Portable Text image serializer can build URLs client-side. */
+export const BLOG_POST_BY_SLUG_QUERY = defineQuery(/* groq */ `
+  *[_type == "blogPost" && slug.current == $slug][0] {
+    "slug": slug.current,
+    "title": ${localized("heroTitle")},
+    "description": ${localized("heroDescription")},
+    "imageDesktop": heroDesktopImage.asset->url,
+    "imageDesktopAlt": ${localized("heroDesktopImage.alt")},
+    "imageMobile": heroMobileImage.asset->url,
+    "imageMobileAlt": ${localized("heroMobileImage.alt")},
+    "createdAt": _createdAt,
+    "content": coalesce(content[$locale], content.uk, content.ru),
+    "faq": customFaq[]{
+      _key,
+      "question": ${localized("question")},
+      "answer": coalesce(answer[$locale], answer.uk, answer.ru)
+    },
+    "author": author->{
+      "name": ${localized("name")},
+      "photo": photo.asset->url,
+      "photoAlt": ${localized("photo.alt")},
+      profileUrl
+    },
+    "seo": {
+      "metaTitle": ${localized("seo.metaTitle")},
+      "metaDescription": ${localized("seo.metaDescription")},
+      "ogTitle": ${localized("seo.opengraphTitle")},
+      "ogDescription": ${localized("seo.opengraphDescription")},
+      "ogImage": seo.opengraphImage.asset->url
+    }
+  }
+`);
+
+/** Slugs for `generateStaticParams` on the article route. */
+export const BLOG_POST_SLUGS_QUERY = defineQuery(/* groq */ `
+  *[_type == "blogPost" && defined(slug.current)].slug.current
+`);

@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@plugin "tailwind-scrollbar" {
+  nocompatible: true;
+  preferredStrategy: "pseudoelements";
+}
+
 /* =============================================================================
    Happy Bar Grill — design tokens (Tailwind v4, CSS-first `@theme`).
    Mirrors bravo's token approach (named colors + `<px><weight>` type scale),
@@ -247,6 +252,35 @@
 
   .no-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/* Thin 2px navy scrollbar (80% thumb, transparent track).
+   Do NOT set `scrollbar-width` / `scrollbar-color` on Chromium — those props
+   inherit and force the native scrollbar, ignoring ::-webkit-scrollbar width. */
+@utility scrollbar-brand {
+  scrollbar-width: initial;
+  scrollbar-color: initial;
+
+  &::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: color-mix(in srgb, var(--color-navy) 80%, transparent);
+  }
+}
+
+/* Firefox has no ::-webkit-scrollbar — thin + coloured is the closest match. */
+@supports (-moz-appearance: none) {
+  .scrollbar-brand {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--color-navy) 80%, transparent) transparent;
   }
 }
 

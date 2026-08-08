@@ -83,7 +83,7 @@ export default function CartModal({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-6 lg:px-8">
+        <div className="flex-1 overflow-y-auto px-6 scrollbar-brand lg:px-8">
           {isEmpty ? (
             <p className="py-24 text-center text-16reg text-grey-dark">
               {t("empty")}

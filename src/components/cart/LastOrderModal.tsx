@@ -19,9 +19,12 @@ import { cn } from "@/utils/cn";
 export default function LastOrderModal({
   open,
   onClose,
+  onOpenCart,
 }: {
   open: boolean;
   onClose: () => void;
+  /** Called after last-order lines are merged into the cart. */
+  onOpenCart: () => void;
 }) {
   const t = useTranslations("LastOrder");
   const tp = useTranslations("Product");
@@ -47,6 +50,7 @@ export default function LastOrderModal({
   const handleRepeat = () => {
     repeatLastOrder();
     onClose();
+    onOpenCart();
   };
 
   return (
@@ -93,7 +97,7 @@ export default function LastOrderModal({
               </button>
             </div>
 
-            <ul className="flex-1 overflow-y-auto px-4 pb-3 sm:px-5">
+            <ul className="flex-1 overflow-y-auto px-4 pb-3 scrollbar-brand sm:px-5">
               {lastOrder.items.map((item) => (
                 <li
                   key={item.id}

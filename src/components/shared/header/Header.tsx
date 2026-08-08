@@ -185,6 +185,7 @@ export default function Header({ className }: { className?: string }) {
       <LastOrderModal
         open={lastOrderOpen}
         onClose={() => setLastOrderOpen(false)}
+        onOpenCart={() => setCartOpen(true)}
       />
     </header>
   );

@@ -168,7 +168,7 @@ export const blogPortableTextComponents: PortableTextComponents = {
       if (rows.length === 0) return null;
       const [header, ...body] = rows;
       return (
-        <div className="my-8 w-full overflow-x-auto rounded-tl-xl rounded-br-xl border border-navy/12">
+        <div className="my-8 w-full overflow-x-auto rounded-tl-xl rounded-br-xl border border-navy/12 scrollbar-brand">
           <table className="w-full border-collapse text-14reg">
             <thead>
               <tr className="bg-navy text-white">

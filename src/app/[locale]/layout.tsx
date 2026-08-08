@@ -87,7 +87,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
   return (
     <html
       lang={locale}
-      className={`${montserrat.variable} ${findSansPro.variable} h-full antialiased`}
+      className={`${montserrat.variable} ${findSansPro.variable} h-full antialiased scrollbar-brand`}
     >
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider>

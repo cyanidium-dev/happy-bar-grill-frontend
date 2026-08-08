@@ -71,7 +71,7 @@ export default function MobileMenu({
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-6 py-12">
+        <nav className="flex-1 overflow-y-auto px-6 py-12 scrollbar-brand">
           <ul className="flex flex-col">
             {navLinks.map(({ href, key }) => (
               <li key={key} className="border-b border-white/10">

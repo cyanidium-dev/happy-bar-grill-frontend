@@ -11,6 +11,8 @@ import PhoneIcon from "@/components/shared/icons/PhoneIcon";
 import CartButton from "./CartButton";
 import MobileMenu from "./MobileMenu";
 import CartModal from "@/components/cart/CartModal";
+import LastOrderButton from "@/components/cart/LastOrderButton";
+import LastOrderModal from "@/components/cart/LastOrderModal";
 import { navLinks } from "@/config/navigation";
 import { PHONE, PHONE_HREF } from "@/constants/contacts";
 import { cn } from "@/utils/cn";
@@ -37,6 +39,7 @@ export default function Header({ className }: { className?: string }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [lastOrderOpen, setLastOrderOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   // Solid navy-dark on non-hero pages always; on hero pages only after scroll.
   const solid = !isHeroPage || scrolled;
@@ -69,7 +72,10 @@ export default function Header({ className }: { className?: string }) {
   return (
     <header
       ref={headerRef}
-      className={cn("fixed inset-x-0 top-0 z-50 w-full", className)}
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 w-full pr-[var(--scroll-lock-offset,0px)]",
+        className,
+      )}
     >
       <div
         className={cn(
@@ -126,7 +132,20 @@ export default function Header({ className }: { className?: string }) {
               </a>
             </div>
 
-            <CartButton label={th("cart")} onOpen={() => setCartOpen(true)} />
+            <LastOrderButton
+              label={th("lastOrder")}
+              onOpen={() => {
+                setCartOpen(false);
+                setLastOrderOpen(true);
+              }}
+            />
+            <CartButton
+              label={th("cart")}
+              onOpen={() => {
+                setLastOrderOpen(false);
+                setCartOpen(true);
+              }}
+            />
 
             <button
               type="button"
@@ -163,6 +182,10 @@ export default function Header({ className }: { className?: string }) {
 
       <MobileMenu open={open} onClose={() => setOpen(false)} />
       <CartModal open={cartOpen} onClose={() => setCartOpen(false)} />
+      <LastOrderModal
+        open={lastOrderOpen}
+        onClose={() => setLastOrderOpen(false)}
+      />
     </header>
   );
 }

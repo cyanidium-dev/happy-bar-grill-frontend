@@ -18,6 +18,8 @@ interface CartState {
    * Pass `orderNumber` when it was already generated (e.g. for Telegram notify).
    */
   placeOrder: (customer: OrderCustomer, orderNumber?: string) => LastOrder;
+  /** Merges every line from `lastOrder` into the live cart (quantities add up). */
+  repeatLastOrder: () => void;
 }
 
 /**
@@ -82,6 +84,15 @@ export const useCartStore = create<CartState>()(
         };
         set({ lastOrder: order, items: [] });
         return order;
+      },
+
+      repeatLastOrder: () => {
+        const { lastOrder, addItem } = get();
+        if (!lastOrder) return;
+        for (const item of lastOrder.items) {
+          const { quantity, ...line } = item;
+          addItem(line, quantity);
+        }
       },
     }),
     {

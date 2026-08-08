@@ -12,6 +12,7 @@ import CartItemRow from "./CartItemRow";
 import CartIcon from "@/components/shared/icons/CartIcon";
 import CloseIcon from "@/components/shared/icons/CloseIcon";
 import { buttonStyles, Sheen } from "@/components/shared/buttons/Button";
+import { lockBodyScroll } from "@/lib/lockBodyScroll";
 import { cn } from "@/utils/cn";
 
 /**
@@ -34,14 +35,13 @@ export default function CartModal({
 
   useEffect(() => {
     if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const unlock = lockBodyScroll();
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
     };
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = previous;
+      unlock();
       window.removeEventListener("keydown", onKey);
     };
   }, [open, onClose]);
@@ -54,7 +54,7 @@ export default function CartModal({
         aria-hidden
         onClick={onClose}
         className={cn(
-          "fixed inset-0 z-[60] bg-navy-dark/50 backdrop-blur-[2px] transition-opacity duration-300",
+          "fixed inset-0 z-[60] bg-navy-dark/50 transition-opacity duration-300",
           open ? "opacity-100" : "pointer-events-none opacity-0",
         )}
       />

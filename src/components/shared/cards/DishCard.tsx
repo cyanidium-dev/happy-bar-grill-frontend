@@ -70,7 +70,7 @@ export default async function DishCard({
       <div className="pointer-events-none relative z-[2] flex h-full flex-col gap-3 overflow-hidden rounded-[inherit] p-3 sm:gap-4 sm:p-4">
         <div className="flex items-stretch gap-3 sm:gap-4">
           <div className="flex min-w-0 flex-1 flex-col gap-2">
-            <h3 className="font-findsans line-clamp-3 text-18bold text-navy transition-colors duration-300 xl:group-hover:text-red sm:text-20bold">
+            <h3 className="font-findsans line-clamp-3 text-16bold text-navy transition-colors duration-300 xl:group-hover:text-red">
               {dish.name}
             </h3>
             <DishDescription
@@ -98,7 +98,7 @@ export default async function DishCard({
         <div className="mt-auto flex items-end justify-between gap-3 border-t border-navy/10 pt-3">
           <div className="flex flex-col">
             <span className="flex items-baseline gap-2">
-              <span className="mb-1 inline-block font-findsans text-14semi text-navy sm:text-16semi">
+              <span className="mb-1 inline-block font-findsans text-14bold text-navy">
                 {dish.price} {t("currency")}
               </span>
               {dish.oldPrice && (
@@ -112,7 +112,17 @@ export default async function DishCard({
             </span>
           </div>
 
-          <QuickAddButton image={dish.image} label={t("addToCart")} />
+          <QuickAddButton
+            line={{
+              id: dish.slug,
+              name: dish.name,
+              price: dish.price,
+              image: dish.image,
+              imageAlt: dish.name,
+              weight: dish.weight,
+            }}
+            label={t("addToCart")}
+          />
         </div>
       </div>
     </article>

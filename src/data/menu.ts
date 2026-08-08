@@ -15,6 +15,7 @@ import {
   POPULAR_DISHES_QUERY,
   PROMOTIONS_QUERY,
   SIMILAR_DISHES_QUERY,
+  UPSELL_DISHES_QUERY,
 } from "@/sanity/lib/queries";
 
 /**
@@ -175,6 +176,15 @@ export const getHeroDishes = cache(async (locale?: Locale): Promise<Dish[]> => {
     query: HERO_DISHES_QUERY,
     params: await localeParams({}, locale),
     tags: ["menuDish"],
+  });
+});
+
+/** Dishes from `upsell`-flagged categories, recommended at checkout. */
+export const getUpsellDishes = cache(async (locale?: Locale): Promise<Dish[]> => {
+  return sanityFetch<Dish[]>({
+    query: UPSELL_DISHES_QUERY,
+    params: await localeParams({}, locale),
+    tags: ["menuDish", "menuCategory"],
   });
 });
 

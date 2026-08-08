@@ -3,7 +3,9 @@
 import { useState } from "react";
 import Button from "@/components/shared/buttons/Button";
 import CartIcon from "@/components/shared/icons/CartIcon";
+import { useCartStore } from "@/store/cartStore";
 import { flyToCart } from "@/lib/cartFly";
+import type { CartLine } from "@/types/cart";
 import { cn } from "@/utils/cn";
 
 export type DishQuantityAddLabels = {
@@ -18,22 +20,23 @@ const stepBtn =
   "flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full text-20semi text-navy transition duration-300 ease-out hover:text-red disabled:cursor-not-allowed disabled:text-navy/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy/40";
 
 /**
- * Quantity stepper + add-to-cart button for the dish page. Visual only for now —
- * the cart store is wired in a later step (same as `DishCard`'s quick-add).
+ * Quantity stepper + add-to-cart button for the dish page. Adds the selected
+ * quantity to the cart store and plays the fly-to-cart animation.
  */
 export default function DishQuantityAdd({
   labels,
-  image,
+  line,
 }: {
   labels: DishQuantityAddLabels;
-  /** Dish image URL — the thumbnail that flies to the cart. */
-  image?: string;
+  /** The dish being added. */
+  line: CartLine;
 }) {
   const [quantity, setQuantity] = useState(1);
+  const addItem = useCartStore((s) => s.addItem);
 
   return (
     <div className="inline-flex flex-col gap-3 sm:gap-4">
-      <div className="flex items-center rounded-full bg-beige/80 ring-1 ring-navy/10 w-fit">
+      <div className="flex w-fit items-center rounded-full bg-beige/80 ring-1 ring-navy/10">
         <button
           type="button"
           onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -65,7 +68,10 @@ export default function DishQuantityAdd({
         variant="primary"
         shape="leaf"
         className={cn("flex-1", "sm:flex-none sm:min-w-56")}
-        onClick={(event) => flyToCart(event.currentTarget, image)}
+        onClick={(event) => {
+          addItem(line, quantity);
+          flyToCart(event.currentTarget, line.image);
+        }}
       >
         <CartIcon className="size-5" />
         {labels.addToCart}

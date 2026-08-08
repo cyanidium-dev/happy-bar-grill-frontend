@@ -70,6 +70,14 @@ export const SIMILAR_DISHES_QUERY = defineQuery(/* groq */ `
     }
 `);
 
+/** Dishes from categories flagged `upsell` — recommended at checkout. */
+export const UPSELL_DISHES_QUERY = defineQuery(/* groq */ `
+  *[_type == "menuDish" && available != false && category->upsell == true]
+    | order(order asc) [0...8] {
+      ${dishFields}
+    }
+`);
+
 /** Bestsellers for the homepage popular block. */
 export const POPULAR_DISHES_QUERY = defineQuery(/* groq */ `
   *[_type == "menuDish" && available != false && tag == "bestseller"]

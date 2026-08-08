@@ -26,7 +26,7 @@ export default async function HeroDishCard({
   return (
     <article
       className={cn(
-        "relative flex shrink-0 gap-3 w-[279px] rounded-[14px] bg-white/10 backdrop-blur-[18px] shadow-[inset_0px_4px_12.6px_rgba(255,255,255,0.22)] p-3",
+        "relative flex h-full shrink-0 gap-3 w-[279px] rounded-[14px] bg-white/10 backdrop-blur-[18px] shadow-[inset_0px_4px_12.6px_rgba(255,255,255,0.22)] p-3",
         className,
       )}
     >
@@ -54,7 +54,7 @@ export default async function HeroDishCard({
           </p>
         </div>
 
-        <div className="mt-1.5 flex items-center gap-1.5">
+        <div className="mt-auto flex items-center gap-1.5 pt-1.5">
           <Link
             href={href}
             className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-white w-full text-center px-3.5 h-[27px] sm:h-[27px] text-8bold uppercase tracking-wide text-navy transition-colors duration-300 xl:hover:bg-beige"

@@ -24,7 +24,7 @@ export default async function OtherPosts({
   ]);
 
   return (
-    <aside className={cn("mt-14 lg:mt-0", className)}>
+    <aside className={cn("mt-20 lg:mt-0", className)}>
       <div className="relative">
         <h2 className="pr-24 text-20semi text-navy lg:pr-0 lg:text-24semi">
           {t("otherPostsTitle")}
@@ -37,7 +37,7 @@ export default async function OtherPosts({
             breakpoints={{
               640: { slidesPerView: 2, spaceBetween: 20 },
             }}
-            buttonsClassName="absolute right-0 top-0"
+            buttonsClassName="absolute right-0 -top-1"
             prevLabel={tSlider("prev")}
             nextLabel={tSlider("next")}
             slides={posts.map((post) => (

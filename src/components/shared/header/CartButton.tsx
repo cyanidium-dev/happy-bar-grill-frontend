@@ -1,5 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import CartIcon from "@/components/shared/icons/CartIcon";
+import { CART_FLY_TARGET_ID } from "@/lib/cartFly";
 import { cn } from "@/utils/cn";
 
 /**
@@ -18,6 +19,7 @@ export default function CartButton({
   return (
     <Link
       href="/checkout"
+      id={CART_FLY_TARGET_ID}
       aria-label={label}
       className={cn(
         "relative flex size-8 lg:size-[41px] items-center justify-center rounded-full bg-red transition-colors duration-300 hover:text-red focus-visible:text-red",

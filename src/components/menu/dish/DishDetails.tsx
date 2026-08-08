@@ -58,6 +58,7 @@ export default async function DishDetails({ dish }: { dish: Dish }) {
 
         <div className="mt-1">
           <DishQuantityAdd
+            image={dish.image}
             labels={{
               addToCart: tp("addToCart"),
               decrease: t("quantityDecrease"),

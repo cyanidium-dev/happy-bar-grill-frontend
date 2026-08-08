@@ -68,7 +68,7 @@ export default async function Footer({ className }: { className?: string }) {
                     {t(key)}
                     <span
                       aria-hidden
-                      className="absolute inset-x-0 -bottom-1 h-0.5 origin-left scale-x-0 rounded-full bg-red transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                      className="absolute left-0 -bottom-1 h-0.5 w-8 origin-left scale-x-0 rounded-full bg-red transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100"
                     />
                   </Link>
                 </li>

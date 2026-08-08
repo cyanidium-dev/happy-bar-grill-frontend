@@ -1,10 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import Button from "@/components/shared/buttons/Button";
 import Badge from "@/components/shared/badges/Badge";
 import CardMedia from "@/components/shared/cards/CardMedia";
 import DishDescription from "@/components/shared/cards/DishDescription";
-import PlusIcon from "@/components/shared/icons/PlusIcon";
+import QuickAddButton from "@/components/shared/cards/QuickAddButton";
 import type { Dish } from "@/types/content";
 import { cn } from "@/utils/cn";
 
@@ -113,15 +112,7 @@ export default async function DishCard({
             </span>
           </div>
 
-          <Button
-            variant="primary"
-            size="icon"
-            shape="leaf"
-            aria-label={t("addToCart")}
-            className="pointer-events-auto"
-          >
-            <PlusIcon className="size-5" />
-          </Button>
+          <QuickAddButton image={dish.image} label={t("addToCart")} />
         </div>
       </div>
     </article>

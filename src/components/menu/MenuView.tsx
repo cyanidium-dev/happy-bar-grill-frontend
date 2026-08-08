@@ -1,9 +1,11 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/shared/container/Container";
+import { MENU_CATALOG_ID } from "@/constants/menu";
+import { getAllDishes, getDishesByCategory } from "@/data/menu";
 import CategoryNav from "./CategoryNav";
 import DishesGrid from "./DishesGrid";
+import MenuCatalogScroll from "./MenuCatalogScroll";
 import MenuDecorations from "./MenuDecorations";
-import { getAllDishes, getDishesByCategory } from "@/data/menu";
 
 /**
  * Shared menu body used by both `/menu` (activeSlug="all") and
@@ -19,7 +21,11 @@ export default async function MenuView({ activeSlug }: { activeSlug: string }) {
       : await getDishesByCategory(activeSlug);
 
   return (
-    <section className="relative overflow-x-clip bg-white">
+    <section
+      id={MENU_CATALOG_ID}
+      className="relative overflow-x-clip bg-white scroll-mt-[var(--header-height)]"
+    >
+      <MenuCatalogScroll />
       <div className="pt-14 xl:hidden">
         <CategoryNav activeSlug={activeSlug} variant="mobile" />
       </div>

@@ -1,8 +1,9 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
+import { SPECIAL_OFFERS_SLUG } from "@/constants/menu";
 import { getCategories } from "@/data/menu";
 import { cn } from "@/utils/cn";
+import CategoryNavLink from "@/components/menu/CategoryNavLink";
 import MobileCategoryChips from "@/components/menu/MobileCategoryChips";
 
 type CategoryNavProps = {
@@ -33,6 +34,11 @@ export default async function CategoryNav({
 
   const items: NavItem[] = [
     { label: t("allDishes"), href: "/menu", active: activeSlug === "all" },
+    {
+      label: t("specialOffers"),
+      href: `/menu/${SPECIAL_OFFERS_SLUG}`,
+      active: activeSlug === SPECIAL_OFFERS_SLUG,
+    },
     ...categories.map((category) => ({
       label: category.name,
       href: `/menu/${category.slug}`,
@@ -55,7 +61,7 @@ export default async function CategoryNav({
       <ul className="flex flex-col gap-2">
         {items.map((item) => (
           <li key={item.href}>
-            <Link
+            <CategoryNavLink
               href={item.href}
               aria-current={item.active ? "page" : undefined}
               className={cn(
@@ -65,7 +71,7 @@ export default async function CategoryNav({
               )}
             >
               {item.label}
-            </Link>
+            </CategoryNavLink>
           </li>
         ))}
       </ul>

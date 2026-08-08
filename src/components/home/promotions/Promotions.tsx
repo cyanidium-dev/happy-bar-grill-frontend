@@ -4,6 +4,7 @@ import Button from "@/components/shared/buttons/Button";
 import DishCard from "@/components/shared/cards/DishCard";
 import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
+import { SPECIAL_OFFERS_SLUG } from "@/constants/menu";
 import { getPromotions } from "@/data/menu";
 import Image from "next/image";
 
@@ -56,7 +57,12 @@ export default async function Promotions() {
           </p>
         </AnimatedWrapper>
         <AnimatedWrapper className="mt-8 flex md:mt-10">
-          <Button href="/menu" variant="secondary" size="lg" className="max-h-[58px]">
+          <Button
+            href={`/menu/${SPECIAL_OFFERS_SLUG}`}
+            variant="secondary"
+            size="lg"
+            className="max-h-[58px]"
+          >
             {t("cta")}
           </Button>
         </AnimatedWrapper>

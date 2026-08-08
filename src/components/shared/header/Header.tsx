@@ -17,10 +17,11 @@ import { cn } from "@/utils/cn";
 /**
  * Floating header: logo, desktop nav, language switcher, cart and phone, plus
  * the mobile burger + slide-in menu. It's `fixed` (not `sticky`) so it floats
- * *over* the page — on the home page the Hero renders behind it with its own
- * background, visible through the header while it's transparent (white chrome).
- * On every other page the header is solid `navy-dark` with white chrome from
- * the start. Once scrolled past 60px on home, it joins that same solid bar.
+ * *over* the page — on hero pages (home, blog, article) the section renders behind it
+ * with its own background, visible through the header while it's transparent
+ * (white chrome). On every other page the header is solid `navy-dark` with
+ * white chrome from the start. Once scrolled past 60px on a hero page, it
+ * joins that same solid bar.
  *
  * Its rendered height is published as the `--header-height` CSS variable so
  * every page can reserve the right amount of space below it (see the locale
@@ -33,16 +34,17 @@ export default function Header({ className }: { className?: string }) {
   const t = useTranslations("Nav");
   const th = useTranslations("Header");
   const pathname = usePathname();
-  const isHome = pathname === "/";
+  const isHeroPage =
+    pathname === "/" || pathname === "/blog" || pathname.startsWith("/blog/");
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const lastScrollY = useRef(0);
-  // Solid navy-dark on non-home pages always; on home only after scroll.
-  const solid = !isHome || scrolled;
-  // White chrome over the home hero, and on the solid bar everywhere else.
-  const onDark = isHome || solid;
+  // Solid navy-dark on non-hero pages always; on hero pages only after scroll.
+  const solid = !isHeroPage || scrolled;
+  // White chrome over the hero, and on the solid bar everywhere else.
+  const onDark = isHeroPage || solid;
 
   useEffect(() => {
     const onScroll = () => {

@@ -8,11 +8,14 @@ import Input from "@/components/shared/forms/Input";
 import Button from "@/components/shared/buttons/Button";
 import CartItemRow from "@/components/cart/CartItemRow";
 import PhoneField from "./PhoneField";
+import { sendTelegramMessage } from "@/lib/telegram/client";
+import { formatOrderTelegramMessage } from "@/lib/telegram/formatOrder";
 import {
   selectCartTotal,
   useCartHydrated,
   useCartStore,
 } from "@/store/cartStore";
+import { generateOrderNumber } from "@/utils/orderNumber";
 import { cn } from "@/utils/cn";
 
 type Fields = "name" | "phone" | "address";
@@ -44,6 +47,8 @@ export default function CheckoutView({
     comment: "",
   });
   const [errors, setErrors] = useState<Partial<Record<Fields, string>>>({});
+  const [submitError, setSubmitError] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const set = (field: keyof typeof values, value: string) => {
     setValues((v) => ({ ...v, [field]: value }));
@@ -61,17 +66,37 @@ export default function CheckoutView({
     return Object.keys(next).length === 0;
   };
 
-  const onSubmit = (event: React.FormEvent) => {
+  const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (items.length === 0 || !validate()) return;
-    placeOrder({
+    if (items.length === 0 || !validate() || isSubmitting) return;
+
+    setSubmitError(false);
+    setIsSubmitting(true);
+
+    const customer = {
       name: values.name.trim(),
       phone: `+380${values.phone}`,
       address: values.address.trim(),
       payment: values.payment,
       comment: values.comment.trim() || undefined,
-    });
-    router.push("/confirmation");
+    };
+    const orderNumber = generateOrderNumber();
+
+    try {
+      await sendTelegramMessage(
+        formatOrderTelegramMessage({
+          orderNumber,
+          customer,
+          items,
+          total,
+        }),
+      );
+      placeOrder(customer, orderNumber);
+      router.push("/confirmation");
+    } catch {
+      setSubmitError(true);
+      setIsSubmitting(false);
+    }
   };
 
   // Avoid an SSR/client mismatch: the store is empty on the server.
@@ -82,7 +107,7 @@ export default function CheckoutView({
   const isEmpty = items.length === 0;
   const visibleUpsell = upsellCards
     .filter((card) => !items.some((it) => it.id === card.slug))
-    .slice(0, 5);
+    .slice(0, 4);
 
   return (
     <Container className="pb-16 pt-10 md:pb-20 md:pt-14">
@@ -196,12 +221,19 @@ export default function CheckoutView({
                 })}
               </p>
 
+              {submitError && (
+                <p className="mt-4 text-14reg text-red" role="alert">
+                  {t("errors.submit")}
+                </p>
+              )}
+
               <Button
                 type="submit"
                 variant="primary"
                 shape="leaf"
                 fullWidth
                 className="mt-4"
+                isLoading={isSubmitting}
               >
                 {t("placeOrder")}
               </Button>

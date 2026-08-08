@@ -13,8 +13,11 @@ interface CartState {
   decrease: (id: string) => void;
   removeItem: (id: string) => void;
   clear: () => void;
-  /** Snapshots the cart into `lastOrder`, empties the cart, returns the order. */
-  placeOrder: (customer: OrderCustomer) => LastOrder;
+  /**
+   * Snapshots the cart into `lastOrder`, empties the cart, returns the order.
+   * Pass `orderNumber` when it was already generated (e.g. for Telegram notify).
+   */
+  placeOrder: (customer: OrderCustomer, orderNumber?: string) => LastOrder;
 }
 
 /**
@@ -64,14 +67,14 @@ export const useCartStore = create<CartState>()(
 
       clear: () => set({ items: [] }),
 
-      placeOrder: (customer) => {
+      placeOrder: (customer, orderNumber) => {
         const { items } = get();
         const total = items.reduce(
           (sum, it) => sum + it.price * it.quantity,
           0,
         );
         const order: LastOrder = {
-          orderNumber: generateOrderNumber(),
+          orderNumber: orderNumber ?? generateOrderNumber(),
           items,
           total,
           customer,

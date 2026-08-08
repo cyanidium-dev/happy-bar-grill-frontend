@@ -83,7 +83,7 @@ export default function ConfirmationView() {
 
         <div className="mt-6 flex items-center justify-between border-t border-navy/10 pt-5">
           <span className="text-16med text-graphite">{t("total")}</span>
-          <span className="text-24bold text-navy">
+          <span className="text-20bold text-navy">
             {order.total} {tp("currency")}
           </span>
         </div>

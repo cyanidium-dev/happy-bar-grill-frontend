@@ -93,9 +93,9 @@ export default async function Hero() {
         </div>
       </Container>
       <div className="min-w-0 xs:max-w-full lg:max-w-[1024px] xl:max-w-[1280px] lg:px-20 sm:ml-[calc(50%-320px)] md:ml-[calc(50%-384px)] lg:ml-[calc(50%-512px)] xl:ml-[calc(50%-640px)] mx-auto">
-        <ul className="flex min-w-0 gap-3 overflow-x-auto pl-6 lg:pl-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <ul className="flex min-w-0 items-stretch gap-3 overflow-x-auto pl-6 lg:pl-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {featuredDishes.map((dish) => (
-            <li key={dish.slug}>
+            <li key={dish.slug} className="flex shrink-0">
               <HeroDishCard dish={dish} />
             </li>
           ))}

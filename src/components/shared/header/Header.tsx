@@ -79,14 +79,14 @@ export default function Header({ className }: { className?: string }) {
     >
       <div
         className={cn(
-          "border-b border-transparent transition-[background-color,backdrop-filter,box-shadow,border-color] duration-500 ease-out",
+          "py-3 border-b border-transparent transition-[background-color,backdrop-filter,box-shadow,border-color] duration-500 ease-out",
           solid
             ? "bg-navy-dark"
             : "bg-transparent backdrop-blur-0",
         )}
       >
         <Container className="relative flex items-center gap-4">
-          <Logo onDark={onDark} className="" />
+          <Logo className="h-12 md:h-14 lg:h-16"/>
           <nav className="ml-8 hidden lg:block xl:ml-12">
             <ul className="flex items-center gap-6 xl:gap-8">
               {navLinks.map(({ href, key }) => (

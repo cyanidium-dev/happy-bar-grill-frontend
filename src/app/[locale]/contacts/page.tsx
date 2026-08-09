@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
-import PagePlaceholder from "@/components/shared/PagePlaceholder";
+import Container from "@/components/shared/container/Container";
+import ContactInfo from "@/components/contacts/ContactInfo";
+import ContactForm from "@/components/contacts/ContactForm";
+import ContactsMap from "@/components/contacts/ContactsMap";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
 
@@ -16,12 +19,36 @@ export default async function ContactsPage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const t = await getTranslations("Metadata");
+  const [t, tMeta] = await Promise.all([
+    getTranslations("ContactsPage"),
+    getTranslations("Metadata"),
+  ]);
 
   return (
     <>
-      <BreadCrumbs items={[{ label: t("contacts.title") }]} />
-      <PagePlaceholder title={t("contacts.title")} />
+      <BreadCrumbs items={[{ label: tMeta("contacts.title") }]} />
+
+      <section className="bg-white">
+        <Container className="pb-16 pt-10 md:pb-20 md:pt-14">
+          <div className="mb-8 flex max-w-2xl flex-col gap-4 md:mb-10">
+            <h1 className="font-findsans text-28bold uppercase text-navy lg:text-40bold">
+              {t("title")}
+            </h1>
+            <p className="text-16reg leading-relaxed text-graphite">
+              {t("subtitle")}
+            </p>
+          </div>
+
+          <div className="grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-10">
+            <ContactInfo />
+            <ContactForm />
+          </div>
+
+          <div className="mt-10 md:mt-14">
+            <ContactsMap />
+          </div>
+        </Container>
+      </section>
     </>
   );
 }

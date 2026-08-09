@@ -86,7 +86,7 @@ export default function Header({ className }: { className?: string }) {
         )}
       >
         <Container className="relative flex items-center gap-4">
-          <Logo className="lg:h-16"/>
+          <Logo className="h-12 md:h-14 lg:h-16"/>
           <nav className="ml-8 hidden lg:block xl:ml-12">
             <ul className="flex items-center gap-6 xl:gap-8">
               {navLinks.map(({ href, key }) => (

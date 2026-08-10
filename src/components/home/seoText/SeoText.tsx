@@ -18,7 +18,7 @@ export default async function SeoText() {
   return (
     <Section
       background="white"
-      waveTop="beige"
+  
       containerClassName="pb-9 pt-20 md:pb-11 md:pt-24 xl:pb-12 xl:pt-28"
     >
       <div className="flex flex-col gap-8 md:grid md:grid-cols-[3fr_2fr] md:items-center md:gap-[6.25rem]">

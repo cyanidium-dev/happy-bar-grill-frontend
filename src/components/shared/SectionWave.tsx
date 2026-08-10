@@ -37,7 +37,7 @@ export default function SectionWave({
     <div
       aria-hidden
       className={cn(
-        "pointer-events-none absolute inset-x-0 top-0 h-[44px] md:h-[72px] xl:h-[96px]",
+        "relative z-10 pointer-events-none absolute inset-x-0 top-0 h-[44px] md:h-[72px] xl:h-[96px]",
         fills[from],
         flip && "-scale-x-100",
         className,

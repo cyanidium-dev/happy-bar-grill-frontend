@@ -40,9 +40,8 @@ export default async function DeliveryInfo() {
     <Section
       id="delivery"
       background="beige"
-      accent="navy"
-      waveTop="navy"
-      waveFlip
+      
+     className="rounded-[24px] lg:rounded-[36px relative -top-4"
     >
       <div className="flex flex-col gap-8 md:mt-2 lg:flex-row lg:items-center lg:gap-12">
         <div className="flex flex-col gap-6 lg:flex-1">

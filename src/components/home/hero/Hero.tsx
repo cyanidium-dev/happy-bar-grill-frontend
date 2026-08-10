@@ -37,7 +37,7 @@ export default async function Hero() {
       </div>
       <Container className="relative items-center gap-10">
         <div className="flex min-w-0 flex-col gap-7 mb-[140px] xs:mb-[91px]">
-          <div className="relative -z-15">
+          <div className="">
             <PageTitle className="max-w-[301px] sm:max-w-[540px]">
               {t("title")}
             </PageTitle>
@@ -58,7 +58,7 @@ export default async function Hero() {
           </div>
         </div>
 
-        <div className="absolute -z-10 left-[69px] lg:left-[585px] bottom-[-254px] lg:bottom-[-294px] w-[590px] h-[508px] lg:w-[959px] lg:h-[827px]">
+        <div className="absolute -z-10 left-[calc(50%-182px)] bottom-[-223px] xs:left-[69px] md:left-[200px] lg:left-[555px] xl:left-[585px] xs:bottom-[-204px] md:bottom-[-204px] lg:bottom-[-204px] xl:lg:bottom-[-294px] w-[409px] h-[353px] xs:w-[590px] xs:h-[508px] lg:w-[750px] lg:h-[647px] xl:w-[959px] xl:h-[827px]">
           <Image
             src="/images/home/hero/burger.webp"
             alt={t("burgerImageAlt")}
@@ -67,7 +67,7 @@ export default async function Hero() {
           />
         </div>
 
-        <div className="lg:hidden absolute -z-5 left-[91px] bottom-[-332px] w-[550px] h-[432px]">
+        <div className="lg:hidden absolute -z-5 left-[91px] xs:left-[160px] bottom-[-442px] w-[550px] h-[432px]">
           <Image
             src="/images/home/hero/navy-ellipse-mob.svg"
             alt={t("ellipseMobileAlt")}
@@ -83,7 +83,7 @@ export default async function Hero() {
             className="object-cover"
           />
         </div>
-        <div className="absolute -z-15 left-[-260px] bottom-[-532px] lg:left-[230px] xl:left-[371px] lg:bottom-[-442px] right-[-241px] bottom-[-242px] w-[1331px] h-[900px] mix-blend-plus-lighter">
+        <div className="hidden lg:block absolute -z-15 left-[calc(50%-580px)] sm:left-[-260px] bottom-[-472px] md:left-[-140px] lg:left-[320px] xl:left-[371px] md:bottom-[-472px] lg:bottom-[-402px] xl:bottom-[-442px] w-[1331px] h-[900px] mix-blend-plus-lighter">
           <Image
             src="/images/home/hero/lighter-small.svg"
             alt={t("lightingAlt")}

@@ -17,7 +17,7 @@ export default async function Categories() {
   return (
     <Section background="white">
       <div className="flex flex-col gap-10">
-        <div className="hidden lg:block absolute lg:left-0 lg:top-[40px] xl:top-[80px] w-[275px] h-[187px]">
+        <div className="hidden md:block absolute md:left-0 md:top-[40px] xl:top-[80px] w-[275px] h-[187px]">
           <Image
             src="/images/home/categories/fork.webp"
             alt={t("alts.fork")}
@@ -27,14 +27,14 @@ export default async function Categories() {
         </div>
 
         <AnimatedWrapper>
-          <SectionTitle className="lg:ml-[160px] xl:ml-[175px]">
+          <SectionTitle className="md:ml-[220px] lg:ml-[160px] xl:ml-[175px]">
             {t("title")}
           </SectionTitle>
         </AnimatedWrapper>
 
-        <div className="hidden lg:block absolute lg:top-[141px] xl:top-[180px] right-20 lg:w-[129px] xl:w-[149px] h-[3px] bg-gradient-to-r from-navy-dark to-white rounded-full" />
+        <div className="hidden xl:block absolute lg:top-[141px] xl:top-[180px] right-20 lg:w-[129px] xl:w-[149px] h-[3px] bg-gradient-to-r from-navy-dark to-white rounded-full" />
 
-        <div className="hidden lg:block absolute lg:right-[-110px] xl:right-[-201px] lg:bottom-[-40px] w-[715px] h-[484px]">
+        <div className="absolute right-[-170px] xs:right-[-210px] md:right-[-250px] lg:right-[-30px] xl:right-[-201px] bottom-28 xs:bottom-12 sm:bottom-8 md:bottom-[-40px] lg:bottom-10 xl:bottom-[-40px] w-[350px] h-[233px] xs:w-[450px] xs:h-[300px] sm:w-[515px] sm:h-[343px] md:w-[715px] md:h-[484px] lg:w-[615px] lg:h-[410px] xl:w-[715px] xl:h-[484px]">
           <Image
             src="/images/home/categories/bg-image.webp"
             alt={t("alts.bgImage")}
@@ -53,7 +53,7 @@ export default async function Categories() {
             />
           ))}
         </ul>
-        <p className="lg:max-w-[344px] xl:max-w-[454px] text-16reg text-graphite">
+        <p className="max-w-[260px] lg:max-w-[344px] xl:max-w-[454px] text-16reg text-graphite">
           {t("text")}
         </p>
       </div>

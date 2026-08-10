@@ -22,7 +22,7 @@ export default async function PopularDishes() {
         <div className="hidden sm:block absolute z-5 -bottom-10 -right-10 md:-bottom-4 md:-right-10 lg:-bottom-4 lg:-right-6 w-[257px] h-[259px] lg:w-[317px] lg:h-[320px]">
               <Image
                 src="/images/home/popular/sushi-chopsticks.webp"
-                alt="Fork"
+                alt={t("alts.sushiChopsticks")}
                 fill
                 className="object-cover"
               />
@@ -30,7 +30,7 @@ export default async function PopularDishes() {
             <div className="hidden lg:block absolute lg:bottom-21 lg:-left-62 w-[412px] h-[205px]">
               <Image
                 src="/images/home/popular/grill-plate.webp"
-                alt="Fork"
+                alt={t("alts.grillPlate")}
                 fill
                 className="object-cover"
               />
@@ -42,7 +42,7 @@ export default async function PopularDishes() {
             <div className=" absolute -top-4 left-60 sm:top-auto sm:left-auto sm:bottom-6 sm:-right-12 lg:-top-14 lg:-right-14 w-[55px] h-[43px] lg:w-[85px] lg:h-[67px]">
               <Image
                 src="/images/home/popular/decor.webp"
-                alt="Fork"
+                alt={t("alts.decor")}
                 fill
                 className="object-cover"
               />

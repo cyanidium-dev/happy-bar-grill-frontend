@@ -67,7 +67,7 @@ export async function generateMetadata({
     metadataBase: new URL("https://happy-bar-grill.vercel.app"),
     title: {
       default: t("site.title"),
-      // Page titles render as "<page> | Happy Bar Grill".
+      // Page titles render as "<page> | Vtiha".
       template: `%s | ${t("site.name")}`,
     },
     description: t("site.description"),

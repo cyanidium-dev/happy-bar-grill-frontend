@@ -123,7 +123,7 @@ export default async function Footer({ className }: { className?: string }) {
 
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <p>
-              © {year} Happy Bar &amp; Grill Paradise. {tf("rights")}.
+              © {year} Vtiha. {tf("rights")}.
             </p>
             <p>
               {tf("developedBy")} —{" "}

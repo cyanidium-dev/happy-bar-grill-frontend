@@ -96,7 +96,7 @@ export const useCartStore = create<CartState>()(
       },
     }),
     {
-      name: "happy-cart",
+      name: "vtiha-cart",
       partialize: (state) => ({
         items: state.items,
         lastOrder: state.lastOrder,

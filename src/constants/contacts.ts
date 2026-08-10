@@ -9,7 +9,7 @@ export const PHONE_HREF = "+380633000000";
 
 export const ADDRESS = "м. Миколаїв";
 
-export const EMAIL = "info@happybargrill.ua";
+export const EMAIL = "info@vtiha.ua";
 
 /* Social profiles — replace with the real accounts before launch. */
 export const INSTAGRAM_URL = "https://instagram.com";

@@ -6,7 +6,7 @@
 }
 
 /* =============================================================================
-   Happy Bar Grill — design tokens (Tailwind v4, CSS-first `@theme`).
+   Vtiha — design tokens (Tailwind v4, CSS-first `@theme`).
    Mirrors bravo's token approach (named colors + `<px><weight>` type scale),
    ported from its v3 `tailwind.config.ts` to v4 `@theme`.
    Palette: "класична схема" — Морський синій / Фірмовий червоний / Тепле бежеве / Біле.
@@ -47,6 +47,9 @@
   --text-40bold: 40px;
   --text-40bold--font-weight: 700;
   --text-40bold--line-height: 120%;
+  --text-36bold: 36px;
+  --text-36bold--font-weight: 700;
+  --text-36bold--line-height: 120%;
   --text-36semi: 36px;
   --text-36semi--font-weight: 600;
   --text-36semi--line-height: 120%;
@@ -62,6 +65,9 @@
   --text-28semi: 28px;
   --text-28semi--font-weight: 600;
   --text-28semi--line-height: 120%;
+  --text-26bold: 26px;
+  --text-26bold--font-weight: 700;
+  --text-26bold--line-height: 120%;
   --text-24bold: 24px;
   --text-24bold--font-weight: 700;
   --text-24bold--line-height: 120%;

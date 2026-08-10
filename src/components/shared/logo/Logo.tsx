@@ -21,7 +21,7 @@ export default function Logo({
     <Link
       href="/"
       onClick={onClick}
-      aria-label="Happy Bar & Grill Paradise"
+      aria-label="Vtiha"
       className={cn(
         "inline-flex h-10 w-fit shrink-0 items-center outline-none lg:h-12",
         className,

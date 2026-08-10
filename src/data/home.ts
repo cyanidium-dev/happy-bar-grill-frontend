@@ -31,6 +31,6 @@ export const reviews: Review[] = [
     rating: 5,
     source: "Google",
     url: "https://maps.google.com",
-    text: "Затишна атмосфера, до Happy справді хочеться повертатися.",
+    text: "Затишна атмосфера, до Vtiha справді хочеться повертатися.",
   },
 ];

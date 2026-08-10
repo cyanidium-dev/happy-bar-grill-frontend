@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
-import PagePlaceholder from "@/components/shared/PagePlaceholder";
+import AboutIntro from "@/components/about/AboutIntro";
+import AboutValues from "@/components/about/AboutValues";
+import AboutMenuTeaser from "@/components/about/AboutMenuTeaser";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
 
@@ -21,7 +23,10 @@ export default async function AboutPage({ params }: PageProps) {
   return (
     <>
       <BreadCrumbs items={[{ label: t("about.title") }]} />
-      <PagePlaceholder title={t("about.title")} />
+      <AboutIntro />
+      <AboutValues />
+      <AboutMenuTeaser />
+
     </>
   );
 }

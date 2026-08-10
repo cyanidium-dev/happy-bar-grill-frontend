@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
-import PagePlaceholder from "@/components/shared/PagePlaceholder";
+import DeliveryHero from "@/components/delivery/DeliveryHero";
+import DeliverySteps from "@/components/delivery/DeliverySteps";
+import PaymentMethods from "@/components/delivery/PaymentMethods";
+import DeliveryConditions from "@/components/delivery/DeliveryConditions";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
 
@@ -20,8 +23,12 @@ export default async function DeliveryPage({ params }: PageProps) {
 
   return (
     <>
+      <DeliveryHero />
       <BreadCrumbs items={[{ label: t("delivery.title") }]} />
-      <PagePlaceholder title={t("delivery.title")} />
+      <DeliverySteps />
+      <DeliveryConditions />
+      <PaymentMethods />
+   
     </>
   );
 }

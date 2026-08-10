@@ -1,18 +1,19 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import Button from "@/components/shared/buttons/Button";
+import PhoneButton from "@/components/shared/buttons/PhoneButton";
 import Container from "@/components/shared/container/Container";
 
 /**
- * About page intro: full-bleed hero with the same background treatment as
- * the blog listing and delivery page — no inset content image.
+ * Delivery page intro: full-bleed hero with the same background treatment as
+ * the blog listing — no inset content image. CTAs go to the menu and a direct call.
  */
-export default async function AboutIntro() {
-  const t = await getTranslations("AboutPage.intro");
+export default async function DeliveryHero() {
+  const t = await getTranslations("DeliveryPage.hero");
 
   return (
     <section
-      className="relative flex items-end overflow-hidden rounded-b-[24px] pt-[170px] pb-30 lg:rounded-b-[36px]"
+      className="relative flex items-end overflow-hidden rounded-b-[24px] pt-[200px] pb-40 lg:rounded-b-[36px]"
       style={{ marginTop: "calc(var(--header-height) * -1)" }}
     >
       <div className="absolute inset-0 -z-20 bg-navy-dark" />
@@ -30,17 +31,20 @@ export default async function AboutIntro() {
         <h1 className="mb-10 font-findsans text-40bold uppercase text-white lg:text-40bold">
           {t("title")}
         </h1>
-        <p className="max-w-[520px] text-16reg leading-relaxed text-white/80">
+        <p className="mb-10 max-w-[420px] text-16reg leading-relaxed text-white/80">
           {t("text")}
         </p>
-        <p className="mb-10 max-w-[520px] text-16reg leading-relaxed text-white/80">
-          {t("text2")}
-        </p>
 
-        <div className="mt-2">
+        <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center">
           <Button href="/menu" variant="primary" size="lg">
-            {t("cta")}
+            {t("ctaMenu")}
           </Button>
+          <PhoneButton
+            size="lg"
+            shape="pill"
+            ariaLabel={t("ctaPhone")}
+            className="border-white bg-white text-navy xl:hover:border-white xl:hover:bg-navy/30 xl:hover:text-white transition-colors duration-300 ease-in-out"
+          />
         </div>
       </Container>
     </section>

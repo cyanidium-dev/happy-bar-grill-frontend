@@ -15,38 +15,40 @@ const iconProps = {
 };
 
 const icons: Record<string, ReactNode> = {
-  fresh: (
+  choose: (
     <svg {...iconProps} className="size-6">
-      <path d="M11 20a7 7 0 0 1-7-7c0-4 3-8 7-9 4 1 7 5 7 9a7 7 0 0 1-7 7Z" />
-      <path d="M11 20V9" />
+      <path d="M4 5h2l1.2 10.5a1.5 1.5 0 0 0 1.5 1.3h7.9a1.5 1.5 0 0 0 1.5-1.2L20 8H6.2" />
+      <circle cx="9.5" cy="20" r="1.1" />
+      <circle cx="17" cy="20" r="1.1" />
     </svg>
   ),
-  portions: (
+  order: (
     <svg {...iconProps} className="size-6">
-      <circle cx="12" cy="12" r="8.5" />
-      <circle cx="12" cy="12" r="4" />
+      <rect x="5" y="3.5" width="14" height="17" rx="2" />
+      <path d="M9 8h6M9 12h6M9 16h4" />
     </svg>
   ),
-  variety: (
+  confirm: (
     <svg {...iconProps} className="size-6">
-      <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />
-      <rect x="13.5" y="3.5" width="7" height="7" rx="1.5" />
-      <rect x="3.5" y="13.5" width="7" height="7" rx="1.5" />
-      <rect x="13.5" y="13.5" width="7" height="7" rx="1.5" />
+      <path d="M20 15.5v2a2 2 0 0 1-2.2 2 16 16 0 0 1-7-2.5 15.5 15.5 0 0 1-4.8-4.8 16 16 0 0 1-2.5-7A2 2 0 0 1 5.5 3h2a2 2 0 0 1 2 1.7c.1.9.3 1.7.6 2.5a2 2 0 0 1-.5 2.1l-.9.9a12.5 12.5 0 0 0 4.8 4.8l.9-.9a2 2 0 0 1 2.1-.5c.8.3 1.6.5 2.5.6a2 2 0 0 1 1.7 2Z" />
     </svg>
   ),
-  atmosphere: (
+  deliver: (
     <svg {...iconProps} className="size-6">
-      <path d="M12 20s-7-4.3-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.7-7 9-7 9Z" />
+      <path d="M3 7h9v8H3z" />
+      <path d="M12 10h4l3 3v2h-7z" />
+      <circle cx="7" cy="18" r="1.6" />
+      <circle cx="16.5" cy="18" r="1.6" />
     </svg>
   ),
 };
 
-const keys = ["fresh", "portions", "variety", "atmosphere"] as const;
+const keys = ["choose", "order", "confirm", "deliver"] as const;
 
-/** Brand values framed as promises (a new venue — principles, not achievements). */
-export default async function AboutValues() {
-  const t = await getTranslations("AboutPage.values");
+/** How ordering works — process steps only (correct for a venue that has just
+ * opened, no invented delivery terms). */
+export default async function DeliverySteps() {
+  const t = await getTranslations("DeliveryPage.steps");
 
   return (
     <Section background="white" waveTop="white">
@@ -55,7 +57,7 @@ export default async function AboutValues() {
           <SectionTitle>{t("title")}</SectionTitle>
         </AnimatedWrapper>
 
-        <ul className="grid gap-4 sm:grid-cols-2 md:gap-6 xl:grid-cols-4">
+        <ol className="grid gap-4 sm:grid-cols-2 md:gap-6 xl:grid-cols-4">
           {keys.map((key, index) => (
             <AnimatedWrapper
               key={key}
@@ -64,9 +66,14 @@ export default async function AboutValues() {
               className="h-full"
             >
               <div className="flex h-full flex-col gap-3 rounded-tl-2xl rounded-br-2xl bg-beige p-6 shadow-card">
-                <span className="flex size-12 items-center justify-center rounded-tl-lg rounded-br-lg bg-red/10 text-red">
-                  {icons[key]}
-                </span>
+                <div className="flex items-center justify-between">
+                  <span className="flex size-12 items-center justify-center rounded-tl-lg rounded-br-lg bg-red/10 text-red">
+                    {icons[key]}
+                  </span>
+                  <span className="font-findsans text-36bold leading-none text-navy/10">
+                    {index + 1}
+                  </span>
+                </div>
                 <h3 className="text-18semi text-navy">
                   {t(`items.${key}.title`)}
                 </h3>
@@ -76,7 +83,7 @@ export default async function AboutValues() {
               </div>
             </AnimatedWrapper>
           ))}
-        </ul>
+        </ol>
       </div>
     </Section>
   );

@@ -13,7 +13,7 @@ export default async function AboutMenuTeaser() {
   const categories = await getCategories();
 
   return (
-    <Section background="white">
+    <Section background="beige" waveTop="white" >
       <div className="flex flex-col gap-8">
         <div className="hidden lg:block absolute lg:left-0 lg:top-[40px] xl:top-[80px] w-[275px] h-[187px]">
           <Image
@@ -33,7 +33,7 @@ export default async function AboutMenuTeaser() {
           </p>
         </AnimatedWrapper>
 
-        <div className="hidden lg:block absolute lg:top-[141px] xl:top-[180px] right-20 lg:w-[129px] xl:w-[149px] h-[3px] bg-gradient-to-r from-navy-dark to-white rounded-full" />
+        <div className="hidden lg:block absolute lg:top-[141px] xl:top-[180px] right-20 lg:w-[129px] xl:w-[149px] h-[3px] bg-gradient-to-r from-navy-dark to-beige rounded-full" />
 
         <div className="hidden lg:block absolute lg:right-[-110px] xl:right-[-201px] lg:bottom-[-40px] w-[715px] h-[484px]">
           <Image

@@ -37,11 +37,11 @@ export default async function PaymentMethods() {
   const t = await getTranslations("DeliveryPage.payment");
 
   return (
-    <Section background="beige" waveTop="white" >
+    <Section background="navy" waveTop="beige">
       <div className="flex flex-col gap-8">
         <AnimatedWrapper className="flex flex-col gap-3">
-          <SectionTitle>{t("title")}</SectionTitle>
-          <p className="max-w-2xl text-16reg text-graphite">{t("note")}</p>
+          <SectionTitle variant="white">{t("title")}</SectionTitle>
+          <p className="max-w-2xl text-16reg text-white/80">{t("note")}</p>
         </AnimatedWrapper>
 
         <ul className="grid gap-4 md:grid-cols-2 md:gap-6">
@@ -52,15 +52,15 @@ export default async function PaymentMethods() {
               animation={{ y: 24, delay: index * 0.06 }}
               className="h-full"
             >
-              <div className="flex h-full items-start gap-4 rounded-tl-2xl rounded-br-2xl bg-white p-6 shadow-card">
+              <div className="flex h-full items-start gap-4 rounded-tl-2xl rounded-br-2xl bg-white/10 p-6">
                 <span className="flex size-12 shrink-0 items-center justify-center rounded-tl-lg rounded-br-lg bg-red/10 text-red">
                   {icons[key]}
                 </span>
                 <div className="flex flex-col gap-2">
-                  <h3 className="text-18semi text-navy">
+                  <h3 className="text-18semi text-white">
                     {t(`methods.${key}.title`)}
                   </h3>
-                  <p className="text-14reg leading-relaxed text-graphite">
+                  <p className="text-14reg leading-relaxed text-white/80">
                     {t(`methods.${key}.text`)}
                   </p>
                 </div>

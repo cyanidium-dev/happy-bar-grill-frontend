@@ -26,11 +26,11 @@ export default async function DeliveryConditions() {
   ].filter(Boolean) as { label: string; value: string }[];
 
   return (
-    <Section background="navy" waveTop="beige">
+    <Section background="beige" waveTop="white">
       <div className="flex flex-col gap-8">
         <AnimatedWrapper className="flex flex-col gap-3">
-          <SectionTitle variant="white">{t("title")}</SectionTitle>
-          <p className="max-w-2xl text-16reg text-white/80">{t("lead")}</p>
+          <SectionTitle>{t("title")}</SectionTitle>
+          <p className="max-w-2xl text-16reg text-graphite">{t("lead")}</p>
         </AnimatedWrapper>
 
         <ul className="grid gap-3 sm:grid-cols-2 md:gap-4 xl:grid-cols-4">
@@ -41,21 +41,18 @@ export default async function DeliveryConditions() {
               animation={{ y: 20, delay: index * 0.06 }}
               className="h-full"
             >
-              <div className="flex h-full flex-col gap-1 rounded-tl-xl rounded-br-xl bg-white/10 p-4 sm:rounded-tl-2xl sm:rounded-br-2xl">
-                <span className="text-12med uppercase tracking-wide text-white/60">
+              <div className="flex h-full flex-col gap-1 rounded-tl-xl rounded-br-xl bg-white p-4 shadow-card sm:rounded-tl-2xl sm:rounded-br-2xl">
+                <span className="text-12med uppercase tracking-wide text-grey-dark">
                   {row.label}
                 </span>
-                <span className="text-18semi text-white">{row.value}</span>
+                <span className="text-18semi text-navy">{row.value}</span>
               </div>
             </AnimatedWrapper>
           ))}
         </ul>
 
         <AnimatedWrapper>
-          <PhoneButton
-            label={t("cta")}
-            className="border-white bg-white text-navy xl:hover:border-white xl:hover:bg-white/90 xl:hover:text-navy transition-colors duration-300 ease-in-out"
-          />
+          <PhoneButton label={t("cta")} />
         </AnimatedWrapper>
       </div>
     </Section>

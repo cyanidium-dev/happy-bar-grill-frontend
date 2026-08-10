@@ -26,8 +26,9 @@ export default async function DeliveryPage({ params }: PageProps) {
       <DeliveryHero />
       <BreadCrumbs items={[{ label: t("delivery.title") }]} />
       <DeliverySteps />
-      <PaymentMethods />
       <DeliveryConditions />
+      <PaymentMethods />
+   
     </>
   );
 }

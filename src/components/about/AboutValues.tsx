@@ -49,7 +49,7 @@ export default async function AboutValues() {
   const t = await getTranslations("AboutPage.values");
 
   return (
-    <Section background="beige" accent="cool" waveTop="white">
+    <Section background="beige" waveTop="white" className="rounded-b-[24px] lg:rounded-b-[36px]">
       <div className="flex flex-col gap-8">
         <AnimatedWrapper>
           <SectionTitle>{t("title")}</SectionTitle>

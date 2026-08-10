@@ -12,7 +12,7 @@ export default async function AboutMenuTeaser() {
   const categories = await getCategories();
 
   return (
-    <Section background="white" waveTop="beige">
+    <Section background="white">
       <div className="flex flex-col gap-8">
         <AnimatedWrapper className="flex flex-col gap-3">
           <SectionTitle>{t("title")}</SectionTitle>

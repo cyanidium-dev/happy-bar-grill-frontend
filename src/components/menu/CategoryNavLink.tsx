@@ -4,7 +4,10 @@ import type { ComponentProps } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { MENU_CATALOG_ID, MENU_SCROLL_FLAG } from "@/constants/menu";
 
-type CategoryNavLinkProps = Omit<ComponentProps<typeof Link>, "scroll" | "href"> & {
+type CategoryNavLinkProps = Omit<
+  ComponentProps<typeof Link>,
+  "scroll" | "href"
+> & {
   href: string;
 };
 

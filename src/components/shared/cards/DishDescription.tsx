@@ -56,13 +56,22 @@ export default function DishDescription({
   }, [text]);
 
   return (
-    <div className={cn("relative flex flex-1 flex-col justify-center gap-1", className)}>
+    <div
+      className={cn(
+        "relative flex flex-1 flex-col justify-center gap-1",
+        className,
+      )}
+    >
       <div
         className={cn(
           "overflow-hidden",
           measured && "transition-[height] duration-300 ease-out",
         )}
-        style={measured ? { height: expanded ? fullHeight : collapsedHeight } : undefined}
+        style={
+          measured
+            ? { height: expanded ? fullHeight : collapsedHeight }
+            : undefined
+        }
       >
         <p
           ref={textRef}

@@ -26,21 +26,31 @@ export default async function BreadCrumbs({
   const trail: BreadCrumbItem[] = [{ label: t("home"), href: "/" }, ...items];
 
   return (
-    <Container as="nav" aria-label="Breadcrumb" className={cn("pt-4 md:pt-6", className)}>
+    <Container
+      as="nav"
+      aria-label="Breadcrumb"
+      className={cn("pt-4 md:pt-6", className)}
+    >
       <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-14med text-grey-dark">
         {trail.map((item, index) => {
           const isLast = index === trail.length - 1;
           const isLink = !isLast && Boolean(item.href);
 
           return (
-            <li key={`${item.label}-${index}`} className="flex items-center gap-x-2">
+            <li
+              key={`${item.label}-${index}`}
+              className="flex items-center gap-x-2"
+            >
               {index > 0 && (
                 <span aria-hidden className="text-grey">
                   /
                 </span>
               )}
               {isLink ? (
-                <Link href={item.href!} className="transition-colors hover:text-navy">
+                <Link
+                  href={item.href!}
+                  className="transition-colors hover:text-navy"
+                >
                   {item.label}
                 </Link>
               ) : (

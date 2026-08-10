@@ -51,7 +51,9 @@ export default async function Promotions() {
 
       <div className="flex flex-col gap-3 lg:flex-row lg:justify-between lg:items-end">
         <AnimatedWrapper className="flex flex-col gap-3">
-          <SectionTitle className="max-w-[540px] xl:max-w-[672px]">{t("title")}</SectionTitle>
+          <SectionTitle className="max-w-[540px] xl:max-w-[672px]">
+            {t("title")}
+          </SectionTitle>
           <p className="lg:max-w-[420px] xl:max-w-2xl text-16reg text-graphite">
             {t("text")}
           </p>

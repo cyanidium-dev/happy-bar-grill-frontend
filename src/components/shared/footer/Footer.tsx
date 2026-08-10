@@ -106,10 +106,7 @@ export default function Footer({ className }: { className?: string }) {
                 <li key={key}>
                   <Link
                     href={href}
-                    className={cn(
-                      "group relative inline-block",
-                      styles.nav,
-                    )}
+                    className={cn("group relative inline-block", styles.nav)}
                   >
                     {t(key)}
                     <span

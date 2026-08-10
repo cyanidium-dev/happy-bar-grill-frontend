@@ -2,7 +2,7 @@
 
 @plugin "tailwind-scrollbar" {
   nocompatible: true;
-  preferredStrategy: "pseudoelements";
+  preferredstrategy: "pseudoelements";
 }
 
 /* =============================================================================
@@ -286,7 +286,8 @@
 @supports (-moz-appearance: none) {
   .scrollbar-brand {
     scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--color-navy) 80%, transparent) transparent;
+    scrollbar-color: color-mix(in srgb, var(--color-navy) 80%, transparent)
+      transparent;
   }
 }
 

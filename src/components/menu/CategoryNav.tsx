@@ -47,7 +47,9 @@ export default async function CategoryNav({
   ];
 
   if (variant === "mobile") {
-    return <MobileCategoryChips items={items} ariaLabel={t("categoriesLabel")} />;
+    return (
+      <MobileCategoryChips items={items} ariaLabel={t("categoriesLabel")} />
+    );
   }
 
   const tAlts = await getTranslations("Menu.alts");

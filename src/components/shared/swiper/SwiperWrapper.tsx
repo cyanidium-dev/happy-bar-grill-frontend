@@ -143,7 +143,9 @@ export default function SwiperWrapper({
       </div>
 
       {showNavigation && !isLocked && (
-        <div className={cn("flex items-center gap-2 sm:gap-3", buttonsClassName)}>
+        <div
+          className={cn("flex items-center gap-2 sm:gap-3", buttonsClassName)}
+        >
           <button
             type="button"
             disabled={isBeginning && !loop}

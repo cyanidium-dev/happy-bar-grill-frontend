@@ -73,7 +73,11 @@ export default function ContactForm() {
           {t("successTitle")}
         </h2>
         <p className="text-16reg text-graphite">{t("successText")}</p>
-        <Button type="button" variant="secondary" onClick={() => setSuccess(false)}>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => setSuccess(false)}
+        >
           {t("sendAnother")}
         </Button>
       </div>

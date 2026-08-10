@@ -28,7 +28,9 @@ export default function CartItemRow({ item }: { item: CartItem }) {
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <p className="mb-1 font-findsans line-clamp-2 text-14semi text-navy">{item.name}</p>
+        <p className="mb-1 font-findsans line-clamp-2 text-14semi text-navy">
+          {item.name}
+        </p>
         <p className="mt-0.5 font-findsans text-12semi text-navy">
           {item.price} {t("currency")}
           {item.weight ? (

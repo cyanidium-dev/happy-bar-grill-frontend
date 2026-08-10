@@ -11,8 +11,7 @@ import { EMAIL, PHONE } from "@/constants/contacts";
  */
 
 export type LegalBlock =
-  | { type: "p"; text: string }
-  | { type: "list"; items: string[] };
+  { type: "p"; text: string } | { type: "list"; items: string[] };
 
 export type LegalSection = { heading: string; blocks: LegalBlock[] };
 
@@ -38,7 +37,9 @@ export const privacyDoc: Record<Locale, LegalDoc> = {
           p(
             "Розпорядником персональних даних є [ЮРИДИЧНА НАЗВА (ФОП/ТОВ)], код [ЄДРПОУ/РНОКПП], адреса: [юридична адреса], заклад у місті Миколаїв (далі — «ми», «Vtiha»).",
           ),
-          p(`З питань щодо ваших даних пишіть на ${EMAIL} або телефонуйте ${PHONE}.`),
+          p(
+            `З питань щодо ваших даних пишіть на ${EMAIL} або телефонуйте ${PHONE}.`,
+          ),
         ],
       },
       {
@@ -160,7 +161,9 @@ export const privacyDoc: Record<Locale, LegalDoc> = {
           p(
             "Распорядителем персональных данных является [ЮРИДИЧЕСКОЕ НАЗВАНИЕ (ФЛП/ООО)], код [ЕГРПОУ/РНУКПН], адрес: [юридический адрес], заведение в городе Николаев (далее — «мы», «Vtiha»).",
           ),
-          p(`По вопросам о ваших данных пишите на ${EMAIL} или звоните ${PHONE}.`),
+          p(
+            `По вопросам о ваших данных пишите на ${EMAIL} или звоните ${PHONE}.`,
+          ),
         ],
       },
       {

@@ -1,7 +1,12 @@
 import { useSyncExternalStore } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { CartItem, CartLine, LastOrder, OrderCustomer } from "@/types/cart";
+import type {
+  CartItem,
+  CartLine,
+  LastOrder,
+  OrderCustomer,
+} from "@/types/cart";
 import { generateOrderNumber } from "@/utils/orderNumber";
 
 interface CartState {

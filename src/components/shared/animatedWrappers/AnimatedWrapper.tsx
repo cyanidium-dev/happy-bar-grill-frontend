@@ -47,8 +47,14 @@ export default function AnimatedWrapper({
   amount = 0.2,
   children,
 }: AnimatedWrapperProps) {
-  const { x = 0, y = 24, scale = 1, opacity = 0, duration = 0.6, delay = 0 } =
-    animation;
+  const {
+    x = 0,
+    y = 24,
+    scale = 1,
+    opacity = 0,
+    duration = 0.6,
+    delay = 0,
+  } = animation;
 
   // Callback ref (state) — avoids reading a ref during render.
   const [node, setNode] = useState<HTMLElement | null>(null);

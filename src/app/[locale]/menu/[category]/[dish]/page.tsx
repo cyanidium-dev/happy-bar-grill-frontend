@@ -144,7 +144,10 @@ export default async function DishPage({ params }: DishProps) {
       <section className="bg-white pt-14">
         <Container className="pb-12 pt-6 md:pb-16 xl:pb-20">
           <div className="flex flex-col sm:flex-row gap-8 lg:gap-14 ">
-            <AnimatedWrapper animation={{ y: 20 }} className="w-full sm:w-1/2 shrink-0">
+            <AnimatedWrapper
+              animation={{ y: 20 }}
+              className="w-full sm:w-1/2 shrink-0"
+            >
               <DishGallery
                 images={images}
                 priority
@@ -173,11 +176,11 @@ export default async function DishPage({ params }: DishProps) {
 
       <SimilarDishes dishes={similar} />
 
-      <Section
-        background="white"
-        className="text-center"
-      >
-        <AnimatedWrapper animation={{ y: 20 }} className="flex flex-col items-center gap-6">
+      <Section background="white" className="text-center">
+        <AnimatedWrapper
+          animation={{ y: 20 }}
+          className="flex flex-col items-center gap-6"
+        >
           <SectionTitle variant="navy">{t("ctaTitle")}</SectionTitle>
           <Button href="/menu" size="lg">
             {t("ctaButton")}

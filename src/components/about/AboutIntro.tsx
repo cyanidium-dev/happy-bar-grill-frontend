@@ -19,10 +19,8 @@ export default async function AboutIntro() {
     <Section background="white" accent="warm">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-12">
         <AnimatedWrapper className="flex flex-col gap-4 lg:flex-1">
-          <span className="text-14semi uppercase tracking-wide text-red">
-            {t("eyebrow")}
-          </span>
-          <h1 className="font-findsans text-28bold uppercase text-navy lg:text-40bold">
+  
+          <h1 className="font-findsans text-28bold uppercase text-navy lg:text-36bold xl:text-40bold">
             {t("title")}
           </h1>
           <p className="text-16reg leading-relaxed text-graphite">{t("text")}</p>

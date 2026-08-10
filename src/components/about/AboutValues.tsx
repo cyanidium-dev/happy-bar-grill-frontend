@@ -55,7 +55,7 @@ export default async function AboutValues() {
           <SectionTitle>{t("title")}</SectionTitle>
         </AnimatedWrapper>
 
-        <ul className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-4">
+        <ul className="grid gap-4 sm:grid-cols-2 md:gap-6 xl:grid-cols-4">
           {keys.map((key, index) => (
             <AnimatedWrapper
               key={key}

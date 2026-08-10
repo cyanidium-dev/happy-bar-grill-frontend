@@ -4,7 +4,6 @@ import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import AboutIntro from "@/components/about/AboutIntro";
 import AboutValues from "@/components/about/AboutValues";
 import AboutMenuTeaser from "@/components/about/AboutMenuTeaser";
-import AboutInvite from "@/components/about/AboutInvite";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
 
@@ -27,7 +26,7 @@ export default async function AboutPage({ params }: PageProps) {
       <AboutIntro />
       <AboutValues />
       <AboutMenuTeaser />
-      <AboutInvite />
+
     </>
   );
 }

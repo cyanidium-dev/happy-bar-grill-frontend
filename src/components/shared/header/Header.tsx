@@ -20,7 +20,7 @@ import { cn } from "@/utils/cn";
 /**
  * Floating header: logo, desktop nav, language switcher, cart and phone, plus
  * the mobile burger + slide-in menu. It's `fixed` (not `sticky`) so it floats
- * *over* the page — on hero pages (home, blog, article) the section renders behind it
+ * *over* the page — on hero pages (home, blog, article, delivery, about) the section renders behind it
  * with its own background, visible through the header while it's transparent
  * (white chrome). On every other page the header is solid `navy-dark` with
  * white chrome from the start. Once scrolled past 60px on a hero page, it
@@ -35,7 +35,11 @@ export default function Header({ className }: { className?: string }) {
   const th = useTranslations("Header");
   const pathname = usePathname();
   const isHeroPage =
-    pathname === "/" || pathname === "/blog" || pathname.startsWith("/blog/");
+    pathname === "/" ||
+    pathname === "/blog" ||
+    pathname.startsWith("/blog/") ||
+    pathname === "/delivery" ||
+    pathname === "/about";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);

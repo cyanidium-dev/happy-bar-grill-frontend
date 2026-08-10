@@ -1,5 +1,7 @@
-import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
+"use client";
+
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 import Container from "@/components/shared/container/Container";
 import Logo from "@/components/shared/logo/Logo";
 import SectionWave from "@/components/shared/SectionWave";
@@ -7,6 +9,11 @@ import InstagramIcon from "@/components/shared/icons/InstagramIcon";
 import TelegramIcon from "@/components/shared/icons/TelegramIcon";
 import TiktokIcon from "@/components/shared/icons/TiktokIcon";
 import { navLinks } from "@/config/navigation";
+import {
+  getFooterVariant,
+  getFooterWaveColor,
+  type FooterVariant,
+} from "@/config/footer";
 import {
   ADDRESS,
   DEVELOPER_NAME,
@@ -26,17 +33,51 @@ const socials = [
   { url: TIKTOK_URL, label: "TikTok", Icon: TiktokIcon },
 ];
 
-export default async function Footer({ className }: { className?: string }) {
-  const t = await getTranslations("Nav");
-  const tf = await getTranslations("Footer");
+const variantStyles: Record<
+  FooterVariant,
+  {
+    footer: string;
+    social: string;
+    nav: string;
+    contacts: string;
+    divider: string;
+    developer: string;
+  }
+> = {
+  light: {
+    footer: "bg-white text-navy",
+    social: "border-navy/15 text-navy",
+    nav: "text-navy",
+    contacts: "text-graphite",
+    divider: "border-navy/10 text-grey-dark",
+    developer: "text-navy",
+  },
+  dark: {
+    footer: "bg-navy text-white",
+    social: "border-white/20 text-white",
+    nav: "text-white/90",
+    contacts: "text-white/90",
+    divider: "border-white/15 text-white/70",
+    developer: "text-white",
+  },
+};
+
+export default function Footer({ className }: { className?: string }) {
+  const pathname = usePathname();
+  const variant = getFooterVariant(pathname);
+  const styles = variantStyles[variant];
+
+  const t = useTranslations("Nav");
+  const tf = useTranslations("Footer");
   const year = new Date().getFullYear();
 
   return (
-    <footer className={cn("relative overflow-hidden bg-navy text-white", className)}>
-      <SectionWave from="white" />
+    <footer
+      className={cn("relative overflow-hidden", styles.footer, className)}
+    >
+      <SectionWave from={getFooterWaveColor(pathname)} />
       <Container className="pb-14 pt-20 md:pb-16 md:pt-24">
         <div className="flex flex-col gap-10 lg:flex-row lg:justify-between">
-          {/* Brand + socials */}
           <div className="flex flex-col gap-6">
             <Logo className="h-14 md:h-16" />
             <ul className="flex items-center gap-4">
@@ -47,7 +88,10 @@ export default async function Footer({ className }: { className?: string }) {
                     target="_blank"
                     rel="noopener noreferrer nofollow"
                     aria-label={label}
-                    className="flex size-11 items-center justify-center rounded-full border border-white/20 text-white transition-colors duration-300 hover:border-red hover:text-red"
+                    className={cn(
+                      "flex size-11 items-center justify-center rounded-full border transition-colors duration-300 hover:border-red hover:text-red",
+                      styles.social,
+                    )}
                   >
                     <Icon className="size-5" />
                   </a>
@@ -56,14 +100,16 @@ export default async function Footer({ className }: { className?: string }) {
             </ul>
           </div>
 
-          {/* Navigation */}
           <nav aria-label="Footer">
             <ul className="flex flex-col gap-3 text-16med">
               {navLinks.map(({ href, key }) => (
                 <li key={key}>
                   <Link
                     href={href}
-                    className="group relative inline-block text-white/90"
+                    className={cn(
+                      "group relative inline-block",
+                      styles.nav,
+                    )}
                   >
                     {t(key)}
                     <span
@@ -76,8 +122,7 @@ export default async function Footer({ className }: { className?: string }) {
             </ul>
           </nav>
 
-          {/* Contacts */}
-          <ul className="flex flex-col gap-3 text-16reg text-white/90">
+          <ul className={cn("flex flex-col gap-3 text-16reg", styles.contacts)}>
             <li>
               {tf("phone")}:{" "}
               <a
@@ -102,7 +147,12 @@ export default async function Footer({ className }: { className?: string }) {
           </ul>
         </div>
 
-        <div className="mt-12 flex flex-col gap-4 border-t border-white/15 pt-6 text-14reg text-white/70">
+        <div
+          className={cn(
+            "mt-12 flex flex-col gap-4 border-t pt-6 text-14reg",
+            styles.divider,
+          )}
+        >
           <nav
             aria-label="Правова інформація"
             className="flex flex-wrap gap-x-6 gap-y-2"
@@ -131,7 +181,10 @@ export default async function Footer({ className }: { className?: string }) {
                 href={DEVELOPER_URL}
                 target="_blank"
                 rel="noopener noreferrer nofollow"
-                className="text-white transition-colors duration-300 hover:text-red"
+                className={cn(
+                  "transition-colors duration-300 hover:text-red",
+                  styles.developer,
+                )}
               >
                 {DEVELOPER_NAME}
               </a>

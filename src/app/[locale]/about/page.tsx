@@ -22,11 +22,10 @@ export default async function AboutPage({ params }: PageProps) {
 
   return (
     <>
-      <BreadCrumbs items={[{ label: t("about.title") }]} />
       <AboutIntro />
+      <BreadCrumbs items={[{ label: t("about.title") }]} />
       <AboutValues />
       <AboutMenuTeaser />
-
     </>
   );
 }

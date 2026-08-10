@@ -15,9 +15,9 @@ export default async function Categories() {
   const categories = await getCategories();
 
   return (
-    <Section background="white">
+    <Section background="white" className="pt-15 md:pt-0">
       <div className="flex flex-col gap-10">
-        <div className="hidden md:block absolute md:left-0 md:top-[40px] xl:top-[80px] w-[275px] h-[187px]">
+        <div className="absolute left-0 top-[-40px] md:top-[40px] xl:top-[80px] w-[275px] h-[187px]">
           <Image
             src="/images/home/categories/fork.webp"
             alt={t("alts.fork")}

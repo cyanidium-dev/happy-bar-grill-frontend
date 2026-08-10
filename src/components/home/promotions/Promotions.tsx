@@ -22,7 +22,7 @@ export default async function Promotions() {
       waveFlip
       className="rounded-b-[24px] lg:rounded-b-[36px] overflow-hidden"
     >
-      <div className="hidden lg:block absolute lg:bottom-[0px] right-0 lg:w-[390px] lg:h-[268px]">
+      <div className="hidden md:block absolute md:bottom-[-90px] xl:bottom-[-180px] md:right-[-150px] lg:right-[-100px] xl:right-[-150px] md:w-[535px] md:h-[458px] lg:w-[635px] lg:h-[558px] xl:w-[535px] xl:h-[458px]">
         <Image
           src="/images/home/promotions/pizza.webp"
           alt={t("alts.pizza")}
@@ -31,7 +31,7 @@ export default async function Promotions() {
         />
       </div>
 
-      <div className="hidden lg:block absolute lg:right-[320px] lg:top-[80px] w-[199px] h-[223px]">
+      <div className="absolute left-[280px] md:left-auto md:right-[200px] lg:right-[320px] top-[190px] md:top-[30px] lg:top-[80px] w-[199px] h-[223px]">
         <Image
           src="/images/home/promotions/tomato-top.webp"
           alt={t("alts.tomatoTop")}
@@ -40,7 +40,7 @@ export default async function Promotions() {
         />
       </div>
 
-      <div className="hidden lg:block absolute lg:left-[-60px] bottom-[-40px] lg:w-[261px] lg:h-[166px]">
+      <div className="absolute left-[-60px] bottom-[-40px] w-[261px] h-[166px]">
         <Image
           src="/images/home/promotions/tomato-bottom.webp"
           alt={t("alts.tomatoBottom")}
@@ -49,16 +49,16 @@ export default async function Promotions() {
         />
       </div>
 
-      <div className="flex flex-col gap-3 lg:flex-row lg:justify-between lg:items-end">
+      <div className="flex flex-col gap-3 md:flex-row md:justify-between md:items-end">
         <AnimatedWrapper className="flex flex-col gap-3">
           <SectionTitle className="max-w-[540px] xl:max-w-[672px]">
             {t("title")}
           </SectionTitle>
-          <p className="lg:max-w-[420px] xl:max-w-2xl text-16reg text-graphite">
+          <p className="md:max-w-[394px] lg:max-w-[420px] xl:max-w-2xl text-16reg text-graphite">
             {t("text")}
           </p>
         </AnimatedWrapper>
-        <AnimatedWrapper className="mt-8 flex md:mt-10">
+        <AnimatedWrapper className="mt-8 flex md:mt-10 shrink-0">
           <Button
             href={`/menu/${SPECIAL_OFFERS_SLUG}`}
             variant="secondary"

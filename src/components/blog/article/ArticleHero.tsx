@@ -73,7 +73,10 @@ export default async function ArticleHero({ post }: { post: BlogPost }) {
             {post.author?.name && (
               <span className="text-16semi text-white">{post.author.name}</span>
             )}
-            <time dateTime={post.createdAt} className="text-14med text-white/70">
+            <time
+              dateTime={post.createdAt}
+              className="text-14med text-white/70"
+            >
               {formatBlogDate(post.createdAt, locale)}
             </time>
           </div>

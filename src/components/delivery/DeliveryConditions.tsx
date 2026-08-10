@@ -3,11 +3,7 @@ import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrappe
 import PhoneButton from "@/components/shared/buttons/PhoneButton";
 import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
-import {
-  DELIVERY_COST,
-  DELIVERY_TIME,
-  MIN_ORDER,
-} from "@/constants/contacts";
+import { DELIVERY_COST, DELIVERY_TIME, MIN_ORDER } from "@/constants/contacts";
 
 /**
  * Delivery conditions. The venue has just opened, so exact zone/cost are

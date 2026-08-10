@@ -29,9 +29,21 @@ export default async function ContactInfo() {
     ADDRESS && { label: t("address"), value: ADDRESS },
   ].filter(Boolean) as { label: string; value: string; href?: string }[];
 
-  const socials: { url: string; label: string; Icon: ComponentType<{ className?: string }> }[] = [
-    INSTAGRAM_URL && { url: INSTAGRAM_URL, label: "Instagram", Icon: InstagramIcon },
-    TELEGRAM_URL && { url: TELEGRAM_URL, label: "Telegram", Icon: TelegramIcon },
+  const socials: {
+    url: string;
+    label: string;
+    Icon: ComponentType<{ className?: string }>;
+  }[] = [
+    INSTAGRAM_URL && {
+      url: INSTAGRAM_URL,
+      label: "Instagram",
+      Icon: InstagramIcon,
+    },
+    TELEGRAM_URL && {
+      url: TELEGRAM_URL,
+      label: "Telegram",
+      Icon: TelegramIcon,
+    },
     TIKTOK_URL && { url: TIKTOK_URL, label: "TikTok", Icon: TiktokIcon },
   ].filter(Boolean) as {
     url: string;

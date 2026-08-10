@@ -28,7 +28,6 @@ export default async function DeliveryPage({ params }: PageProps) {
       <DeliverySteps />
       <DeliveryConditions />
       <PaymentMethods />
-   
     </>
   );
 }

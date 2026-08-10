@@ -23,7 +23,10 @@ export default async function PrivacyPolicyPage({ params }: PageProps) {
   return (
     <>
       <BreadCrumbs items={[{ label: t("privacy.title") }]} />
-      <LegalPage title={t("privacy.title")} doc={privacyDoc[locale as Locale]} />
+      <LegalPage
+        title={t("privacy.title")}
+        doc={privacyDoc[locale as Locale]}
+      />
     </>
   );
 }

@@ -51,7 +51,9 @@ export const blogPortableTextComponents: PortableTextComponents = {
       </h4>
     ),
     normal: ({ children }) => (
-      <p className="mb-4 text-16reg leading-relaxed text-graphite">{children}</p>
+      <p className="mb-4 text-16reg leading-relaxed text-graphite">
+        {children}
+      </p>
     ),
   },
   list: {

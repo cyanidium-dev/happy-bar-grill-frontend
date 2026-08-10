@@ -180,13 +180,15 @@ export const getHeroDishes = cache(async (locale?: Locale): Promise<Dish[]> => {
 });
 
 /** Dishes from `upsell`-flagged categories, recommended at checkout. */
-export const getUpsellDishes = cache(async (locale?: Locale): Promise<Dish[]> => {
-  return sanityFetch<Dish[]>({
-    query: UPSELL_DISHES_QUERY,
-    params: await localeParams({}, locale),
-    tags: ["menuDish", "menuCategory"],
-  });
-});
+export const getUpsellDishes = cache(
+  async (locale?: Locale): Promise<Dish[]> => {
+    return sanityFetch<Dish[]>({
+      query: UPSELL_DISHES_QUERY,
+      params: await localeParams({}, locale),
+      tags: ["menuDish", "menuCategory"],
+    });
+  },
+);
 
 export const getPromotions = cache(async (locale?: Locale): Promise<Dish[]> => {
   return sanityFetch<Dish[]>({

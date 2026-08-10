@@ -67,9 +67,7 @@ export default function LastOrderModal({
       <div
         className={cn(
           "pointer-events-none fixed inset-x-0 top-[calc(var(--header-height)+0.5rem)] z-[70] pr-[var(--scroll-lock-offset,0px)] transition-[opacity,transform] duration-300 ease-out",
-          open
-            ? "translate-y-0 opacity-100"
-            : "-translate-y-2 opacity-0",
+          open ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0",
         )}
       >
         <Container className="flex justify-end">

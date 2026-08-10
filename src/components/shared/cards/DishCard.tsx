@@ -51,7 +51,7 @@ export default async function DishCard({
       <div
         aria-hidden
         className={cn(
-          "absolute inset-0 rounded-[inherit] backdrop-blur-[20px]",
+          "absolute inset-0 rounded-[inherit] backdrop-blur-[10px]",
           surfaces[variant],
         )}
       />

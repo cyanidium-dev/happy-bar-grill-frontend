@@ -276,7 +276,6 @@ export default function CheckoutView({
           </aside>
         </div>
       )}
-
     </Container>
   );
 }

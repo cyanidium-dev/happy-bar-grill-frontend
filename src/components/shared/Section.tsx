@@ -58,7 +58,8 @@ export default function Section({
   containerClassName,
   children,
 }: SectionProps) {
-  const accentKeys = accent === "none" ? [] : Array.isArray(accent) ? accent : [accent];
+  const accentKeys =
+    accent === "none" ? [] : Array.isArray(accent) ? accent : [accent];
 
   return (
     <Tag

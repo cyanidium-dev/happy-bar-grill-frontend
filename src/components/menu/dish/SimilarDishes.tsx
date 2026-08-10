@@ -56,7 +56,9 @@ export default async function SimilarDishes({ dishes }: { dishes: Dish[] }) {
 
       <div className="relative flex flex-col gap-3">
         <AnimatedWrapper className="pr-24 sm:pr-28">
-          <SectionTitle className="mb-3 max-w-[350px]">{t("similarTitle")}</SectionTitle>
+          <SectionTitle className="mb-3 max-w-[350px]">
+            {t("similarTitle")}
+          </SectionTitle>
         </AnimatedWrapper>
 
         <div className="mt-8 md:mt-10">
@@ -71,10 +73,7 @@ export default async function SimilarDishes({ dishes }: { dishes: Dish[] }) {
             prevLabel={tSlider("prev")}
             nextLabel={tSlider("next")}
             slides={dishes.map((dish) => (
-              <DishCard
-                key={`${dish.categorySlug}-${dish.slug}`}
-                dish={dish}
-              />
+              <DishCard key={`${dish.categorySlug}-${dish.slug}`} dish={dish} />
             ))}
           />
         </div>

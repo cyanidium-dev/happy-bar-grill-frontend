@@ -50,7 +50,9 @@ export default function ConfirmationView() {
           <p className="mt-3 text-16reg text-graphite">{t("text")}</p>
           <p className="mt-4 text-16med text-navy">
             {t("orderNumber")}:{" "}
-            <span className="font-findsans text-18semi">{order.orderNumber}</span>
+            <span className="font-findsans text-18semi">
+              {order.orderNumber}
+            </span>
           </p>
         </div>
 
@@ -69,7 +71,9 @@ export default function ConfirmationView() {
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="line-clamp-1 text-14semi text-navy">{item.name}</p>
+                <p className="line-clamp-1 text-14semi text-navy">
+                  {item.name}
+                </p>
                 <p className="text-14med text-grey-dark">
                   {item.quantity} × {item.price} {tp("currency")}
                 </p>

@@ -5,6 +5,7 @@ import CheckoutView, {
   type UpsellCard,
 } from "@/components/checkout/CheckoutView";
 import DishCard from "@/components/shared/cards/DishCard";
+import { FOOTER_WAVE_HEIGHT_CLASS } from "@/config/footer";
 import { getUpsellDishes } from "@/data/menu";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
@@ -37,6 +38,7 @@ export default async function CheckoutPage({ params }: PageProps) {
       <BreadCrumbs items={[{ label: t("checkout.title") }]} />
       <section className="bg-white">
         <CheckoutView upsellCards={upsellCards} />
+        <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
       </section>
     </>
   );

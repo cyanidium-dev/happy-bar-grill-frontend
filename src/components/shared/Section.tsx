@@ -2,6 +2,7 @@ import type { ElementType, ReactNode } from "react";
 import { cn } from "@/utils/cn";
 import Container from "@/components/shared/container/Container";
 import SectionWave from "@/components/shared/SectionWave";
+import { FOOTER_WAVE_HEIGHT_CLASS } from "@/config/footer";
 
 type Background = "white" | "beige" | "navy";
 type AccentKey = "warm" | "cool" | "coolRight" | "coolTopCenter" | "navy";
@@ -36,6 +37,11 @@ type SectionProps = {
   waveTop?: Background;
   /** Mirror the top wave horizontally, so it doesn't repeat the previous one. */
   waveFlip?: boolean;
+  /**
+   * Extra bottom space equal to the footer’s overlapping navy wave so last-
+   * section content isn’t covered (dark-footer pages).
+   */
+  clearFooterWave?: boolean;
   className?: string;
   /** Override inner container spacing/width when a section needs it. */
   containerClassName?: string;
@@ -56,6 +62,7 @@ export default function Section({
   accent = "none",
   waveTop,
   waveFlip,
+  clearFooterWave = false,
   className,
   containerClassName,
   sectionAside,
@@ -96,6 +103,9 @@ export default function Section({
         )}
       >
         {children}
+        {clearFooterWave && (
+          <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
+        )}
       </Container>
     </Tag>
   );

@@ -205,7 +205,7 @@ export default function Footer({ className }: { className?: string }) {
                 href={DEVELOPER_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-[13px] leading-[120%] font-findsans"
+                className="flex items-center gap-2 text-[13px] leading-[120%] font-findsans transition-colors duration-300 hover:text-red"
               >
                 CODE-SITE.ART <TagIcon className="mb-1" />
               </a>

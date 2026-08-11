@@ -1,3 +1,4 @@
+import { FOOTER_WAVE_HEIGHT_CLASS } from "@/config/footer";
 import { cn } from "@/utils/cn";
 
 type WaveColor = "white" | "beige" | "navy";
@@ -40,7 +41,8 @@ export default function SectionWave({
     <div
       aria-hidden
       className={cn(
-        "pointer-events-none absolute inset-x-0 z-10 h-[44px] md:h-[72px] xl:h-[96px]",
+        "pointer-events-none absolute inset-x-0 z-10",
+        FOOTER_WAVE_HEIGHT_CLASS,
         above ? "bottom-full -scale-y-100" : "top-0",
         fills[from],
         flip && "-scale-x-100",

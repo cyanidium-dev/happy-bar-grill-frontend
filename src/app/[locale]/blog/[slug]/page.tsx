@@ -7,6 +7,7 @@ import ArticleHero from "@/components/blog/article/ArticleHero";
 import ArticleContent from "@/components/blog/article/ArticleContent";
 import BlogFaq from "@/components/blog/article/BlogFaq";
 import OtherPosts from "@/components/blog/article/OtherPosts";
+import { FOOTER_WAVE_HEIGHT_CLASS } from "@/config/footer";
 import {
   getBlogPostBySlug,
   getBlogPostSlugs,
@@ -103,6 +104,7 @@ export default async function BlogArticlePage({ params }: BlogArticleProps) {
 
             <OtherPosts posts={others} className="lg:w-80 lg:shrink-0" />
           </div>
+          <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
         </Container>
       </section>
     </>

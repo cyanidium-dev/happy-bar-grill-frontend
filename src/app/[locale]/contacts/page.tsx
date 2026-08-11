@@ -29,8 +29,11 @@ export default async function ContactsPage({ params }: PageProps) {
     <>
       <BreadCrumbs items={[{ label: tMeta("contacts.title") }]} />
 
-      <section className="bg-white">
-        <Container className="pb-16 pt-10 md:pb-20 md:pt-14">
+      <section className="relative z-10 overflow-hidden bg-white">
+        <Container className="relative pb-16 pt-10 md:pb-20 md:pt-14">
+          <div className="absolute -z-10 bg-navy-dark bottom-0 right-[-30px] sm:bottom-[-74px] sm:right-[-69px] w-[240px] h-[227px] sm:w-[481px] sm:h-[454px] rounded-full" />
+          <div className="absolute z-10 bg-red bottom-[-60px] right-[-90px] sm:bottom-[-210px] sm:right-[-170px] w-[240px] h-[227px] sm:w-[481px] sm:h-[454px] rounded-full" />
+
           <div className="mb-8 flex max-w-2xl flex-col gap-4 md:mb-10">
             <h1 className="font-findsans text-28bold uppercase text-navy lg:text-40bold">
               {t("title")}

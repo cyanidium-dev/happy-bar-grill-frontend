@@ -22,7 +22,7 @@ type AnimatedWrapperProps = {
   once?: boolean;
   /** IntersectionObserver threshold. */
   amount?: number;
-  children: ReactNode;
+  children?: ReactNode;
 } & Omit<HTMLAttributes<HTMLElement>, "children">;
 
 /**

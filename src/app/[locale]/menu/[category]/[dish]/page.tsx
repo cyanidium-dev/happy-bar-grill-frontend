@@ -12,6 +12,7 @@ import DishGallery from "@/components/menu/dish/DishGallery";
 import DishDetails from "@/components/menu/dish/DishDetails";
 import DishTabs, { type DishTab } from "@/components/menu/dish/DishTabs";
 import SimilarDishes from "@/components/menu/dish/SimilarDishes";
+import Image from "next/image";
 import {
   getAllDishes,
   getCategoryBySlug,
@@ -176,12 +177,48 @@ export default async function DishPage({ params }: DishProps) {
 
       <SimilarDishes dishes={similar} />
 
-      <Section background="white" className="text-center" clearFooterWave>
+      <Section
+        background="white"
+        className="relative -top-18 -z-10 text-center pt-10 pb-[120px] md:pb-[140px] xl:pb-[160px]"
+        sectionAside={
+          <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
+            <Image
+              src="/images/home/seo-text/bg-image.webp"
+              alt={t("alts.bgImage")}
+              fill
+              className="object-cover -scale-x-100"
+            />
+          </div>
+        }
+      >
+        <div
+          aria-hidden
+          className="hidden md:block pointer-events-none absolute md:top-48 md:left-10 lg:left-220 lg:top-60 xl:top-70  xl:left-300 z-1 h-[85px] w-[110px]"
+        >
+          <Image
+            src="/images/home/seo-text/onion-small.webp"
+            alt={t("alts.onionSmall")}
+            fill
+            className="object-cover"
+          />
+        </div>
+
+        <div
+          aria-hidden
+          className="hidden md:block pointer-events-none absolute z-1 md:top-18 md:left-140 lg:left-180 lg:top-24 xl:top-30 xl:left-260 z-10 h-[229px] w-[213px]"
+        >
+          <Image
+            src="/images/home/seo-text/onion-large.webp"
+            alt={t("alts.onionLarge")}
+            fill
+            className="object-cover"
+          />
+        </div>
         <AnimatedWrapper
           animation={{ y: 20 }}
           className="flex flex-col items-center gap-6"
         >
-          <SectionTitle variant="navy">{t("ctaTitle")}</SectionTitle>
+          <SectionTitle variant="white">{t("ctaTitle")}</SectionTitle>
           <Button href="/menu" size="lg">
             {t("ctaButton")}
           </Button>

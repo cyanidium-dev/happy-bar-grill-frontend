@@ -14,6 +14,7 @@ import { navLinks } from "@/config/navigation";
 import {
   getFooterVariant,
   getFooterWaveColor,
+  hasOverlappingLightFooter,
   type FooterVariant,
 } from "@/config/footer";
 import {
@@ -76,7 +77,7 @@ export default function Footer({ className }: { className?: string }) {
     <footer
       className={cn(
         "relative z-10",
-        pathname === "/" && "-mt-18",
+        hasOverlappingLightFooter(pathname) && "-mt-18",
         styles.footer,
         className,
       )}

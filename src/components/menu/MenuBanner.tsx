@@ -29,7 +29,7 @@ export default async function MenuBanner() {
         fill
         priority
         sizes="100vw"
-        className="object-cover lg:hidden"
+        className="object-cover sm:hidden"
       />
       <Image
         src={banner.imageDesktop}
@@ -37,7 +37,7 @@ export default async function MenuBanner() {
         fill
         priority
         sizes="(max-width: 1280px) 100vw, 1140px"
-        className="hidden object-cover lg:block"
+        className="hidden object-cover sm:block"
       />
     </>
   );
@@ -62,7 +62,7 @@ export default async function MenuBanner() {
 
   return (
     <Container className="w-full pt-14">
-      <div className="relative aspect-[2240/708] overflow-hidden rounded-[24px] shadow-card lg:rounded-[36px]">
+      <div className="relative aspect-[1120/708] overflow-hidden rounded-[24px] shadow-card sm:aspect-[2240/708] lg:rounded-[36px]">
         {content}
       </div>
     </Container>

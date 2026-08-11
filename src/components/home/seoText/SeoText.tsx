@@ -17,7 +17,7 @@ export default async function SeoText() {
   return (
     <Section
       background="white"
-      className="pt-[82px] pb-[128px] -top-18"
+      className="pt-[82px] pb-[228px] -top-18"
       sectionAside={
         <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
           <Image

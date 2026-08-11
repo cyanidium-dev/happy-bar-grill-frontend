@@ -26,18 +26,22 @@ const fills: Record<WaveColor, string> = {
 export default function SectionWave({
   from,
   flip = false,
+  above = false,
   className,
 }: {
   from: WaveColor;
   /** Mirror horizontally so this wave doesn't look identical to the last one. */
   flip?: boolean;
+  /** Sit above the parent (e.g. footer) and overlap the previous section. */
+  above?: boolean;
   className?: string;
 }) {
   return (
     <div
       aria-hidden
       className={cn(
-        "relative z-10 pointer-events-none absolute inset-x-0 top-0 h-[44px] md:h-[72px] xl:h-[96px]",
+        "pointer-events-none absolute inset-x-0 z-10 h-[44px] md:h-[72px] xl:h-[96px]",
+        above ? "bottom-full -scale-y-100" : "top-0",
         fills[from],
         flip && "-scale-x-100",
         className,

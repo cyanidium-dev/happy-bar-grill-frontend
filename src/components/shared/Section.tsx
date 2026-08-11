@@ -39,6 +39,8 @@ type SectionProps = {
   className?: string;
   /** Override inner container spacing/width when a section needs it. */
   containerClassName?: string;
+  /** Decorative layers pinned to the section shell (outside the inner container). */
+  sectionAside?: ReactNode;
   children: ReactNode;
 };
 
@@ -56,6 +58,7 @@ export default function Section({
   waveFlip,
   className,
   containerClassName,
+  sectionAside,
   children,
 }: SectionProps) {
   const accentKeys =
@@ -85,6 +88,7 @@ export default function Section({
         />
       ))}
       {waveTop && <SectionWave from={waveTop} flip={waveFlip} />}
+      {sectionAside}
       <Container
         className={cn(
           "relative pb-12 pt-28 md:pb-16 md:pt-32 xl:pb-24 xl:pt-40",

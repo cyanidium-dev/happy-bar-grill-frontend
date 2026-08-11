@@ -62,7 +62,7 @@ export default async function MenuBanner() {
 
   return (
     <Container className="w-full pt-14">
-      <div className="relative aspect-[2240/708] overflow-hidden rounded-tl-2xl rounded-br-2xl shadow-card">
+      <div className="relative aspect-[2240/708] overflow-hidden rounded-[24px] shadow-card lg:rounded-[36px]">
         {content}
       </div>
     </Container>

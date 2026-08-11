@@ -43,10 +43,10 @@ export default async function DeliveryInfo() {
       background="beige"
      className="relative z-10 rounded-[24px] lg:rounded-[36px] relative -top-8 overflow-hidden"
     >
-      <div className="absolute -z-10 bg-navy-dark bottom-[-134px] right-[-69px] w-[481px] h-[454px] rounded-full" />
-      <div className="absolute z-10 bg-red bottom-[-270px] right-[-170px] w-[481px] h-[454px] rounded-full" />
+      <div className="absolute -z-10 bg-navy-dark bottom-[-60px] right-[-30px] sm:bottom-[-134px] sm:right-[-69px] w-[240px] h-[227px] sm:w-[481px] sm:h-[454px] rounded-full" />
+      <div className="absolute z-10 bg-red bottom-[-120px] right-[-90px] sm:bottom-[-270px] sm:right-[-170px] w-[240px] h-[227px] sm:w-[481px] sm:h-[454px] rounded-full" />
     
-            <div className="absolute  right-10 top-4 md:top-10 lg:top-auto md:right-14 lg:top-14 xl:top-24 lg:left-120 xl:left-148 w-[103px] h-[108px]">
+            <div className="absolute right-10 top-4 md:top-10 md:right-14 lg:top-14 xl:top-24 lg:left-120 xl:left-148 w-[103px] h-[108px]">
               <Image
                 src="/images/home/delivery/decor.webp"
                 alt=""
@@ -62,7 +62,7 @@ export default async function DeliveryInfo() {
           </AnimatedWrapper>
 
           <AnimatedWrapper
-            animation={{ x: -30 }}
+          
             className="flex flex-col gap-6"
           >
             <ul className="grid gap-3 sm:grid-cols-2">
@@ -112,7 +112,7 @@ export default async function DeliveryInfo() {
         </div>
 
         <AnimatedWrapper
-          animation={{ x: 30 }}
+  
           className="lg:flex lg:flex-1 lg:flex-col"
         >
           <iframe

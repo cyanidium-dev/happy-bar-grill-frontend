@@ -3,6 +3,7 @@ import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrappe
 import Button from "@/components/shared/buttons/Button";
 import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
+import Image from "next/image";
 import { cn } from "@/utils/cn";
 import {
   ADDRESS,
@@ -40,9 +41,19 @@ export default async function DeliveryInfo() {
     <Section
       id="delivery"
       background="beige"
-      
-     className="relative z-10 rounded-[24px] lg:rounded-[36px relative -top-4"
+     className="relative z-10 rounded-[24px] lg:rounded-[36px] relative -top-8 overflow-hidden"
     >
+      <div className="absolute -z-10 bg-navy-dark bottom-[-134px] right-[-69px] w-[481px] h-[454px] rounded-full" />
+      <div className="absolute z-10 bg-red bottom-[-270px] right-[-170px] w-[481px] h-[454px] rounded-full" />
+    
+            <div className="absolute  right-10 top-4 md:top-10 lg:top-auto md:right-14 lg:top-14 xl:top-24 lg:left-120 xl:left-148 w-[103px] h-[108px]">
+              <Image
+                src="/images/home/delivery/decor.webp"
+                alt=""
+                fill
+                className="object-cover"
+              />
+            </div>
       <div className="flex flex-col gap-8 md:mt-2 lg:flex-row lg:items-stretch lg:gap-12">
         <div className="flex flex-col gap-6 lg:flex-1">
           <AnimatedWrapper className="flex flex-col gap-3">
@@ -79,11 +90,19 @@ export default async function DeliveryInfo() {
                 </li>
               ))}
             </ul>
-            <div className="flex">
+            <div className="flex relative">
+            <div className="absolute -right-36 -bottom-22 w-[273px] h-[242px]">
+              <Image
+                src="/images/home/delivery/tomato.webp"
+                alt=""
+                fill
+                className="object-cover"
+              />
+            </div>
               <Button
                 href="/delivery"
                 variant="secondary"
-                className="w-full shrink-0 sm:w-fit"
+                className="shrink-0 w-fit"
               >
                 {t("cta")}
               </Button>

@@ -1,5 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrapper";
+import {
+  delayAfterCards,
+  fadeIn,
+} from "@/components/shared/animatedWrappers/animation";
 import Button from "@/components/shared/buttons/Button";
 import DishCard from "@/components/shared/cards/DishCard";
 import Section from "@/components/shared/Section";
@@ -16,29 +20,41 @@ export default async function PopularDishes() {
   const t = await getTranslations("HomePage.popular");
   const tSlider = await getTranslations("Common.slider");
   const popularDishes = await getPopularDishes();
+  // Swiper row is one AnimatedWrapper — decor waits for that reveal to finish.
+  const decorFade = fadeIn(delayAfterCards(1));
 
   return (
     <Section background="white" waveFlip>
-        <div className="hidden sm:block absolute z-5 -bottom-10 -right-10 md:-bottom-4 md:-right-10 lg:-bottom-4 lg:-right-6 w-[257px] h-[259px] lg:w-[317px] lg:h-[320px]">
-              <Image
-                src="/images/home/popular/sushi-chopsticks.webp"
-                alt={t("alts.sushiChopsticks")}
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="hidden lg:block absolute lg:bottom-21 lg:-left-62 w-[412px] h-[205px]">
-              <Image
-                src="/images/home/popular/grill-plate.webp"
-                alt={t("alts.grillPlate")}
-                fill
-                className="object-cover"
-              />
-            </div>
+      <AnimatedWrapper
+        className="hidden sm:block absolute z-5 -bottom-10 -right-10 md:-bottom-4 md:-right-10 lg:-bottom-4 lg:-right-6 w-[257px] h-[259px] lg:w-[317px] lg:h-[320px]"
+        animation={decorFade}
+        amount={0.01}
+      >
+        <Image
+          src="/images/home/popular/sushi-chopsticks.webp"
+          alt={t("alts.sushiChopsticks")}
+          fill
+          className="object-cover"
+        />
+      </AnimatedWrapper>
+      <AnimatedWrapper
+        className="hidden lg:block absolute lg:bottom-21 lg:-left-62 w-[412px] h-[205px]"
+        animation={decorFade}
+        amount={0.01}
+      >
+        <Image
+          src="/images/home/popular/grill-plate.webp"
+          alt={t("alts.grillPlate")}
+          fill
+          className="object-cover"
+        />
+      </AnimatedWrapper>
       <div className="relative flex flex-col gap-3">
         <AnimatedWrapper className="flex flex-col gap-3 pr-24 sm:pr-28">
           <div className="relative w-fit">
-            <SectionTitle className="max-w-[420px] sm:max-w-full w-fit">{t("title")}</SectionTitle>
+            <SectionTitle className="max-w-[420px] sm:max-w-full w-fit">
+              {t("title")}
+            </SectionTitle>
             <div className=" absolute -top-4 left-60 sm:top-auto sm:left-auto sm:bottom-6 sm:-right-12 lg:-top-14 lg:-right-14 w-[55px] h-[43px] lg:w-[85px] lg:h-[67px]">
               <Image
                 src="/images/home/popular/decor.webp"

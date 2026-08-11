@@ -1,5 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrapper";
+import {
+  delayAfterCards,
+  fadeIn,
+} from "@/components/shared/animatedWrappers/animation";
 import { Sheen } from "@/components/shared/buttons/Button";
 import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
@@ -14,6 +18,7 @@ import { REVIEWS_URL } from "@/constants/contacts";
  */
 export default async function Reviews() {
   const t = await getTranslations("HomePage.reviews");
+  const decorFade = fadeIn(delayAfterCards(reviews.length));
 
   return (
     <Section
@@ -30,9 +35,11 @@ export default async function Reviews() {
         </div>
       }
     >
-      <div
+      <AnimatedWrapper
         aria-hidden
         className="pointer-events-none absolute top-10 md:top-16 xl:top-26 left-80 xs:left-100 sm:left-120 md:left-auto md:right-40 lg:right-60 z-1 h-[164px] w-[144px]"
+        animation={decorFade}
+        amount={0.01}
       >
         <Image
           src="/images/home/reviews/onion-small.webp"
@@ -40,11 +47,13 @@ export default async function Reviews() {
           fill
           className="object-cover"
         />
-      </div>
+      </AnimatedWrapper>
 
-      <div
+      <AnimatedWrapper
         aria-hidden
         className="pointer-events-none absolute z-1 top-48 left-50 xs:left-70 sm:left-90 md:left-auto md:top-90 xl:top-45 right-50 lg:right-70 xl:right-110 z-10 h-[229px] w-[213px]"
+        animation={decorFade}
+        amount={0.01}
       >
         <Image
           src="/images/home/reviews/onion-large.webp"
@@ -52,11 +61,13 @@ export default async function Reviews() {
           fill
           className="object-cover"
         />
-      </div>
+      </AnimatedWrapper>
 
-      <div
+      <AnimatedWrapper
         aria-hidden
         className="pointer-events-none absolute z-1 -bottom-80 xl:-bottom-80 left-20 md:left-60 xl:left-22 z-10 w-[843px] h-[432px]"
+        animation={decorFade}
+        amount={0.01}
       >
         <Image
           src="/images/home/reviews/grill-plate.webp"
@@ -64,12 +75,19 @@ export default async function Reviews() {
           fill
           className="object-cover"
         />
-      </div>
+      </AnimatedWrapper>
 
       <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <AnimatedWrapper className="flex max-w-2xl flex-col gap-3 text-white">
-          <SectionTitle variant="white" className="max-w-[300px] lg:max-w-[540px]">{t("title")}</SectionTitle>
-          <p className="max-w-[312px] md:max-w-[399px] text-16reg text-white">{t("text")}</p>
+          <SectionTitle
+            variant="white"
+            className="max-w-[300px] lg:max-w-[540px]"
+          >
+            {t("title")}
+          </SectionTitle>
+          <p className="max-w-[312px] md:max-w-[399px] text-16reg text-white">
+            {t("text")}
+          </p>
         </AnimatedWrapper>
         <AnimatedWrapper animation={{ y: 20 }} className="shrink-0">
           {/*

@@ -18,7 +18,7 @@ export default async function Reviews() {
   return (
     <Section
       waveTop="white"
-      className="overflow-hidden"
+      className="overflow-hidden pb-10"
       sectionAside={
         <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
           <Image
@@ -56,7 +56,7 @@ export default async function Reviews() {
 
       <div
         aria-hidden
-        className="pointer-events-none absolute z-1 -bottom-70 xl:-bottom-73 left-20 md:left-60 xl:left-22 z-10 w-[843px] h-[432px]"
+        className="pointer-events-none absolute z-1 -bottom-80 xl:-bottom-80 left-20 md:left-60 xl:left-22 z-10 w-[843px] h-[432px]"
       >
         <Image
           src="/images/home/reviews/grill-plate.webp"

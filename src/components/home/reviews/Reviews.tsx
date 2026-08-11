@@ -23,7 +23,7 @@ export default async function Reviews() {
         <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
           <Image
             src="/images/home/reviews/bg-image.webp"
-            alt=""
+            alt={t("alts.bgImage")}
             fill
             className="object-cover"
           />
@@ -36,7 +36,7 @@ export default async function Reviews() {
       >
         <Image
           src="/images/home/reviews/onion-small.webp"
-          alt=""
+          alt={t("alts.onionSmall")}
           fill
           className="object-cover"
         />
@@ -48,7 +48,7 @@ export default async function Reviews() {
       >
         <Image
           src="/images/home/reviews/onion-large.webp"
-          alt=""
+          alt={t("alts.onionLarge")}
           fill
           className="object-cover"
         />
@@ -60,7 +60,7 @@ export default async function Reviews() {
       >
         <Image
           src="/images/home/reviews/grill-plate.webp"
-          alt=""
+          alt={t("alts.grillPlate")}
           fill
           className="object-cover"
         />

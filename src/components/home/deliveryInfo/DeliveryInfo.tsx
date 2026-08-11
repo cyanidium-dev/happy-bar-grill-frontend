@@ -49,7 +49,7 @@ export default async function DeliveryInfo() {
       <div className="absolute right-10 top-4 md:top-10 md:right-14 lg:top-14 xl:top-24 lg:left-120 xl:left-148 w-[103px] h-[108px]">
         <Image
           src="/images/home/delivery/decor.webp"
-          alt=""
+          alt={t("alts.decor")}
           fill
           className="object-cover"
         />
@@ -91,7 +91,7 @@ export default async function DeliveryInfo() {
               <div className="absolute -right-36 -bottom-22 w-[273px] h-[242px]">
                 <Image
                   src="/images/home/delivery/tomato.webp"
-                  alt=""
+                  alt={t("alts.tomato")}
                   fill
                   className="object-cover"
                 />

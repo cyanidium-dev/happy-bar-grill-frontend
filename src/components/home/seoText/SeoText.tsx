@@ -7,9 +7,7 @@ import Image from "next/image";
 
 /**
  * Bottom-of-page SEO paragraph. Muted, lower visual weight — describes the full
- * offering for search engines while staying readable for users. A photo sits
- * beside the text on desktop (grid places it in the 2nd column) and below it
- * on mobile (same DOM order, stacked via `flex-col`) — no reordering needed.
+ * offering for search engines while staying readable for users.
  */
 export default async function SeoText() {
   const t = await getTranslations("HomePage.seo");
@@ -22,7 +20,7 @@ export default async function SeoText() {
         <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
           <Image
             src="/images/home/seo-text/bg-image.webp"
-            alt=""
+            alt={t("alts.bgImage")}
             fill
             className="object-cover -scale-x-100"
           />
@@ -36,7 +34,7 @@ export default async function SeoText() {
       >
         <Image
           src="/images/home/seo-text/onion-small.webp"
-          alt=""
+          alt={t("alts.onionSmall")}
           fill
           className="object-cover"
         />
@@ -48,7 +46,7 @@ export default async function SeoText() {
       >
         <Image
           src="/images/home/seo-text/onion-large.webp"
-          alt=""
+          alt={t("alts.onionLarge")}
           fill
           className="object-cover"
         />
@@ -60,7 +58,7 @@ export default async function SeoText() {
       >
         <Image
           src="/images/home/seo-text/grill-plate.webp"
-          alt=""
+          alt={t("alts.grillPlate")}
           fill
           className="object-cover"
         />

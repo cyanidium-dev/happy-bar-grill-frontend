@@ -6,19 +6,13 @@ import {
   useState,
   type CSSProperties,
   type ElementType,
+  type HTMLAttributes,
   type ReactNode,
 } from "react";
+import type { Animation } from "./animation";
 
-export type Animation = {
-  x?: number;
-  y?: number;
-  scale?: number;
-  opacity?: number;
-  /** seconds */
-  duration?: number;
-  /** seconds — stagger list items by passing index * step */
-  delay?: number;
-};
+export type { Animation } from "./animation";
+export { delayAfterCards, fadeIn } from "./animation";
 
 type AnimatedWrapperProps = {
   as?: ElementType;
@@ -28,8 +22,8 @@ type AnimatedWrapperProps = {
   once?: boolean;
   /** IntersectionObserver threshold. */
   amount?: number;
-  children: ReactNode;
-};
+  children?: ReactNode;
+} & Omit<HTMLAttributes<HTMLElement>, "children">;
 
 /**
  * Dependency-free scroll reveal (same intent as bravo's framer-motion
@@ -46,6 +40,7 @@ export default function AnimatedWrapper({
   once = true,
   amount = 0.2,
   children,
+  ...rest
 }: AnimatedWrapperProps) {
   const {
     x = 0,
@@ -55,6 +50,8 @@ export default function AnimatedWrapper({
     duration = 0.6,
     delay = 0,
   } = animation;
+
+  const moves = x !== 0 || y !== 0 || scale !== 1;
 
   // Callback ref (state) — avoids reading a ref during render.
   const [node, setNode] = useState<HTMLElement | null>(null);
@@ -105,17 +102,23 @@ export default function AnimatedWrapper({
   // has finished playing, neither property does anything useful anymore, so
   // we drop them instead of leaving `translate3d(0, 0, 0)` sitting there
   // forever — that keeps descendants' stacking/backdrop-filter behavior
-  // normal at rest.
+  // normal at rest. Opacity-only reveals skip `transform` entirely.
   const style: CSSProperties = settled
     ? { opacity: 1 }
-    : {
-        opacity: visible ? 1 : opacity,
-        transform: visible
-          ? "translate3d(0, 0, 0) scale(1)"
-          : `translate3d(${x}px, ${y}px, 0) scale(${scale})`,
-        transition: `opacity ${duration}s ease-out ${delay}s, transform ${duration}s ease-out ${delay}s`,
-        willChange: "opacity, transform",
-      };
+    : moves
+      ? {
+          opacity: visible ? 1 : opacity,
+          transform: visible
+            ? "translate3d(0, 0, 0) scale(1)"
+            : `translate3d(${x}px, ${y}px, 0) scale(${scale})`,
+          transition: `opacity ${duration}s ease-out ${delay}s, transform ${duration}s ease-out ${delay}s`,
+          willChange: "opacity, transform",
+        }
+      : {
+          opacity: visible ? 1 : opacity,
+          transition: `opacity ${duration}s ease-out ${delay}s`,
+          willChange: "opacity",
+        };
 
-  return createElement(as, { ref: setNode, className, style }, children);
+  return createElement(as, { ref: setNode, className, style, ...rest }, children);
 }

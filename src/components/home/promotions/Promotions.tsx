@@ -1,5 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrapper";
+import {
+  delayAfterCards,
+  fadeIn,
+} from "@/components/shared/animatedWrappers/animation";
 import Button from "@/components/shared/buttons/Button";
 import DishCard from "@/components/shared/cards/DishCard";
 import Section from "@/components/shared/Section";
@@ -14,6 +18,7 @@ import Image from "next/image";
 export default async function Promotions() {
   const t = await getTranslations("HomePage.promotions");
   const promotions = await getPromotions();
+  const decorFade = fadeIn(delayAfterCards(promotions.length));
 
   return (
     <Section
@@ -22,32 +27,44 @@ export default async function Promotions() {
       waveFlip
       className="rounded-b-[24px] lg:rounded-b-[36px] overflow-hidden"
     >
-      <div className="hidden md:block absolute md:bottom-[-90px] xl:bottom-[-180px] md:right-[-150px] lg:right-[-100px] xl:right-[-150px] md:w-[535px] md:h-[458px] lg:w-[635px] lg:h-[558px] xl:w-[535px] xl:h-[458px]">
+      <AnimatedWrapper
+        className="hidden md:block absolute md:bottom-[-90px] xl:bottom-[-180px] md:right-[-150px] lg:right-[-100px] xl:right-[-150px] md:w-[535px] md:h-[458px] lg:w-[635px] lg:h-[558px] xl:w-[535px] xl:h-[458px]"
+        animation={decorFade}
+        amount={0.01}
+      >
         <Image
           src="/images/home/promotions/pizza.webp"
           alt={t("alts.pizza")}
           fill
           className="object-cover"
         />
-      </div>
+      </AnimatedWrapper>
 
-      <div className="absolute left-[280px] md:left-auto md:right-[200px] lg:right-[320px] top-[190px] md:top-[30px] lg:top-[80px] w-[199px] h-[223px]">
+      <AnimatedWrapper
+        className="absolute left-[280px] md:left-auto md:right-[200px] lg:right-[320px] top-[190px] md:top-[30px] lg:top-[80px] w-[199px] h-[223px]"
+        animation={decorFade}
+        amount={0.01}
+      >
         <Image
           src="/images/home/promotions/tomato-top.webp"
           alt={t("alts.tomatoTop")}
           fill
           className="object-cover"
         />
-      </div>
+      </AnimatedWrapper>
 
-      <div className="absolute left-[-60px] bottom-[-40px] w-[261px] h-[166px]">
+      <AnimatedWrapper
+        className="absolute left-[-60px] bottom-[-40px] w-[261px] h-[166px]"
+        animation={decorFade}
+        amount={0.01}
+      >
         <Image
           src="/images/home/promotions/tomato-bottom.webp"
           alt={t("alts.tomatoBottom")}
           fill
           className="object-cover"
         />
-      </div>
+      </AnimatedWrapper>
 
       <div className="flex flex-col gap-3 md:flex-row md:justify-between md:items-end">
         <AnimatedWrapper className="flex flex-col gap-3">

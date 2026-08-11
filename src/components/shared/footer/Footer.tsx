@@ -73,10 +73,15 @@ export default function Footer({ className }: { className?: string }) {
 
   return (
     <footer
-      className={cn("relative overflow-hidden", styles.footer, className)}
+      className={cn(
+        "relative z-10",
+        pathname === "/" && "-mt-18",
+        styles.footer,
+        className,
+      )}
     >
-      <SectionWave from={getFooterWaveColor(pathname)} />
-      <Container className="pb-14 pt-20 md:pb-16 md:pt-24">
+      <SectionWave from={getFooterWaveColor(pathname)} above />
+      <Container className="pb-14 pt-12 md:pb-16 md:pt-14">
         <div className="flex flex-col gap-10 lg:flex-row lg:justify-between">
           <div className="flex flex-col gap-6">
             <Logo className="h-14 md:h-16" />

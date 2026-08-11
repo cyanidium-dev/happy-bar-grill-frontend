@@ -6,6 +6,7 @@ import Container from "@/components/shared/container/Container";
 import Logo from "@/components/shared/logo/Logo";
 import SectionWave from "@/components/shared/SectionWave";
 import InstagramIcon from "@/components/shared/icons/InstagramIcon";
+import TagIcon from "@/components/shared/icons/TagIcon";
 import TelegramIcon from "@/components/shared/icons/TelegramIcon";
 import TiktokIcon from "@/components/shared/icons/TiktokIcon";
 import Image from "next/image";
@@ -17,7 +18,6 @@ import {
 } from "@/config/footer";
 import {
   ADDRESS,
-  DEVELOPER_NAME,
   DEVELOPER_URL,
   EMAIL,
   INSTAGRAM_URL,
@@ -46,19 +46,19 @@ const variantStyles: Record<
   }
 > = {
   light: {
-    footer: "bg-white text-navy",
-    social: "border-navy/15 text-navy",
-    nav: "text-navy",
-    contacts: "text-graphite",
-    divider: "border-navy/10 text-grey-dark",
-    developer: "text-navy",
+    footer: "bg-white text-navy-dark",
+    social: "border-navy-dark/15 text-navy-dark",
+    nav: "text-navy-dark",
+    contacts: "text-navy-dark",
+    divider: "border-navy-dark/10 text-navy-dark",
+    developer: "text-navy-dark",
   },
   dark: {
     footer: "bg-navy text-white",
     social: "border-white/20 text-white",
-    nav: "text-white/90",
-    contacts: "text-white/90",
-    divider: "border-white/15 text-white/70",
+    nav: "text-white",
+    contacts: "text-white",
+    divider: "border-white/15 text-white",
     developer: "text-white",
   },
 };
@@ -85,7 +85,11 @@ export default function Footer({ className }: { className?: string }) {
       <Container className="relative pb-14 pt-12 md:pb-16 md:pt-14">
         <div className="absolute bottom-0 md:left-[calc(50%-240px/2)] lg:left-[calc(50%-339px/2)] xl:left-[calc(50%-509px/2)] md:w-[280px] md:h-[156px] lg:w-[359px] lg:h-[195px] xl:w-[509px] xl:h-[270px]">
           <Image
-            src="/images/footer/decor.webp"
+            src={
+              variant === "dark"
+                ? "/images/footer/decor-dark.webp"
+                : "/images/footer/decor.webp"
+            }
             alt=""
             fill
             className="object-cover"
@@ -193,20 +197,19 @@ export default function Footer({ className }: { className?: string }) {
             <p>
               © {year} Vtiha. {tf("rights")}.
             </p>
-            <p>
-              {tf("developedBy")} —{" "}
+            <div className={cn("mt-5", styles.developer)}>
+              <p className="text-[8px] leading-[120%] font-medium uppercase">
+                Created by:
+              </p>
               <a
                 href={DEVELOPER_URL}
                 target="_blank"
-                rel="noopener noreferrer nofollow"
-                className={cn(
-                  "transition-colors duration-300 hover:text-red",
-                  styles.developer,
-                )}
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-[13px] leading-[120%] font-findsans"
               >
-                {DEVELOPER_NAME}
+                CODE-SITE.ART <TagIcon className="mb-1" />
               </a>
-            </p>
+            </div>
           </div>
         </div>
       </Container>

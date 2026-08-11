@@ -1,6 +1,11 @@
 import { getTranslations } from "next-intl/server";
+import Image from "next/image";
 import type { ReactNode } from "react";
 import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrapper";
+import {
+  delayAfterCards,
+  fadeIn,
+} from "@/components/shared/animatedWrappers/animation";
 import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
 
@@ -47,12 +52,59 @@ const keys = ["fresh", "portions", "variety", "atmosphere"] as const;
 /** Brand values framed as promises (a new venue — principles, not achievements). */
 export default async function AboutValues() {
   const t = await getTranslations("AboutPage.values");
+  const decorFade = fadeIn(delayAfterCards(keys.length, { stagger: 0.06 }));
 
   return (
-    <Section background="white" waveTop="white">
-      <div className="flex flex-col gap-8">
-        <AnimatedWrapper>
-          <SectionTitle>{t("title")}</SectionTitle>
+    <Section
+      background="white"
+      className="z-15"
+      containerClassName="pt-[72px] md:pt-[88px] xl:pt-[120px]"
+    >
+      <AnimatedWrapper
+        className="pointer-events-none absolute hidden md:bottom-[-220px] md:right-[-150px] md:block md:h-[458px] md:w-[535px] lg:right-[-100px] lg:bottom-[-240px] xl:bottom-[-240px] xl:right-[-150px] lg:h-[458px] lg:w-[535px]"
+        animation={decorFade}
+        amount={0.01}
+      >
+        <Image
+          src="/images/home/promotions/pizza.webp"
+          alt={t("alts.pizza")}
+          fill
+          className="object-cover"
+        />
+      </AnimatedWrapper>
+
+      <AnimatedWrapper
+        className="pointer-events-none absolute top-[10px] xs:top-[50px] left-[240px] xs:left-auto xs:right-[10px] h-[223px] w-[199px] md:top-[50px] md:right-[70px] md:left-auto lg:top-[80px] lg:right-[320px]"
+        animation={decorFade}
+        amount={0.01}
+      >
+        <Image
+          src="/images/home/promotions/tomato-top.webp"
+          alt={t("alts.tomatoTop")}
+          fill
+          className="object-cover"
+        />
+      </AnimatedWrapper>
+
+      <AnimatedWrapper
+        className="pointer-events-none absolute bottom-[-40px] left-[-60px] h-[166px] w-[261px]"
+        animation={decorFade}
+        amount={0.01}
+      >
+        <Image
+          src="/images/home/promotions/tomato-bottom.webp"
+          alt={t("alts.tomatoBottom")}
+          fill
+          className="object-cover"
+        />
+      </AnimatedWrapper>
+
+      <div className="relative z-10 flex flex-col gap-8">
+        <AnimatedWrapper className="flex flex-col gap-3">
+          <SectionTitle className="max-w-[360px] md:max-w-none">
+            {t("title")}
+          </SectionTitle>
+          <p className="max-w-[322px] text-16reg text-graphite">{t("text")}</p>
         </AnimatedWrapper>
 
         <ul className="grid gap-4 sm:grid-cols-2 md:gap-6 xl:grid-cols-4">

@@ -41,7 +41,7 @@ export default async function DeliveryInfo() {
       id="delivery"
       background="beige"
       
-     className="rounded-[24px] lg:rounded-[36px relative -top-4"
+     className="relative z-10 rounded-[24px] lg:rounded-[36px relative -top-4"
     >
       <div className="flex flex-col gap-8 md:mt-2 lg:flex-row lg:items-center lg:gap-12">
         <div className="flex flex-col gap-6 lg:flex-1">

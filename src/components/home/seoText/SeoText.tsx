@@ -30,6 +30,30 @@ export default async function SeoText() {
       }
       containerClassName="pb-9 pt-20 md:pb-11 md:pt-24 xl:pb-12 xl:pt-28"
     >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute top-20 right-0 md:top-50 xl:top-50 md:left-80 lg:left-120 xl:left-160 z-1 h-[85px] w-[110px]"
+      >
+        <Image
+          src="/images/home/seo-text/onion-small.webp"
+          alt=""
+          fill
+          className="object-cover"
+        />
+      </div>
+
+      <div
+        aria-hidden
+        className="pointer-events-none absolute z-1 -top-12 right-10 md:-top-4 xl:top-10 md:left-50 lg:left-80 xl:left-110 z-10 h-[229px] w-[213px]"
+      >
+        <Image
+          src="/images/home/seo-text/onion-large.webp"
+          alt=""
+          fill
+          className="object-cover"
+        />
+      </div>
+
       <div className="flex flex-col gap-8">
         <AnimatedWrapper className="flex flex-col gap-4 text-14reg text-grey-dark xl:text-16reg text-white">
           <div className="flex flex-col gap-6 md:flex-row lg:gap-[100px] xl:gap-[260px] md:justify-between">

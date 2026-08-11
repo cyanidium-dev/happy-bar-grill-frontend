@@ -43,7 +43,7 @@ export default async function DeliveryInfo() {
       
      className="relative z-10 rounded-[24px] lg:rounded-[36px relative -top-4"
     >
-      <div className="flex flex-col gap-8 md:mt-2 lg:flex-row lg:items-center lg:gap-12">
+      <div className="flex flex-col gap-8 md:mt-2 lg:flex-row lg:items-stretch lg:gap-12">
         <div className="flex flex-col gap-6 lg:flex-1">
           <AnimatedWrapper className="flex flex-col gap-3">
             <SectionTitle>{t("title")}</SectionTitle>
@@ -69,33 +69,39 @@ export default async function DeliveryInfo() {
                   {row.href ? (
                     <a
                       href={row.href}
-                      className="text-20semi text-navy transition-colors hover:text-red"
+                      className="text-18semi text-navy transition-colors hover:text-red"
                     >
                       {row.value}
                     </a>
                   ) : (
-                    <span className="text-20semi text-navy">{row.value}</span>
+                    <span className="text-18semi text-navy">{row.value}</span>
                   )}
                 </li>
               ))}
             </ul>
-            <Button
-              href="/delivery"
-              variant="secondary"
-              className="w-full sm:w-fit"
-            >
-              {t("cta")}
-            </Button>
+            <div className="flex">
+              <Button
+                href="/delivery"
+                variant="secondary"
+                className="w-full shrink-0 sm:w-fit"
+              >
+                {t("cta")}
+              </Button>
+              <div className="relative -z-10 -bottom-6.5 -left-1 h-[3px] w-full rounded-full bg-gradient-to-r from-navy-dark to-beige" />
+            </div>
           </AnimatedWrapper>
         </div>
 
-        <AnimatedWrapper animation={{ x: 30 }} className="lg:flex-1">
+        <AnimatedWrapper
+          animation={{ x: 30 }}
+          className="lg:flex lg:flex-1 lg:flex-col"
+        >
           <iframe
             title={t("mapTitle")}
             src={mapSrc}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            className="aspect-[4/3] w-full rounded-2xl border-0 shadow-card lg:aspect-auto lg:h-[420px]"
+            className="aspect-[4/3] w-full flex-1 rounded-2xl border-0 shadow-card lg:aspect-auto lg:min-h-0"
           />
         </AnimatedWrapper>
       </div>

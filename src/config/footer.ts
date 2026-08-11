@@ -3,6 +3,7 @@ export type FooterWaveColor = "white" | "beige" | "navy";
 
 /** Routes whose footer uses the navy (dark) variant. */
 const DARK_FOOTER_ROUTES = [
+  "/about",
   "/contacts",
   "/menu",
   "/blog",
@@ -27,7 +28,7 @@ export function getFooterVariant(pathname: string): FooterVariant {
 }
 
 /** Wave fill for the footer's overlapping top wave.
- *  Dark footer → navy; light footer (incl. home, about, delivery) → white. */
+ *  Dark footer → navy; light footer (incl. home, delivery) → white. */
 export function getFooterWaveColor(pathname: string): FooterWaveColor {
   if (getFooterVariant(pathname) === "dark") return "navy";
   return "white";

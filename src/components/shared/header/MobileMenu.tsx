@@ -59,7 +59,7 @@ export default function MobileMenu({
           open ? "translate-x-0" : "translate-x-full",
         )}
       >
-        <div className="flex items-center justify-between px-6">
+        <div className="flex items-center justify-between px-6 pt-6">
           <Logo onClick={onClose} />
           <button
             type="button"

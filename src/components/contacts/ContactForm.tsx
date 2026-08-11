@@ -143,7 +143,7 @@ export default function ContactForm() {
 
       <Button
         type="submit"
-        variant="primary"
+        variant="secondary"
         shape="leaf"
         fullWidth
         className="mt-6"

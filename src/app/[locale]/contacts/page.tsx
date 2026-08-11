@@ -5,6 +5,7 @@ import Container from "@/components/shared/container/Container";
 import ContactInfo from "@/components/contacts/ContactInfo";
 import ContactForm from "@/components/contacts/ContactForm";
 import ContactsMap from "@/components/contacts/ContactsMap";
+import Image from "next/image";
 import { FOOTER_WAVE_HEIGHT_CLASS } from "@/config/footer";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
@@ -43,7 +44,18 @@ export default async function ContactsPage({ params }: PageProps) {
             </p>
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-10">
+          <div className="relative -z-10 grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-10">
+            <div
+              aria-hidden
+              className="hidden xl:block pointer-events-none absolute -z-10 -bottom-26 -left-40 w-[600px] h-[226px]"
+            >
+              <Image
+                src="/images/home/seo-text/grill-plate.webp"
+                alt={t("alts.grillPlate")}
+                fill
+                className="object-cover"
+              />
+            </div>
             <ContactInfo />
             <ContactForm />
           </div>

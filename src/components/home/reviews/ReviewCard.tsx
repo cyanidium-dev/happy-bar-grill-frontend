@@ -18,6 +18,20 @@ export default async function ReviewCard({ review }: { review: Review }) {
         className="absolute inset-0 rounded-[inherit] bg-white/16 backdrop-blur-[4px]"
       />
 
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-[inherit]"
+        style={{
+          background:
+            "linear-gradient(270.67deg, rgba(242, 242, 242, 0.3) -9.58%, rgba(199, 199, 199, 0.3) 103.45%)",
+          padding: "1px",
+          WebkitMask:
+            "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+          WebkitMaskComposite: "xor",
+          maskComposite: "exclude",
+        }}
+      />
+
       <div className="relative z-[1] flex h-full flex-col gap-4 p-6">
         <QuoteIcon className="absolute right-5 top-5 size-9 text-white" />
 

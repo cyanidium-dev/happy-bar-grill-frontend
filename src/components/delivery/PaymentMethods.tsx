@@ -37,7 +37,7 @@ export default async function PaymentMethods() {
   const t = await getTranslations("DeliveryPage.payment");
 
   return (
-    <Section background="navy" waveTop="beige">
+    <Section background="navy" waveTop="beige" clearFooterWave>
       <div className="flex flex-col gap-8">
         <AnimatedWrapper className="flex flex-col gap-3">
           <SectionTitle variant="white">{t("title")}</SectionTitle>

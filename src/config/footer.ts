@@ -26,12 +26,9 @@ export function getFooterVariant(pathname: string): FooterVariant {
   return isDark ? "dark" : "light";
 }
 
-/** Wave fill = the last content section's background, flowing into the footer.
- *  Dark footer pages use a navy wave so the blue footer edge cuts into the
- *  previous section. */
+/** Wave fill for the footer's overlapping top wave.
+ *  Dark footer → navy; light footer (incl. home, about, delivery) → white. */
 export function getFooterWaveColor(pathname: string): FooterWaveColor {
   if (getFooterVariant(pathname) === "dark") return "navy";
-  if (pathname === "/about") return "beige";
-  if (pathname === "/delivery") return "navy";
   return "white";
 }

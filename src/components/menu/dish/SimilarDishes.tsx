@@ -33,7 +33,7 @@ export default async function SimilarDishes({ dishes }: { dishes: Dish[] }) {
       waveTop="white"
       className="rounded-b-[24px] lg:rounded-b-[36px]"
     >
-      <AnimatedWrapper
+      {/* <AnimatedWrapper
         className="pointer-events-none absolute hidden md:bottom-[-220px] md:right-[-150px] md:block md:h-[458px] md:w-[535px] lg:right-[-100px] lg:bottom-[-240px] xl:bottom-[-240px] xl:right-[-150px] lg:h-[458px] lg:w-[535px]"
         animation={decorFade}
         amount={0.01}
@@ -44,7 +44,7 @@ export default async function SimilarDishes({ dishes }: { dishes: Dish[] }) {
           fill
           className="object-cover"
         />
-      </AnimatedWrapper>
+      </AnimatedWrapper> */}
 
       <AnimatedWrapper
         className="pointer-events-none absolute top-[0px] xs:top-[10px] left-[280px] xs:left-auto xs:right-[10px] sm:right-[90px] h-[223px] w-[199px] md:top-[50px] md:right-[130px] lg:top-[80px] lg:right-[320px]"

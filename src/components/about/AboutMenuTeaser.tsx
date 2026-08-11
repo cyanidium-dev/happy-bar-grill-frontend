@@ -13,7 +13,7 @@ export default async function AboutMenuTeaser() {
   const categories = await getCategories();
 
   return (
-    <Section background="beige" waveTop="white">
+    <Section background="beige" waveTop="white" clearFooterWave>
       <div className="flex flex-col gap-8">
         <div className="hidden lg:block absolute lg:left-0 lg:top-[40px] xl:top-[80px] w-[275px] h-[187px]">
           <Image

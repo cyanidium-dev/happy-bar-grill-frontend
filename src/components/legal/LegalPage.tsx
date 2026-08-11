@@ -14,7 +14,7 @@ export default function LegalPage({
   doc: LegalDoc;
 }) {
   return (
-    <Section background="white">
+    <Section background="white" clearFooterWave>
       <article className="mx-auto flex max-w-3xl flex-col gap-8">
         <header className="flex flex-col gap-3">
           <PageTitle className="text-navy">{title}</PageTitle>

@@ -176,7 +176,7 @@ export default async function DishPage({ params }: DishProps) {
 
       <SimilarDishes dishes={similar} />
 
-      <Section background="white" className="text-center">
+      <Section background="white" className="text-center" clearFooterWave>
         <AnimatedWrapper
           animation={{ y: 20 }}
           className="flex flex-col items-center gap-6"

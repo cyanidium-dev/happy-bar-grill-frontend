@@ -8,7 +8,16 @@ const DARK_FOOTER_ROUTES = [
   "/blog",
   "/privacy",
   "/offer",
+  "/checkout",
+  "/confirmation",
 ] as const;
+
+/**
+ * Height of the footer’s overlapping top wave (`SectionWave` with `above`).
+ * Last-section bottom padding must clear this so content isn’t covered.
+ */
+export const FOOTER_WAVE_HEIGHT_CLASS =
+  "h-[44px] md:h-[72px] xl:h-[96px]" as const;
 
 export function getFooterVariant(pathname: string): FooterVariant {
   const isDark = DARK_FOOTER_ROUTES.some(
@@ -17,9 +26,9 @@ export function getFooterVariant(pathname: string): FooterVariant {
   return isDark ? "dark" : "light";
 }
 
-/** Wave fill = the last content section's background, flowing into the footer. */
+/** Wave fill for the footer's overlapping top wave.
+ *  Dark footer → navy; light footer (incl. home, about, delivery) → white. */
 export function getFooterWaveColor(pathname: string): FooterWaveColor {
-  if (pathname === "/about") return "beige";
-  if (pathname === "/delivery") return "navy";
+  if (getFooterVariant(pathname) === "dark") return "navy";
   return "white";
 }

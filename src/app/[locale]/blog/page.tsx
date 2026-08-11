@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import Container from "@/components/shared/container/Container";
 import BlogList from "@/components/blog/BlogList";
+import { FOOTER_WAVE_HEIGHT_CLASS } from "@/config/footer";
 import { getAllBlogPosts } from "@/data/blog";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
@@ -56,6 +57,7 @@ export default async function BlogPage({ params }: PageProps) {
       <section className="bg-white pt-10 md:pt-14">
         <Container className="pb-16 pt-6 md:pb-20">
           <BlogList posts={posts} emptyLabel={t("empty")} />
+          <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
         </Container>
       </section>
     </>

@@ -5,6 +5,7 @@ import Container from "@/components/shared/container/Container";
 import ContactInfo from "@/components/contacts/ContactInfo";
 import ContactForm from "@/components/contacts/ContactForm";
 import ContactsMap from "@/components/contacts/ContactsMap";
+import { FOOTER_WAVE_HEIGHT_CLASS } from "@/config/footer";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
 
@@ -47,6 +48,7 @@ export default async function ContactsPage({ params }: PageProps) {
           <div className="mt-10 md:mt-14">
             <ContactsMap />
           </div>
+          <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
         </Container>
       </section>
     </>

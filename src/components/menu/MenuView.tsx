@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/shared/container/Container";
+import { FOOTER_WAVE_HEIGHT_CLASS } from "@/config/footer";
 import { MENU_CATALOG_ID } from "@/constants/menu";
 import { getAllDishes, getDishesByCategory } from "@/data/menu";
 import CategoryNav from "./CategoryNav";
@@ -37,6 +38,7 @@ export default async function MenuView({ activeSlug }: { activeSlug: string }) {
           <DishesGrid dishes={dishes} emptyLabel={t("emptyCategory")} />
         </div>
       </Container>
+      <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
     </section>
   );
 }

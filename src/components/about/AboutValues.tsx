@@ -74,7 +74,7 @@ export default async function AboutValues() {
       </AnimatedWrapper>
 
       <AnimatedWrapper
-        className="pointer-events-none absolute top-[10px] xs:top-[50px] left-[240px] xs:left-auto xs:right-[10px] h-[223px] w-[199px] md:top-[50px] md:right-[70px] md:left-auto lg:top-[80px] lg:right-[320px]"
+        className="pointer-events-none absolute top-[10px] xs:top-[50px] left-[280px] xs:left-auto xs:right-[10px] h-[223px] w-[199px] md:top-[50px] md:right-[70px] md:left-auto lg:top-[40px] lg:right-[210px]"
         animation={decorFade}
         amount={0.01}
       >
@@ -104,7 +104,7 @@ export default async function AboutValues() {
           <SectionTitle className="max-w-[360px] md:max-w-none">
             {t("title")}
           </SectionTitle>
-          <p className="max-w-[322px] text-16reg text-graphite">{t("text")}</p>
+          <p className="max-w-[280px] text-16reg text-graphite">{t("text")}</p>
         </AnimatedWrapper>
 
         <ul className="grid gap-4 sm:grid-cols-2 md:gap-6 xl:grid-cols-4">

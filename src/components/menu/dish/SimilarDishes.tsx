@@ -15,7 +15,7 @@ import type { Dish } from "@/types/content";
  * "Similar dishes" block on a dish page — same-category suggestions (topped up
  * from popular dishes when a category is thin). Renders nothing when empty.
  * Layout mirrors the homepage PopularDishes carousel; decorative food imagery
- * matches AboutValues (pizza + tomatoes).
+ * matches the homepage Promotions section.
  */
 export default async function SimilarDishes({ dishes }: { dishes: Dish[] }) {
   if (dishes.length === 0) return null;
@@ -31,10 +31,10 @@ export default async function SimilarDishes({ dishes }: { dishes: Dish[] }) {
     <Section
       background="beige"
       waveTop="white"
-      className="rounded-b-[24px] lg:rounded-b-[36px]"
+      className="overflow-hidden rounded-b-[24px] lg:rounded-b-[36px]"
     >
-      {/* <AnimatedWrapper
-        className="pointer-events-none absolute hidden md:bottom-[-220px] md:right-[-150px] md:block md:h-[458px] md:w-[535px] lg:right-[-100px] lg:bottom-[-240px] xl:bottom-[-240px] xl:right-[-150px] lg:h-[458px] lg:w-[535px]"
+      <AnimatedWrapper
+        className="pointer-events-none absolute hidden md:bottom-[-240px] md:right-[-150px] md:block md:h-[458px] md:w-[535px] lg:right-[-100px] lg:bottom-[-300px] lg:h-[558px] lg:w-[635px] xl:bottom-[-180px] xl:right-[-150px] xl:h-[458px] xl:w-[535px]"
         animation={decorFade}
         amount={0.01}
       >
@@ -44,10 +44,10 @@ export default async function SimilarDishes({ dishes }: { dishes: Dish[] }) {
           fill
           className="object-cover"
         />
-      </AnimatedWrapper> */}
+      </AnimatedWrapper>
 
       <AnimatedWrapper
-        className="pointer-events-none absolute top-[0px] xs:top-[10px] left-[280px] xs:left-auto xs:right-[10px] sm:right-[90px] h-[223px] w-[199px] md:top-[50px] md:right-[130px] lg:top-[80px] lg:right-[320px]"
+        className="pointer-events-none absolute left-[280px] top-[0px] h-[223px] w-[199px] xs:top-[10px] xs:left-auto xs:right-[10px] sm:right-[90px] md:top-[30px] md:left-auto md:right-[200px] lg:top-[80px] lg:right-[320px]"
         animation={decorFade}
         amount={0.01}
       >

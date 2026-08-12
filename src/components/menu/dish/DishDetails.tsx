@@ -32,7 +32,7 @@ export default async function DishDetails({ dish }: { dish: Dish }) {
           </Badge>
         )}
 
-        <h1 className="text-28bold text-navy sm:text-32bold xl:mb-6">
+        <h1 className="font-findsans uppercase text-28bold text-navy md:text-32bold lg:text-36bold xl:mb-6">
           {dish.name}
         </h1>
 

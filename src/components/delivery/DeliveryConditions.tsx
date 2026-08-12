@@ -25,7 +25,7 @@ export default async function DeliveryConditions() {
   return (
     <Section
       background="beige"
-      className="rounded-[24px] lg:rounded-[36px] relative z-15"
+      className="relative z-15 rounded-[24px] lg:rounded-[36px]"
     >
       <div className="absolute -z-10 -bottom-1 right-[-180px] lg:-bottom-8 xl:-bottom-14 lg:-right-62 xl:right-40 w-[318px] h-[159px] lg:w-[412px] lg:h-[205px]">
         <Image

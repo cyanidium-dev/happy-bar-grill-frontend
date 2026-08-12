@@ -179,7 +179,7 @@ export default async function DishPage({ params }: DishProps) {
 
       <Section
         background="white"
-        className="relative -top-18 -z-10 text-center pt-10 pb-[120px] md:pb-[140px] xl:pb-[160px]"
+        className="relative -top-18 -z-10 pt-10 pb-[120px] md:pb-[140px] xl:pb-[160px]"
         sectionAside={
           <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
             <Image
@@ -216,17 +216,20 @@ export default async function DishPage({ params }: DishProps) {
         </div>
         <AnimatedWrapper
           animation={{ y: 20 }}
-          className="flex flex-col items-center gap-6"
+          className="flex w-full flex-col gap-16"
         >
-          <SectionTitle
-            variant="white"
-            className="mb-10 max-w-[309px] lg:max-w-[440px] xl:max-w-[540px]"
-          >
+          <SectionTitle variant="white" className="text-center">
             {t("ctaTitle")}
           </SectionTitle>
-          <Button href="/menu" size="lg">
-            {t("ctaButton")}
-          </Button>
+
+          <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between xl:gap-48 mx-auto">
+            <p className="max-w-[307px] text-16reg text-white text-center xl:text-left">
+              {t("ctaDescription")}
+            </p>
+            <Button href="/menu" size="lg" className="shrink-0">
+              {t("ctaButton")}
+            </Button>
+          </div>
         </AnimatedWrapper>
       </Section>
     </>

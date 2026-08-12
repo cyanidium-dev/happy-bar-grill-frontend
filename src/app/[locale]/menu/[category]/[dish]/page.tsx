@@ -218,7 +218,12 @@ export default async function DishPage({ params }: DishProps) {
           animation={{ y: 20 }}
           className="flex flex-col items-center gap-6"
         >
-          <SectionTitle variant="white">{t("ctaTitle")}</SectionTitle>
+          <SectionTitle
+            variant="white"
+            className="mb-10 max-w-[309px] lg:max-w-[440px] xl:max-w-[540px]"
+          >
+            {t("ctaTitle")}
+          </SectionTitle>
           <Button href="/menu" size="lg">
             {t("ctaButton")}
           </Button>

@@ -20,7 +20,20 @@ export const TIKTOK_URL = "https://tiktok.com";
 export const DEVELOPER_URL = "https://www.code-site.art/";
 export const DEVELOPER_NAME = "code-site.art";
 
-export const SCHEDULE = "Щодня 10:00–22:00";
+/** Opening hours used for schedule copy and checkout time slots. */
+export const OPENING_HOUR = 10;
+export const OPENING_MINUTE = 0;
+export const CLOSING_HOUR = 22;
+export const CLOSING_MINUTE = 0;
+/** Checkout “scheduled” order slots. */
+export const ORDER_SLOT_INTERVAL_MINUTES = 30;
+/**
+ * Min minutes from “now” (and from opening) before a slot is offered.
+ * Kitchen needs ~1 hour to prepare an order.
+ */
+export const ORDER_PREP_MINUTES = 60;
+
+export const SCHEDULE = `Щодня ${String(OPENING_HOUR).padStart(2, "0")}:${String(OPENING_MINUTE).padStart(2, "0")}–${String(CLOSING_HOUR).padStart(2, "0")}:${String(CLOSING_MINUTE).padStart(2, "0")}`;
 
 /** [орієнтовний час] placeholder from the copy doc. */
 export const DELIVERY_TIME = "40–60 хв";

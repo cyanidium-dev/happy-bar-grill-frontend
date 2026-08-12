@@ -1,5 +1,20 @@
+import { ADDRESS } from "@/constants/contacts";
 import type { CartItem, OrderCustomer } from "@/types/cart";
 import { TG } from "./icons";
+
+function formatDeliveryLine(customer: OrderCustomer): string {
+  if (customer.deliveryType === "pickup") {
+    return `${TG.location} <b>Отримання:</b> Самовивіз (${ADDRESS})\n`;
+  }
+  return `${TG.location} <b>Адреса:</b> ${customer.address}\n`;
+}
+
+function formatTimeLine(customer: OrderCustomer): string {
+  if (customer.timeMode === "asap") {
+    return `${TG.time} <b>Час:</b> Якнайшвидше\n`;
+  }
+  return `${TG.time} <b>Час:</b> ${customer.scheduledAt ?? ""}\n`;
+}
 
 function formatCartItems(items: CartItem[]): string {
   return items
@@ -33,7 +48,8 @@ export function formatOrderTelegramMessage({
     `${TG.number} <b>Номер:</b> ${orderNumber}\n\n` +
     `${TG.name} <b>Ім'я:</b> ${customer.name}\n` +
     `${TG.phone} <b>Телефон:</b> ${customer.phone}\n` +
-    `${TG.location} <b>Адреса:</b> ${customer.address}\n` +
+    formatDeliveryLine(customer) +
+    formatTimeLine(customer) +
     `${TG.payment} <b>Оплата:</b> ${customer.payment}\n` +
     (customer.comment
       ? `${TG.message} <b>Коментар:</b> ${customer.comment}\n`

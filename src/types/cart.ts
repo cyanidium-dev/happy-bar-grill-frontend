@@ -16,10 +16,18 @@ export type CartLine = {
 
 export type CartItem = CartLine & { quantity: number };
 
+export type DeliveryType = "delivery" | "pickup";
+export type OrderTimeMode = "asap" | "scheduled";
+
 export type OrderCustomer = {
   name: string;
   phone: string;
-  address: string;
+  deliveryType: DeliveryType;
+  /** Required when `deliveryType` is `"delivery"`. */
+  address?: string;
+  timeMode: OrderTimeMode;
+  /** Desired time (`HH:mm`) when `timeMode` is `"scheduled"`. */
+  scheduledAt?: string;
   payment: string;
   /** Optional free-form note for the order. */
   comment?: string;

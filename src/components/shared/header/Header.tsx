@@ -88,9 +88,9 @@ export default function Header({ className }: { className?: string }) {
         )}
       >
         <Container className="relative flex items-center gap-3">
-          <Logo className="h-10 md:h-14 lg:h-16" />
+          <Logo className="h-10 md:h-12 xl:h-16" />
           <nav className="ml-8 hidden lg:block xl:ml-12">
-            <ul className="flex items-center gap-6 xl:gap-8">
+            <ul className="flex items-center gap-4 xl:gap-8">
               {navLinks.map(({ href, key }) => (
                 <li key={key}>
                   <Link
@@ -122,7 +122,7 @@ export default function Header({ className }: { className?: string }) {
                   variant: "secondary",
                   size: "sm",
                   className: cn(
-                    "px-2 lg:px-4 py-1.75",
+                    "px-2 xl:px-4 py-1.75 xl:py-3",
                     onDark
                       ? "border-white bg-white text-navy xl:hover:border-white xl:hover:bg-navy/30 xl:hover:text-white transition-colors duration-300 ease-in-out"
                       : "border-navy-dark bg-navy-dark text-white xl:hover:border-navy xl:hover:bg-navy xl:hover:text-white transition-colors duration-300 ease-in-out",
@@ -130,7 +130,7 @@ export default function Header({ className }: { className?: string }) {
                 })}
               >
                 <Sheen />
-                <span className="relative z-[1] inline-flex items-center gap-2 font-findsans text-9bold lg:text-12semi">
+                <span className="relative z-[1] inline-flex items-center gap-2 font-findsans text-9bold xl:text-12semi">
                   <PhoneIcon className="size-4" />
                   {PHONE}
                 </span>

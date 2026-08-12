@@ -122,7 +122,7 @@ export default function MobileCategoryChips({
   return (
     <nav
       aria-label={ariaLabel}
-      className="sticky z-30 bg-white py-3 xl:hidden"
+      className="sticky z-30 bg-white pt-1 pb-3 xl:hidden"
       style={{ top: "var(--header-height)" }}
     >
       {/* Same left-edge alignment as Hero’s horizontal dish strip — outside

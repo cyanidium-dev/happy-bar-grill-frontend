@@ -1,10 +1,10 @@
 import { getTranslations } from "next-intl/server";
-import Container from "@/components/shared/container/Container";
 import { FOOTER_WAVE_HEIGHT_CLASS } from "@/config/footer";
 import { MENU_CATALOG_ID } from "@/constants/menu";
 import { getAllDishes, getDishesByCategory } from "@/data/menu";
 import CategoryNav from "./CategoryNav";
 import DishesGrid from "./DishesGrid";
+import MenuCatalog from "./MenuCatalog";
 import MenuCatalogScroll from "./MenuCatalogScroll";
 import MenuDecorations from "./MenuDecorations";
 
@@ -27,17 +27,18 @@ export default async function MenuView({ activeSlug }: { activeSlug: string }) {
       className="relative overflow-x-clip bg-white scroll-mt-[var(--header-height)]"
     >
       <MenuCatalogScroll />
-      <div className="pt-14 xl:hidden">
-        <CategoryNav activeSlug={activeSlug} variant="mobile" />
-      </div>
-
-      <Container className="relative flex flex-col gap-8 pb-12 pt-6 md:pb-16 xl:flex-row xl:items-start xl:gap-10 xl:pb-24 xl:pt-14">
-        <MenuDecorations />
-        <CategoryNav activeSlug={activeSlug} variant="desktop" />
-        <div className="relative z-10 min-w-0 flex-1">
-          <DishesGrid dishes={dishes} emptyLabel={t("emptyCategory")} />
-        </div>
-      </Container>
+      <MenuCatalog
+        dishes={dishes}
+        mobileNav={<CategoryNav activeSlug={activeSlug} variant="mobile" />}
+        desktopNav={<CategoryNav activeSlug={activeSlug} variant="desktop" />}
+        decorations={<MenuDecorations />}
+      >
+        <DishesGrid
+          dishes={dishes}
+          emptyLabel={t("emptyCategory")}
+          emptyFilterLabel={t("priceFilter.empty")}
+        />
+      </MenuCatalog>
       <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
     </section>
   );

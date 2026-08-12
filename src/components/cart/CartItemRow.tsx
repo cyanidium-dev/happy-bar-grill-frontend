@@ -61,7 +61,11 @@ export default function CartItemRow({ item }: { item: CartItem }) {
     >
       {/* Keep overflow visible while sliding so translateX isn't clipped mid-row;
           clip only when collapsing height so lower items can rise. */}
-      <div className={phase === "collapse" ? "overflow-hidden" : "overflow-visible"}>
+      <div
+        className={
+          phase === "collapse" ? "overflow-hidden" : "overflow-visible"
+        }
+      >
         <div
           className={cn(
             "pb-3",
@@ -89,7 +93,7 @@ export default function CartItemRow({ item }: { item: CartItem }) {
               <p className="mt-0.5 font-findsans text-12semi text-navy">
                 {item.price} {t("currency")}
                 {item.weight ? (
-                  <span className="ml-1.5 text-12med text-grey-dark">
+                  <span className="ml-1.5 text-10med text-grey-dark">
                     {item.weight} {t("weightUnit")}
                   </span>
                 ) : null}
@@ -98,11 +102,12 @@ export default function CartItemRow({ item }: { item: CartItem }) {
                 <CartCounter
                   id={item.id}
                   quantity={item.quantity}
-                  labels={{ decrease: tc("decrease"), increase: tc("increase") }}
+                  labels={{
+                    decrease: tc("decrease"),
+                    increase: tc("increase"),
+                  }}
                   onDecrease={
-                    item.quantity <= 1
-                      ? requestRemove
-                      : () => decrease(item.id)
+                    item.quantity <= 1 ? requestRemove : () => decrease(item.id)
                   }
                 />
               </div>

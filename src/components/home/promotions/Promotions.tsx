@@ -41,7 +41,7 @@ export default async function Promotions() {
       </AnimatedWrapper>
 
       <AnimatedWrapper
-        className="absolute left-[280px] md:left-auto md:right-[200px] lg:right-[320px] top-[190px] md:top-[30px] lg:top-[80px] w-[199px] h-[223px]"
+        className="absolute left-[280px] md:left-auto md:right-[140px] lg:right-[320px] top-[190px] md:top-[0px] lg:top-[80px] w-[199px] h-[223px]"
         animation={decorFade}
         amount={0.01}
       >

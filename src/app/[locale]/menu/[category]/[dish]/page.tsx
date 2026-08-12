@@ -12,12 +12,14 @@ import DishGallery from "@/components/menu/dish/DishGallery";
 import DishDetails from "@/components/menu/dish/DishDetails";
 import DishTabs, { type DishTab } from "@/components/menu/dish/DishTabs";
 import SimilarDishes from "@/components/menu/dish/SimilarDishes";
+import UpsellDishes from "@/components/menu/dish/UpsellDishes";
 import Image from "next/image";
 import {
   getAllDishes,
   getCategoryBySlug,
   getDishBySlug,
   getSimilarDishes,
+  getUpsellDishes,
 } from "@/data/menu";
 import { ALLERGENS, type GalleryImage, type Dish } from "@/types/content";
 import type { PageProps } from "@/types/page";
@@ -69,7 +71,19 @@ export default async function DishPage({ params }: DishProps) {
 
   if (!categoryDoc || !dishDoc) notFound();
 
-  const similar = await getSimilarDishes(category, dish, locale);
+  const [similar, upsell] = await Promise.all([
+    getSimilarDishes(category, dish, locale),
+    getUpsellDishes(locale),
+  ]);
+
+  const similarKeys = new Set(
+    similar.map((item) => `${item.categorySlug}/${item.slug}`),
+  );
+  const upsellDishes = upsell.filter((item) => {
+    const key = `${item.categorySlug}/${item.slug}`;
+    return key !== `${category}/${dish}` && !similarKeys.has(key);
+  });
+
   const images = galleryImages(dishDoc);
 
   const deliveryLink = (
@@ -194,6 +208,7 @@ export default async function DishPage({ params }: DishProps) {
         </Container>
       </section>
 
+      <UpsellDishes dishes={upsellDishes} />
       <SimilarDishes dishes={similar} />
 
       <Section

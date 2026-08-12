@@ -72,7 +72,7 @@ export const SIMILAR_DISHES_QUERY = defineQuery(/* groq */ `
     }
 `);
 
-/** Dishes from categories flagged `upsell` — recommended at checkout. */
+/** Dishes from categories flagged `upsell` (Допродажі) — checkout and dish page. */
 export const UPSELL_DISHES_QUERY = defineQuery(/* groq */ `
   *[_type == "menuDish" && available != false && category->upsell == true]
     | order(order asc) [0...8] {

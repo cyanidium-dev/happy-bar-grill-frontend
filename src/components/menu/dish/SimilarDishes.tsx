@@ -29,8 +29,8 @@ export default async function SimilarDishes({ dishes }: { dishes: Dish[] }) {
 
   return (
     <Section
-      background="beige"
-      waveTop="white"
+      background="white"
+      waveTop="beige"
       className="z-10 overflow-hidden rounded-b-[24px] lg:rounded-b-[36px]"
     >
       <AnimatedWrapper

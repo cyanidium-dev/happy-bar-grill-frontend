@@ -209,7 +209,7 @@ export default function CheckoutView({
 
   return (
     <Container className="pb-16 pt-10 md:pb-20 md:pt-14">
-      <h1 className="mb-8 font-findsans text-28bold uppercase text-navy md:mb-10 lg:text-40bold">
+      <h1 className="mb-8 font-findsans text-28bold uppercase text-navy md:mb-10 lg:mb-20 lg:text-40bold">
         {t("title")}
       </h1>
 
@@ -222,9 +222,35 @@ export default function CheckoutView({
         </div>
       ) : (
         <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10">
-          {/* Mobile order: summary → form → recommended. On desktop the form +
-              recommended sit in the left column, the summary on the right. */}
+          {/* Mobile order: summary → recommended → form. On desktop the upsell +
+              form sit in the left column, the summary on the right. */}
           <div className="order-2 flex min-w-0 flex-1 flex-col gap-8 lg:order-1">
+            {visibleUpsell.length > 0 && (
+              <section className="relative">
+                <h2 className="mb-6 pr-24 font-findsans text-24bold uppercase text-navy sm:pr-28">
+                  {t("upsellTitle")}
+                </h2>
+                <SwiperWrapper
+                  spaceBetween={16}
+                  slidesPerView={1}
+                  breakpoints={{
+                    640: { slidesPerView: 1, spaceBetween: 16 },
+                    768: { slidesPerView: 2, spaceBetween: 24 },
+                    1024: { slidesPerView: 1, spaceBetween: 24 },
+                    1280: { slidesPerView: 2, spaceBetween: 24 },
+                  }}
+                  buttonsClassName="absolute right-0 top-0"
+                  prevLabel={tSlider("prev")}
+                  nextLabel={tSlider("next")}
+                  slides={visibleUpsell.map((card) => (
+                    <div key={card.slug} className="h-full">
+                      {card.node}
+                    </div>
+                  ))}
+                />
+              </section>
+            )}
+
             <form
               onSubmit={onSubmit}
               noValidate
@@ -400,32 +426,6 @@ export default function CheckoutView({
                 {t("placeOrder")}
               </Button>
             </form>
-
-            {visibleUpsell.length > 0 && (
-              <section className="relative">
-                <h2 className="mb-6 pr-24 font-findsans text-24bold uppercase text-navy sm:pr-28">
-                  {t("upsellTitle")}
-                </h2>
-                <SwiperWrapper
-                  spaceBetween={16}
-                  slidesPerView={1}
-                  breakpoints={{
-                    640: { slidesPerView: 1, spaceBetween: 16 },
-                    768: { slidesPerView: 2, spaceBetween: 24 },
-                    1024: { slidesPerView: 1, spaceBetween: 24 },
-                    1280: { slidesPerView: 2, spaceBetween: 24 },
-                  }}
-                  buttonsClassName="absolute right-0 top-0"
-                  prevLabel={tSlider("prev")}
-                  nextLabel={tSlider("next")}
-                  slides={visibleUpsell.map((card) => (
-                    <div key={card.slug} className="h-full">
-                      {card.node}
-                    </div>
-                  ))}
-                />
-              </section>
-            )}
           </div>
 
           {/* Order summary */}

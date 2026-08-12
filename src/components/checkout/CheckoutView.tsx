@@ -69,6 +69,14 @@ export default function CheckoutView({
     setValues((v) => {
       if (field === "deliveryType") {
         const nextType = value as DeliveryType;
+        if (nextType === "delivery") {
+          return {
+            ...v,
+            deliveryType: nextType,
+            timeMode: "asap" as OrderTimeMode,
+            scheduledTime: "",
+          };
+        }
         const slots = getAvailableTimeSlots(nextType);
         return {
           ...v,
@@ -108,12 +116,13 @@ export default function CheckoutView({
     ) {
       next.address = t("errors.address");
     }
-    if (values.timeMode === "scheduled") {
+    if (
+      values.deliveryType === "pickup" &&
+      values.timeMode === "scheduled"
+    ) {
       if (!values.scheduledTime) {
         next.scheduled = t("errors.scheduled");
-      } else if (
-        !isAvailableTimeSlot(values.deliveryType, values.scheduledTime)
-      ) {
+      } else if (!isAvailableTimeSlot("pickup", values.scheduledTime)) {
         next.scheduled = t("errors.scheduledClosed");
       }
     }
@@ -136,9 +145,13 @@ export default function CheckoutView({
         values.deliveryType === "delivery"
           ? values.address.trim()
           : undefined,
-      timeMode: values.timeMode,
+      timeMode:
+        values.deliveryType === "pickup" ? values.timeMode : ("asap" as const),
       scheduledAt:
-        values.timeMode === "scheduled" ? values.scheduledTime : undefined,
+        values.deliveryType === "pickup" &&
+        values.timeMode === "scheduled"
+          ? values.scheduledTime
+          : undefined,
       payment: values.payment,
       comment: values.comment.trim() || undefined,
     };
@@ -172,8 +185,9 @@ export default function CheckoutView({
   );
 
   const isDelivery = values.deliveryType === "delivery";
-  const isScheduled = values.timeMode === "scheduled";
-  const timeSlots = getAvailableTimeSlots(values.deliveryType);
+  const isPickup = values.deliveryType === "pickup";
+  const isScheduled = isPickup && values.timeMode === "scheduled";
+  const timeSlots = getAvailableTimeSlots("pickup");
 
   const deliveryOptions: { value: DeliveryType; label: string }[] = [
     { value: "delivery", label: t("deliveryOption") },
@@ -255,41 +269,45 @@ export default function CheckoutView({
                 </p>
               )}
 
-              <h2 className="mb-4 mt-8 text-20semi text-navy">
-                {t("timeTitle")}
-              </h2>
-              <div className="flex flex-col gap-3">
-                {timeOptions.map(({ value, label }) => {
-                  const active = values.timeMode === value;
-                  return (
-                    <label key={value} className={radioClass(active)}>
-                      <input
-                        type="radio"
-                        name="timeMode"
-                        value={value}
-                        checked={active}
-                        onChange={() => set("timeMode", value)}
-                        className="size-4 accent-navy"
-                      />
-                      {label}
-                    </label>
-                  );
-                })}
-              </div>
+              {isPickup && (
+                <>
+                  <h2 className="mb-4 mt-8 text-20semi text-navy">
+                    {t("timeTitle")}
+                  </h2>
+                  <div className="flex flex-col gap-3">
+                    {timeOptions.map(({ value, label }) => {
+                      const active = values.timeMode === value;
+                      return (
+                        <label key={value} className={radioClass(active)}>
+                          <input
+                            type="radio"
+                            name="timeMode"
+                            value={value}
+                            checked={active}
+                            onChange={() => set("timeMode", value)}
+                            className="size-4 accent-navy"
+                          />
+                          {label}
+                        </label>
+                      );
+                    })}
+                  </div>
 
-              {isScheduled && (
-                <div className="mt-4">
-                  <TimeSlotSelect
-                    label={t("scheduledTime")}
-                    placeholder={t("scheduledTimePlaceholder")}
-                    required
-                    value={values.scheduledTime}
-                    options={timeSlots}
-                    onChange={(slot) => set("scheduledTime", slot)}
-                    error={errors.scheduled}
-                    emptyMessage={t("scheduledNoSlots")}
-                  />
-                </div>
+                  {isScheduled && (
+                    <div className="mt-4">
+                      <TimeSlotSelect
+                        label={t("scheduledTime")}
+                        placeholder={t("scheduledTimePlaceholder")}
+                        required
+                        value={values.scheduledTime}
+                        options={timeSlots}
+                        onChange={(slot) => set("scheduledTime", slot)}
+                        error={errors.scheduled}
+                        emptyMessage={t("scheduledNoSlots")}
+                      />
+                    </div>
+                  )}
+                </>
               )}
 
               <h2 className="mb-5 mt-8 text-20semi text-navy">

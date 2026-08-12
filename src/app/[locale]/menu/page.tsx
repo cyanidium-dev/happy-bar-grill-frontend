@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import SeoText from "@/components/home/seoText/SeoText";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import MenuBanner from "@/components/menu/MenuBanner";
 import MenuView from "@/components/menu/MenuView";
@@ -24,6 +25,11 @@ export default async function MenuPage({ params }: PageProps) {
       <MenuBanner />
       <BreadCrumbs items={[{ label: t("menu.title") }]} />
       <MenuView activeSlug="all" />
+      <SeoText
+        namespace="Menu.seo"
+        className="rounded-t-[24px] lg:rounded-t-[36px] overflow-hidden relative top-0 lg:-top-6"
+        titleClassName="max-w-[200px] xs:max-w-none md:max-w-[220px]"
+      />
     </>
   );
 }

@@ -57,9 +57,9 @@ export default async function UpsellDishes({ dishes }: { dishes: Dish[] }) {
         <div className="absolute top-[95px] right-[-140px] w-[204px] h-[160px] rounded-full bg-beige blur-[6px]" />
       </AnimatedWrapper>
       <div className="relative flex flex-col gap-3">
-        <AnimatedWrapper className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3 pr-24 sm:pr-28">
+        <AnimatedWrapper className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-10">
           <div className="relative w-fit">
-            <SectionTitle className="max-w-[230px] xs:max-w-[367px] lg:max-w-[440px] xl:max-w-[580px]">
+            <SectionTitle className="max-w-[230px] xs:max-w-[367px] lg:max-w-[440px] xl:max-w-[580px] shrink-0">
               {t("upsellTitle")}
             </SectionTitle>
             <div className=" absolute -top-5 left-38 xs:-top-8 xs:left-70 lg:-top-14 lg:left-78 xl:left-120 w-[55px] h-[43px] lg:w-[85px] lg:h-[67px]">
@@ -84,7 +84,7 @@ export default async function UpsellDishes({ dishes }: { dishes: Dish[] }) {
               768: { slidesPerView: 2, spaceBetween: 24 },
               1280: { slidesPerView: 3, spaceBetween: 24 },
             }}
-            buttonsClassName="absolute right-0 -top-20 md:-top-24"
+            buttonsClassName="absolute right-0 -top-14 md:-top-13"
             prevLabel={tSlider("prev")}
             nextLabel={tSlider("next")}
             slides={dishes.map((dish) => (

@@ -36,6 +36,7 @@ export default async function PopularDishes() {
           fill
           className="object-cover"
         />
+        <div className="absolute top-[100px] right-[-140px] w-[204px] h-[160px] rounded-full bg-white blur-[10px]" />
       </AnimatedWrapper>
       <AnimatedWrapper
         className="hidden lg:block absolute lg:bottom-21 lg:-left-62 w-[412px] h-[205px]"

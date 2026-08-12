@@ -24,6 +24,7 @@ export default async function Categories() {
             fill
             className="object-cover"
           />
+          <div className="absolute left-[-170px] w-[204px] h-[140px] rounded-full bg-white blur-[10px]" />
         </div>
 
         <AnimatedWrapper>

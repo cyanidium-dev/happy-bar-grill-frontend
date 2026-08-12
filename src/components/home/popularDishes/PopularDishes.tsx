@@ -24,9 +24,9 @@ export default async function PopularDishes() {
   const decorFade = fadeIn(delayAfterCards(1));
 
   return (
-    <Section background="white" waveFlip>
+    <Section background="white" waveFlip className="relative z-15">
       <AnimatedWrapper
-        className="hidden sm:block absolute z-5 -bottom-10 -right-10 md:-bottom-4 md:-right-10 lg:-bottom-4 lg:-right-6 w-[257px] h-[259px] lg:w-[317px] lg:h-[320px]"
+        className="block absolute rotate-15 sm:rotate-0 z-5 -bottom-12 -right-26 sm:-right-10 md:-bottom-4 md:-right-10 lg:-bottom-4 lg:-right-6 w-[257px] h-[259px] lg:w-[317px] lg:h-[320px]"
         animation={decorFade}
         amount={0.01}
       >
@@ -39,7 +39,7 @@ export default async function PopularDishes() {
         <div className="absolute top-[100px] right-[-140px] w-[204px] h-[160px] rounded-full bg-white blur-[10px]" />
       </AnimatedWrapper>
       <AnimatedWrapper
-        className="hidden lg:block absolute lg:bottom-21 lg:-left-62 w-[412px] h-[205px]"
+        className="absolute -bottom-8 left-[-140px] lg:bottom-21 lg:-left-62 w-[318px] h-[159px] lg:w-[412px] lg:h-[205px]"
         animation={decorFade}
         amount={0.01}
       >

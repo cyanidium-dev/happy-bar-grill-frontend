@@ -9,7 +9,7 @@ import MobileCategoryChips from "@/components/menu/MobileCategoryChips";
 type CategoryNavProps = {
   /** Active category slug, or "all" for the full catalog (`/menu`). */
   activeSlug: string;
-  /** Horizontal sticky chips (< xl) or vertical sticky sidebar (xl+). */
+  /** Horizontal sticky chips (< xl) or vertical list in the sidebar (xl+). */
   variant: "mobile" | "desktop";
 };
 
@@ -22,8 +22,8 @@ const inactiveCls =
 
 /**
  * Menu category navigation. Same links + active state in two layouts:
- * sticky scrollable chips on the top (< xl) and a sticky vertical sidebar
- * from xl, top-aligned with the dishes grid.
+ * sticky scrollable chips on the top (< xl) and a vertical list from xl,
+ * sitting in the sticky sidebar next to the price filter (`MenuCatalog`).
  */
 export default async function CategoryNav({
   activeSlug,
@@ -55,11 +55,7 @@ export default async function CategoryNav({
   const tAlts = await getTranslations("Menu.alts");
 
   return (
-    <nav
-      aria-label={t("categoriesLabel")}
-      className="hidden w-72 shrink-0 self-start xl:block xl:sticky"
-      style={{ top: "calc(var(--header-height) + 1.5rem)" }}
-    >
+    <nav aria-label={t("categoriesLabel")} className="hidden xl:block">
       <ul className="flex flex-col gap-2">
         {items.map((item) => (
           <li key={item.href}>

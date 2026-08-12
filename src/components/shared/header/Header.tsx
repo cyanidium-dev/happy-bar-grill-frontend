@@ -87,8 +87,8 @@ export default function Header({ className }: { className?: string }) {
           solid ? "bg-navy-dark" : "bg-transparent backdrop-blur-0",
         )}
       >
-        <Container className="relative flex items-center gap-4">
-          <Logo className="h-12 md:h-14 lg:h-16" />
+        <Container className="relative flex items-center gap-3">
+          <Logo className="h-10 md:h-14 lg:h-16" />
           <nav className="ml-8 hidden lg:block xl:ml-12">
             <ul className="flex items-center gap-6 xl:gap-8">
               {navLinks.map(({ href, key }) => (
@@ -111,23 +111,26 @@ export default function Header({ className }: { className?: string }) {
             </ul>
           </nav>
 
-          <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            <LocaleSwitcher onDark={onDark} />
+          <div className="ml-auto flex items-center gap-2.5 sm:gap-3">
+            <LocaleSwitcher className="hidden lg:block" />
 
-            <div className="hidden xl:block">
+            <div>
               <a
                 href={`tel:${PHONE_HREF}`}
                 aria-label={PHONE}
                 className={buttonStyles({
                   variant: "secondary",
                   size: "sm",
-                  className: onDark
-                    ? "border-white bg-white text-navy xl:hover:border-white xl:hover:bg-navy/30 xl:hover:text-white transition-colors duration-300 ease-in-out"
-                    : "border-navy-dark bg-navy-dark text-white xl:hover:border-navy xl:hover:bg-navy xl:hover:text-white transition-colors duration-300 ease-in-out",
+                  className: cn(
+                    "px-2 lg:px-4 py-1.75",
+                    onDark
+                      ? "border-white bg-white text-navy xl:hover:border-white xl:hover:bg-navy/30 xl:hover:text-white transition-colors duration-300 ease-in-out"
+                      : "border-navy-dark bg-navy-dark text-white xl:hover:border-navy xl:hover:bg-navy xl:hover:text-white transition-colors duration-300 ease-in-out",
+                  ),
                 })}
               >
                 <Sheen />
-                <span className="relative z-[1] inline-flex items-center gap-2">
+                <span className="relative z-[1] inline-flex items-center gap-2 font-findsans text-9bold lg:text-14semi">
                   <PhoneIcon className="size-4" />
                   {PHONE}
                 </span>
@@ -154,7 +157,7 @@ export default function Header({ className }: { className?: string }) {
               aria-label={open ? th("closeMenu") : th("openMenu")}
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
-              className="flex size-10 flex-col items-center justify-center gap-1.5 lg:hidden"
+              className="flex size-6 flex-col items-center justify-center gap-1.5 lg:hidden"
             >
               <span
                 className={cn(

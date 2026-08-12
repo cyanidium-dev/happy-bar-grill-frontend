@@ -27,6 +27,7 @@ export default async function AboutMenuTeaser() {
             fill
             className="object-cover"
           />
+          <div className="absolute left-[-170px] w-[204px] h-[140px] rounded-full bg-beige blur-[10px]" />
         </div>
 
         <AnimatedWrapper className="flex flex-col gap-3">

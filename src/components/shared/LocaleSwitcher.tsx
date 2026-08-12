@@ -9,11 +9,10 @@ import { cn } from "@/utils/cn";
 
 export default function LocaleSwitcher({
   className,
-  /** White labels on dark header chrome; navy-dark on light pages. */
-  onDark = true,
+  onLocaleChange,
 }: {
   className?: string;
-  onDark?: boolean;
+  onLocaleChange?: () => void;
 }) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -30,6 +29,7 @@ export default function LocaleSwitcher({
     router.replace(newPath, { locale: newLocale });
 
     setIsOpen(false);
+    onLocaleChange?.();
   };
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
@@ -63,26 +63,17 @@ export default function LocaleSwitcher({
   }, [isOpen, handleClickOutside, handleKeyDown]);
 
   return (
-    <div
-      className={cn("relative ml-auto mt-1 lg:mt-0 lg:mb-[3px]", className)}
-      ref={dropdownRef}
-    >
+    <div className={cn("relative ml-auto", className)} ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="group flex cursor-pointer items-center gap-[9px] outline-none transition duration-300 ease-in-out"
+        className="group inline-flex cursor-pointer items-center gap-2 rounded-full bg-navy-dark px-4 py-[11px] outline-none transition duration-300 ease-in-out"
       >
-        <span
-          className={cn(
-            "text-[16px] font-medium leading-[125%] uppercase transition duration-300 ease-in-out lg:text-[14px] xl:text-[16px] xl:group-hover:text-red group-focus-visible:text-red",
-            onDark ? "text-white" : "text-navy-dark",
-          )}
-        >
+        <span className="text-14semi uppercase text-white transition duration-300 ease-in-out xl:group-hover:text-red group-focus-visible:text-red">
           {currentLocale === "uk" ? "UA" : currentLocale}
         </span>
         <LocaleSwitcherArrowIcon
           className={cn(
-            "mb-[1px] size-3 transition duration-300 ease-in-out xl:size-4 xl:group-hover:text-red group-focus-visible:text-red",
-            onDark ? "text-white" : "text-navy-dark",
+            "size-4 shrink-0 text-white transition duration-300 ease-in-out xl:group-hover:text-red group-focus-visible:text-red",
             isOpen ? "rotate-180" : "rotate-0",
           )}
         />

@@ -3,25 +3,38 @@ import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrappe
 import DecorativeEllipsis from "@/components/shared/DecorativeEllipsis";
 import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
+import { cn } from "@/utils/cn";
 import Image from "next/image";
+
+type SeoTextProps = {
+  namespace?: string;
+  className?: string;
+  titleClassName?: string;
+};
 
 /**
  * Bottom-of-page SEO paragraph. Muted, lower visual weight — describes the full
  * offering for search engines while staying readable for users.
  */
-export default async function SeoText() {
-  const t = await getTranslations("HomePage.seo");
+export default async function SeoText({
+  namespace = "HomePage.seo",
+  className,
+  titleClassName,
+}: SeoTextProps) {
+  const t = await getTranslations(namespace);
 
   return (
     <Section
       background="white"
-      className="pt-[82px] pb-[228px] -top-18"
+      className={cn("pt-[82px] pb-[228px] -top-18", className)}
       sectionAside={
         <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
           <Image
             src="/images/home/seo-text/bg-image.webp"
             alt={t("alts.bgImage")}
             fill
+            sizes="100vw"
+            quality={90}
             className="object-cover -scale-x-100"
           />
         </div>
@@ -69,7 +82,9 @@ export default async function SeoText() {
           <div className="flex flex-col gap-6 md:flex-row lg:gap-[100px] xl:gap-[260px] md:justify-between">
             {" "}
             <div className="flex shrink-0 flex-col gap-4">
-              <SectionTitle className="text-white">{t("title")}</SectionTitle>
+              <SectionTitle className={cn("text-white", titleClassName)}>
+                {t("title")}
+              </SectionTitle>
               <DecorativeEllipsis />
             </div>
             <p className="md:max-w-[300px] lg:max-w-[340px] xl:max-w-[430px]">

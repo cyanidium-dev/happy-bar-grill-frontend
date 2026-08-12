@@ -139,6 +139,9 @@
   --text-10med: 10px;
   --text-10med--font-weight: 500;
   --text-10med--line-height: 120%;
+  --text-9bold: 9px;
+  --text-9bold--font-weight: 700;
+  --text-9bold--line-height: 120%;
   --text-8bold: 8px;
   --text-8bold--font-weight: 700;
   --text-8bold--line-height: 120%;
@@ -260,6 +263,68 @@
 
   .no-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Dual-thumb price slider: native range inputs stacked on one track.
+     `pointer-events` on the input is off so the lower thumb stays reachable;
+     thumbs re-enable it. Focus ring goes on the thumb, not the full track. */
+  .price-range-input {
+    -webkit-appearance: none;
+    appearance: none;
+    pointer-events: none;
+    background: transparent;
+    height: 1.5rem;
+    margin: 0;
+  }
+
+  .price-range-input:focus-visible {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .price-range-input::-webkit-slider-runnable-track {
+    height: 4px;
+    background: transparent;
+    border: none;
+  }
+
+  .price-range-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    pointer-events: auto;
+    width: 20px;
+    height: 20px;
+    margin-top: -8px;
+    border-radius: 9999px;
+    background: var(--color-navy);
+    border: 2px solid var(--color-white);
+    box-shadow: var(--shadow-card);
+    cursor: pointer;
+  }
+
+  .price-range-input::-moz-range-track {
+    height: 4px;
+    background: transparent;
+    border: none;
+  }
+
+  .price-range-input::-moz-range-thumb {
+    pointer-events: auto;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-white);
+    border-radius: 9999px;
+    background: var(--color-navy);
+    box-shadow: var(--shadow-card);
+    cursor: pointer;
+  }
+
+  .price-range-input:focus-visible::-webkit-slider-thumb {
+    box-shadow: var(--shadow-focus);
+  }
+
+  .price-range-input:focus-visible::-moz-range-thumb {
+    box-shadow: var(--shadow-focus);
   }
 }
 

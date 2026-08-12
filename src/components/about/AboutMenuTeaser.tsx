@@ -13,9 +13,14 @@ export default async function AboutMenuTeaser() {
   const categories = await getCategories();
 
   return (
-    <Section background="beige" waveTop="white" clearFooterWave>
+    <Section
+      background="beige"
+      waveTop="white"
+      clearFooterWave
+      className="pt-10"
+    >
       <div className="flex flex-col gap-8">
-        <div className="hidden lg:block absolute lg:left-0 lg:top-[40px] xl:top-[80px] w-[275px] h-[187px]">
+        <div className="absolute left-0 top-[-40px] h-[187px] w-[275px] lg:top-[40px] xl:top-[80px]">
           <Image
             src="/images/home/categories/fork.webp"
             alt={t("alts.fork")}
@@ -35,7 +40,7 @@ export default async function AboutMenuTeaser() {
 
         <div className="hidden lg:block absolute lg:top-[141px] xl:top-[180px] right-20 lg:w-[129px] xl:w-[149px] h-[3px] bg-gradient-to-r from-navy-dark to-beige rounded-full" />
 
-        <div className="hidden lg:block absolute lg:right-[-110px] xl:right-[-201px] lg:bottom-[-40px] w-[715px] h-[484px]">
+        <div className="absolute bottom-28 right-[-170px] h-[233px] w-[350px] xs:bottom-12 xs:right-[-210px] xs:h-[300px] xs:w-[450px] sm:bottom-8 sm:h-[343px] sm:w-[515px] md:bottom-[-40px] md:right-[-250px] md:h-[484px] md:w-[715px] lg:right-[-110px] xl:right-[-201px]">
           <Image
             src="/images/home/categories/bg-image.webp"
             alt={t("alts.bgImage")}

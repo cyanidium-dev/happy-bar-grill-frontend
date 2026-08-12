@@ -432,11 +432,9 @@ export default function CheckoutView({
           <aside className="order-1 w-full lg:order-2 lg:sticky lg:top-[calc(var(--header-height)+1.5rem)] lg:w-[380px] lg:shrink-0">
             <div className="rounded-tl-2xl rounded-br-2xl border border-navy/12 bg-beige/60 p-4">
               <h2 className="mb-5 text-20semi text-navy">{t("orderTitle")}</h2>
-              <ul className="flex flex-col gap-3">
+              <ul className="flex flex-col overflow-x-clip">
                 {items.map((item) => (
-                  <li key={item.id}>
-                    <CartItemRow item={item} />
-                  </li>
+                  <CartItemRow key={item.id} item={item} />
                 ))}
               </ul>
               <div className="mt-6 flex items-center justify-between border-t border-navy/10 pt-5">

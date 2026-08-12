@@ -69,6 +69,14 @@ export default function CheckoutView({
     setValues((v) => {
       if (field === "deliveryType") {
         const nextType = value as DeliveryType;
+        if (nextType === "delivery") {
+          return {
+            ...v,
+            deliveryType: nextType,
+            timeMode: "asap" as OrderTimeMode,
+            scheduledTime: "",
+          };
+        }
         const slots = getAvailableTimeSlots(nextType);
         return {
           ...v,
@@ -108,12 +116,13 @@ export default function CheckoutView({
     ) {
       next.address = t("errors.address");
     }
-    if (values.timeMode === "scheduled") {
+    if (
+      values.deliveryType === "pickup" &&
+      values.timeMode === "scheduled"
+    ) {
       if (!values.scheduledTime) {
         next.scheduled = t("errors.scheduled");
-      } else if (
-        !isAvailableTimeSlot(values.deliveryType, values.scheduledTime)
-      ) {
+      } else if (!isAvailableTimeSlot("pickup", values.scheduledTime)) {
         next.scheduled = t("errors.scheduledClosed");
       }
     }
@@ -136,9 +145,13 @@ export default function CheckoutView({
         values.deliveryType === "delivery"
           ? values.address.trim()
           : undefined,
-      timeMode: values.timeMode,
+      timeMode:
+        values.deliveryType === "pickup" ? values.timeMode : ("asap" as const),
       scheduledAt:
-        values.timeMode === "scheduled" ? values.scheduledTime : undefined,
+        values.deliveryType === "pickup" &&
+        values.timeMode === "scheduled"
+          ? values.scheduledTime
+          : undefined,
       payment: values.payment,
       comment: values.comment.trim() || undefined,
     };
@@ -172,8 +185,9 @@ export default function CheckoutView({
   );
 
   const isDelivery = values.deliveryType === "delivery";
-  const isScheduled = values.timeMode === "scheduled";
-  const timeSlots = getAvailableTimeSlots(values.deliveryType);
+  const isPickup = values.deliveryType === "pickup";
+  const isScheduled = isPickup && values.timeMode === "scheduled";
+  const timeSlots = getAvailableTimeSlots("pickup");
 
   const deliveryOptions: { value: DeliveryType; label: string }[] = [
     { value: "delivery", label: t("deliveryOption") },
@@ -195,7 +209,7 @@ export default function CheckoutView({
 
   return (
     <Container className="pb-16 pt-10 md:pb-20 md:pt-14">
-      <h1 className="mb-8 font-findsans text-28bold uppercase text-navy md:mb-10 lg:text-40bold">
+      <h1 className="mb-8 font-findsans text-28bold uppercase text-navy md:mb-10 lg:mb-20 lg:text-40bold">
         {t("title")}
       </h1>
 
@@ -208,9 +222,35 @@ export default function CheckoutView({
         </div>
       ) : (
         <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10">
-          {/* Mobile order: summary → form → recommended. On desktop the form +
-              recommended sit in the left column, the summary on the right. */}
+          {/* Mobile order: summary → recommended → form. On desktop the upsell +
+              form sit in the left column, the summary on the right. */}
           <div className="order-2 flex min-w-0 flex-1 flex-col gap-8 lg:order-1">
+            {visibleUpsell.length > 0 && (
+              <section className="relative">
+                <h2 className="mb-6 pr-24 font-findsans text-24bold uppercase text-navy sm:pr-28">
+                  {t("upsellTitle")}
+                </h2>
+                <SwiperWrapper
+                  spaceBetween={16}
+                  slidesPerView={1}
+                  breakpoints={{
+                    640: { slidesPerView: 1, spaceBetween: 16 },
+                    768: { slidesPerView: 2, spaceBetween: 24 },
+                    1024: { slidesPerView: 1, spaceBetween: 24 },
+                    1280: { slidesPerView: 2, spaceBetween: 24 },
+                  }}
+                  buttonsClassName="absolute right-0 top-0"
+                  prevLabel={tSlider("prev")}
+                  nextLabel={tSlider("next")}
+                  slides={visibleUpsell.map((card) => (
+                    <div key={card.slug} className="h-full">
+                      {card.node}
+                    </div>
+                  ))}
+                />
+              </section>
+            )}
+
             <form
               onSubmit={onSubmit}
               noValidate
@@ -255,41 +295,45 @@ export default function CheckoutView({
                 </p>
               )}
 
-              <h2 className="mb-4 mt-8 text-20semi text-navy">
-                {t("timeTitle")}
-              </h2>
-              <div className="flex flex-col gap-3">
-                {timeOptions.map(({ value, label }) => {
-                  const active = values.timeMode === value;
-                  return (
-                    <label key={value} className={radioClass(active)}>
-                      <input
-                        type="radio"
-                        name="timeMode"
-                        value={value}
-                        checked={active}
-                        onChange={() => set("timeMode", value)}
-                        className="size-4 accent-navy"
-                      />
-                      {label}
-                    </label>
-                  );
-                })}
-              </div>
+              {isPickup && (
+                <>
+                  <h2 className="mb-4 mt-8 text-20semi text-navy">
+                    {t("timeTitle")}
+                  </h2>
+                  <div className="flex flex-col gap-3">
+                    {timeOptions.map(({ value, label }) => {
+                      const active = values.timeMode === value;
+                      return (
+                        <label key={value} className={radioClass(active)}>
+                          <input
+                            type="radio"
+                            name="timeMode"
+                            value={value}
+                            checked={active}
+                            onChange={() => set("timeMode", value)}
+                            className="size-4 accent-navy"
+                          />
+                          {label}
+                        </label>
+                      );
+                    })}
+                  </div>
 
-              {isScheduled && (
-                <div className="mt-4">
-                  <TimeSlotSelect
-                    label={t("scheduledTime")}
-                    placeholder={t("scheduledTimePlaceholder")}
-                    required
-                    value={values.scheduledTime}
-                    options={timeSlots}
-                    onChange={(slot) => set("scheduledTime", slot)}
-                    error={errors.scheduled}
-                    emptyMessage={t("scheduledNoSlots")}
-                  />
-                </div>
+                  {isScheduled && (
+                    <div className="mt-4">
+                      <TimeSlotSelect
+                        label={t("scheduledTime")}
+                        placeholder={t("scheduledTimePlaceholder")}
+                        required
+                        value={values.scheduledTime}
+                        options={timeSlots}
+                        onChange={(slot) => set("scheduledTime", slot)}
+                        error={errors.scheduled}
+                        emptyMessage={t("scheduledNoSlots")}
+                      />
+                    </div>
+                  )}
+                </>
               )}
 
               <h2 className="mb-5 mt-8 text-20semi text-navy">
@@ -382,32 +426,6 @@ export default function CheckoutView({
                 {t("placeOrder")}
               </Button>
             </form>
-
-            {visibleUpsell.length > 0 && (
-              <section className="relative">
-                <h2 className="mb-6 pr-24 font-findsans text-24bold uppercase text-navy sm:pr-28">
-                  {t("upsellTitle")}
-                </h2>
-                <SwiperWrapper
-                  spaceBetween={16}
-                  slidesPerView={1}
-                  breakpoints={{
-                    640: { slidesPerView: 1, spaceBetween: 16 },
-                    768: { slidesPerView: 2, spaceBetween: 24 },
-                    1024: { slidesPerView: 1, spaceBetween: 24 },
-                    1280: { slidesPerView: 2, spaceBetween: 24 },
-                  }}
-                  buttonsClassName="absolute right-0 top-0"
-                  prevLabel={tSlider("prev")}
-                  nextLabel={tSlider("next")}
-                  slides={visibleUpsell.map((card) => (
-                    <div key={card.slug} className="h-full">
-                      {card.node}
-                    </div>
-                  ))}
-                />
-              </section>
-            )}
           </div>
 
           {/* Order summary */}

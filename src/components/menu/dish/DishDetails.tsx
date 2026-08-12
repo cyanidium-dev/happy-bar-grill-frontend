@@ -5,8 +5,8 @@ import DishQuantityAdd from "./DishQuantityAdd";
 import type { Dish } from "@/types/content";
 
 /**
- * Right-hand info panel on a dish page: name, description, tag, price/weight/
- * calories and the quantity + add-to-cart control.
+ * Right-hand info panel on a dish page: name, description, weight/calories,
+ * price and the quantity + add-to-cart control.
  */
 export default async function DishDetails({ dish }: { dish: Dish }) {
   const [t, tp] = await Promise.all([
@@ -41,6 +41,19 @@ export default async function DishDetails({ dish }: { dish: Dish }) {
             {dish.description}
           </p>
         ) : null}
+
+        {(dish.weight || typeof dish.calories === "number") && (
+          <div className="flex flex-wrap items-baseline gap-3">
+            <span className="text-14med text-navy">
+              {dish.weight} {tp("weightUnit")}
+            </span>
+            {typeof dish.calories === "number" ? (
+              <span className="text-14med text-navy">
+                {dish.calories} {tp("caloriesUnit")}
+              </span>
+            ) : null}
+          </div>
+        )}
       </div>
 
       <div className="relative flex flex-col gap-5">
@@ -51,14 +64,6 @@ export default async function DishDetails({ dish }: { dish: Dish }) {
           {dish.oldPrice ? (
             <span className="text-18med text-grey-dark line-through">
               {dish.oldPrice} {tp("currency")}
-            </span>
-          ) : null}
-          <span className="text-14med text-grey-dark">
-            {dish.weight} {tp("weightUnit")}
-          </span>
-          {typeof dish.calories === "number" ? (
-            <span className="text-14med text-grey-dark">
-              {dish.calories} {tp("caloriesUnit")}
             </span>
           ) : null}
         </div>

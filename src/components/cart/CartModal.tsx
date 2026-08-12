@@ -89,11 +89,9 @@ export default function CartModal({
               {t("empty")}
             </p>
           ) : (
-            <ul className="flex flex-col gap-3 pb-4">
+            <ul className="flex flex-col overflow-x-clip pb-4">
               {items.map((item) => (
-                <li key={item.id}>
-                  <CartItemRow item={item} />
-                </li>
+                <CartItemRow key={item.id} item={item} />
               ))}
             </ul>
           )}

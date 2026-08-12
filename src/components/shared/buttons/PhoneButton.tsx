@@ -41,7 +41,7 @@ export default function PhoneButton({
     >
       <Sheen />
       <span className="relative z-[1] inline-flex items-center gap-2">
-        <PhoneIcon className="size-4" />
+        <PhoneIcon className="size-4 shrink-0" />
         {label ? `${label} — ${PHONE}` : PHONE}
       </span>
     </a>

@@ -181,6 +181,7 @@
   /* --- Animations ------------------------------------------------------- */
   --animate-rotation: rotate 1600ms linear infinite;
   --animate-fade-up: fade-up 600ms ease-out both;
+  --animate-cart-item-exit: cart-item-exit 320ms ease-out forwards;
 }
 
 /* Fonts are bound at runtime by next/font (variables set on <html>).
@@ -391,6 +392,17 @@
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes cart-item-exit {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(110%, 0, 0);
   }
 }
 

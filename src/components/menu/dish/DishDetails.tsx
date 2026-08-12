@@ -44,11 +44,11 @@ export default async function DishDetails({ dish }: { dish: Dish }) {
 
         {(dish.weight || typeof dish.calories === "number") && (
           <div className="flex flex-wrap items-baseline gap-3">
-            <span className="text-14med text-navy">
+            <span className="text-12med text-navy">
               {dish.weight} {tp("weightUnit")}
             </span>
             {typeof dish.calories === "number" ? (
-              <span className="text-14med text-navy">
+              <span className="text-12med text-navy">
                 {dish.calories} {tp("caloriesUnit")}
               </span>
             ) : null}

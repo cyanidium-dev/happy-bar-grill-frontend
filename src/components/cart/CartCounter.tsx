@@ -14,11 +14,14 @@ export default function CartCounter({
   quantity,
   labels,
   className,
+  onDecrease,
 }: {
   id: string;
   quantity: number;
   labels: { decrease: string; increase: string };
   className?: string;
+  /** Optional override (e.g. animate removal when quantity would hit 0). */
+  onDecrease?: () => void;
 }) {
   const increase = useCartStore((s) => s.increase);
   const decrease = useCartStore((s) => s.decrease);
@@ -32,7 +35,7 @@ export default function CartCounter({
     >
       <button
         type="button"
-        onClick={() => decrease(id)}
+        onClick={() => (onDecrease ? onDecrease() : decrease(id))}
         aria-label={labels.decrease}
         className={btn}
       >

@@ -66,7 +66,7 @@ export default function LocaleSwitcher({
     <div className={cn("relative ml-auto", className)} ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="group inline-flex cursor-pointer items-center gap-2 rounded-full bg-navy-dark px-4 py-[11px] outline-none transition duration-300 ease-in-out"
+        className="group inline-flex h-8 cursor-pointer items-center gap-2 rounded-full bg-navy-dark px-4 outline-none transition duration-300 ease-in-out xl:h-10"
       >
         <span className="text-14semi uppercase text-white transition duration-300 ease-in-out xl:group-hover:text-red group-focus-visible:text-red">
           {currentLocale === "uk" ? "UA" : currentLocale}

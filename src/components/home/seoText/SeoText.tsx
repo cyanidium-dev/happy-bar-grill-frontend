@@ -22,6 +22,8 @@ export default async function SeoText() {
             src="/images/home/seo-text/bg-image.webp"
             alt={t("alts.bgImage")}
             fill
+            sizes="100vw"
+            quality={90}
             className="object-cover -scale-x-100"
           />
         </div>

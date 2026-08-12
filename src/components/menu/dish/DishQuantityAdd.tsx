@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { flushSync } from "react-dom";
 import Button from "@/components/shared/buttons/Button";
 import CartIcon from "@/components/shared/icons/CartIcon";
 import { useCartStore } from "@/store/cartStore";
@@ -20,8 +21,9 @@ const stepBtn =
   "flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full text-20semi text-navy transition duration-300 ease-out hover:text-red disabled:cursor-not-allowed disabled:text-navy/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy/40";
 
 /**
- * Quantity stepper + add-to-cart button for the dish page. Adds the selected
- * quantity to the cart store and plays the fly-to-cart animation.
+ * Quantity stepper + add-to-cart button for the dish page. Plays the
+ * fly-to-cart animation, then commits the selected quantity so the header
+ * count updates with the icon bump.
  */
 export default function DishQuantityAdd({
   labels,
@@ -69,8 +71,9 @@ export default function DishQuantityAdd({
         shape="leaf"
         className={cn("flex-1", "sm:flex-none sm:min-w-56")}
         onClick={(event) => {
-          addItem(line, quantity);
-          flyToCart(event.currentTarget, line.image);
+          flyToCart(event.currentTarget, line.image, () => {
+            flushSync(() => addItem(line, quantity));
+          });
         }}
       >
         <CartIcon className="size-5" />

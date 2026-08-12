@@ -1,8 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import Button from "@/components/shared/buttons/Button";
 import CardMedia from "@/components/shared/cards/CardMedia";
 import CartIcon from "@/components/shared/icons/CartIcon";
+import QuickAddButton from "@/components/shared/cards/QuickAddButton";
 import type { Dish } from "@/types/content";
 import { cn } from "@/utils/cn";
 
@@ -11,7 +11,7 @@ import { cn } from "@/utils/cn";
  * gradient tile with the photo mounted in a white frame that pokes past the
  * card's edge, matching the reference design. Deliberately lighter than the
  * full `DishCard` (no price/weight/badge): its only job here is to tease a
- * dish and push into its menu page.
+ * dish and push into its menu page (with a quick add-to-cart on the icon).
  */
 export default async function HeroDishCard({
   dish,
@@ -62,15 +62,22 @@ export default async function HeroDishCard({
             {t("details")}
           </Link>
 
-          <Button
+          <QuickAddButton
+            line={{
+              id: dish.slug,
+              name: dish.name,
+              price: dish.price,
+              image: dish.image,
+              imageAlt: dish.name,
+              weight: dish.weight,
+            }}
+            label={t("addToCart")}
             variant="secondary"
-            size="icon"
             shape="pill"
-            aria-label={t("addToCart")}
             className="size-[27px] sm:size-[27px] shrink-0"
           >
             <CartIcon className="size-4" />
-          </Button>
+          </QuickAddButton>
         </div>
       </div>
     </article>

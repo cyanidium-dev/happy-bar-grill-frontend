@@ -9,7 +9,11 @@ import {
   useCartHydrated,
   useCartStore,
 } from "@/store/cartStore";
-import { CART_FLY_TARGET_ID } from "@/lib/cartFly";
+import {
+  CART_FLY_TARGET_ID,
+  cartBumpProps,
+  cartBumpRootProps,
+} from "@/lib/cartFly";
 import { cn } from "@/utils/cn";
 
 type HeaderCartActionsProps = {
@@ -22,6 +26,7 @@ type HeaderCartActionsProps = {
 /**
  * Header cart + last-order entry. Without a previous order, only the cart
  * button is shown. With one, a single red pill (list | cart) on all breakpoints.
+ * Icon bumps on arrival; the count badge stays still and only the digit updates.
  */
 export default function HeaderCartActions({
   cartLabel,
@@ -42,7 +47,7 @@ export default function HeaderCartActions({
     "relative z-[1] flex h-full cursor-pointer items-center transition-colors duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/60 xl:hover:bg-red-dark";
 
   return (
-    <div className="relative h-8 xl:h-10">
+    <div className="relative h-8 xl:h-10" {...cartBumpRootProps}>
       <div className="relative flex h-full items-stretch overflow-hidden rounded-full bg-red transition duration-300 ease-out active:scale-95">
         <span
           aria-hidden
@@ -78,7 +83,9 @@ export default function HeaderCartActions({
             "justify-start rounded-r-full pr-2 pl-1 lg:pr-2.5 lg:pl-0.5",
           )}
         >
-          <CartIcon className="size-4.5 text-white xl:size-6" />
+          <span {...cartBumpProps} className="inline-flex origin-center">
+            <CartIcon className="size-4.5 text-white xl:size-6" />
+          </span>
         </button>
       </div>
 

@@ -7,12 +7,17 @@ import {
   useCartHydrated,
   useCartStore,
 } from "@/store/cartStore";
-import { CART_FLY_TARGET_ID } from "@/lib/cartFly";
+import {
+  CART_FLY_TARGET_ID,
+  cartBumpProps,
+  cartBumpRootProps,
+} from "@/lib/cartFly";
 import { cn } from "@/utils/cn";
 
 /**
  * Cart entry point in the header. Opens the cart modal and shows the live item
- * count. Also the destination (`id`) for the fly-to-cart animation.
+ * count. Also the destination (`id`) for the fly-to-cart animation; the icon
+ * bumps on arrival while the count badge stays still (digit updates then).
  */
 export default function CartButton({
   label,
@@ -31,6 +36,7 @@ export default function CartButton({
     <button
       type="button"
       id={CART_FLY_TARGET_ID}
+      {...cartBumpRootProps}
       onClick={onOpen}
       aria-label={label}
       className={cn(
@@ -45,7 +51,9 @@ export default function CartButton({
       >
         <Sheen />
       </span>
-      <CartIcon className="relative z-[1] size-4.5 text-white xl:size-6" />
+      <span {...cartBumpProps} className="relative z-[1] inline-flex origin-center">
+        <CartIcon className="size-4.5 text-white xl:size-6" />
+      </span>
       {showCount && (
         <span className="absolute -right-1 -top-1 z-[1] flex min-w-5 items-center justify-center rounded-full bg-white px-1 text-10med text-navy shadow-sm ring-1 ring-navy/10">
           {count}

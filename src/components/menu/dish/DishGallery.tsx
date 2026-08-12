@@ -203,7 +203,7 @@ export default function DishGallery({
         animation={{ fade: 300, swipe: 200 }}
         carousel={{ finite: !hasMany }}
         controller={{ closeOnBackdropClick: true }}
-        styles={{ container: { backgroundColor: "rgba(0, 60, 113, 0.92)" } }}
+        styles={{ container: { backgroundColor: "rgba(0, 0, 0, 0.6)" } }}
       />
     </div>
   );

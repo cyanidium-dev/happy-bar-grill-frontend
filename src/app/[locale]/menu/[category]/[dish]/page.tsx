@@ -19,7 +19,7 @@ import {
   getDishBySlug,
   getSimilarDishes,
 } from "@/data/menu";
-import type { GalleryImage, Dish } from "@/types/content";
+import { ALLERGENS, type GalleryImage, type Dish } from "@/types/content";
 import type { PageProps } from "@/types/page";
 
 type DishProps = PageProps<{ category: string; dish: string }>;
@@ -81,6 +81,10 @@ export default async function DishPage({ params }: DishProps) {
     </Link>
   );
 
+  const knownAllergens = (dishDoc.allergens ?? []).filter((code) =>
+    ALLERGENS.includes(code),
+  );
+
   const tabs: DishTab[] = [
     ...(dishDoc.ingredients
       ? [
@@ -88,6 +92,21 @@ export default async function DishPage({ params }: DishProps) {
             id: "ingredients",
             label: t("tabIngredients"),
             content: <p>{dishDoc.ingredients}</p>,
+          },
+        ]
+      : []),
+    ...(knownAllergens.length
+      ? [
+          {
+            id: "allergens",
+            label: t("tabAllergens"),
+            content: (
+              <ul className="flex list-disc flex-col gap-1 pl-5">
+                {knownAllergens.map((code) => (
+                  <li key={code}>{t(`allergens.${code}`)}</li>
+                ))}
+              </ul>
+            ),
           },
         ]
       : []),
@@ -179,7 +198,7 @@ export default async function DishPage({ params }: DishProps) {
 
       <Section
         background="white"
-        className="relative -top-18 -z-10 pt-10 pb-[120px] md:pb-[140px] xl:pb-[160px]"
+        className="relative -top-18 pt-10 pb-[120px] md:pb-[140px] xl:pb-[160px]"
         sectionAside={
           <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
             <Image

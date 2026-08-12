@@ -5,8 +5,8 @@ import DishQuantityAdd from "./DishQuantityAdd";
 import type { Dish } from "@/types/content";
 
 /**
- * Right-hand info panel on a dish page: name, description, tag, price/weight
- * and the quantity + add-to-cart control.
+ * Right-hand info panel on a dish page: name, description, tag, price/weight/
+ * calories and the quantity + add-to-cart control.
  */
 export default async function DishDetails({ dish }: { dish: Dish }) {
   const [t, tp] = await Promise.all([
@@ -56,6 +56,11 @@ export default async function DishDetails({ dish }: { dish: Dish }) {
           <span className="text-14med text-grey-dark">
             {dish.weight} {tp("weightUnit")}
           </span>
+          {typeof dish.calories === "number" ? (
+            <span className="text-14med text-grey-dark">
+              {dish.calories} {tp("caloriesUnit")}
+            </span>
+          ) : null}
         </div>
 
         <div className="mt-1">

@@ -49,6 +49,8 @@ export const DISH_BY_SLUG_QUERY = defineQuery(/* groq */ `
   *[_type == "menuDish" && slug.current == $slug
     && category->slug.current == $category][0] {
     ${dishFields},
+    calories,
+    allergens,
     "ingredients": ${localized("ingredients")},
     "gallery": gallery[]{
       "url": asset->url,

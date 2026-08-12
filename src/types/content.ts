@@ -6,6 +6,40 @@
 
 export type DishTag = "bestseller" | "new" | "discount";
 
+/** EU 1169/2011 allergen codes stored on Sanity `menuDish.allergens`. */
+export type Allergen =
+  | "gluten"
+  | "crustaceans"
+  | "eggs"
+  | "fish"
+  | "peanuts"
+  | "soy"
+  | "milk"
+  | "nuts"
+  | "celery"
+  | "mustard"
+  | "sesame"
+  | "sulphites"
+  | "lupin"
+  | "molluscs";
+
+export const ALLERGENS: readonly Allergen[] = [
+  "gluten",
+  "crustaceans",
+  "eggs",
+  "fish",
+  "peanuts",
+  "soy",
+  "milk",
+  "nuts",
+  "celery",
+  "mustard",
+  "sesame",
+  "sulphites",
+  "lupin",
+  "molluscs",
+];
+
 /** A gallery photo with its own locale-resolved alt text. */
 export type GalleryImage = {
   url: string;
@@ -23,6 +57,16 @@ export type Dish = {
   oldPrice?: number | null;
   /** Weight in grams. */
   weight: number;
+  /**
+   * Energy value of the portion in kcal (Sanity `calories`). Only the
+   * `DISH_BY_SLUG_QUERY` projects this — catalog/card queries omit it.
+   */
+  calories?: number | null;
+  /**
+   * EU allergen codes present in the dish (Sanity `allergens`). Only the
+   * `DISH_BY_SLUG_QUERY` projects this — catalog/card queries omit it.
+   */
+  allergens?: Allergen[] | null;
   tag?: DishTag | null;
   /** Card/catalog thumbnail URL from Sanity CDN. */
   image: string;

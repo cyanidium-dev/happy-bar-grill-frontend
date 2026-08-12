@@ -31,7 +31,7 @@ export default async function SimilarDishes({ dishes }: { dishes: Dish[] }) {
     <Section
       background="beige"
       waveTop="white"
-      className="overflow-hidden rounded-b-[24px] lg:rounded-b-[36px]"
+      className="z-10 overflow-hidden rounded-b-[24px] lg:rounded-b-[36px]"
     >
       <AnimatedWrapper
         className="pointer-events-none absolute hidden md:bottom-[-240px] md:right-[-150px] md:block md:h-[458px] md:w-[535px] lg:right-[-100px] lg:bottom-[-300px] lg:h-[558px] lg:w-[635px] xl:bottom-[-180px] xl:right-[-150px] xl:h-[458px] xl:w-[535px]"

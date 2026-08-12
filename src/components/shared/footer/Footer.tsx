@@ -82,9 +82,21 @@ export default function Footer({ className }: { className?: string }) {
         className,
       )}
     >
+      <div className="md:hidden absolute top-38 xs:top-68 right-0 w-[184px] h-[341px]">
+        <Image
+          src={
+            variant === "dark"
+              ? "/images/footer/decor-dark-mob.webp"
+              : "/images/footer/decor-mob.webp"
+          }
+          alt=""
+          fill
+          className="object-cover"
+        />
+      </div>
       <SectionWave from={getFooterWaveColor(pathname)} above />
       <Container className="relative pb-14 pt-12 md:pb-16 md:pt-14">
-        <div className="absolute bottom-0 md:left-[calc(50%-240px/2)] lg:left-[calc(50%-339px/2)] xl:left-[calc(50%-509px/2)] md:w-[280px] md:h-[156px] lg:w-[359px] lg:h-[195px] xl:w-[509px] xl:h-[270px]">
+        <div className="hidden md:block absolute bottom-0 md:left-[calc(50%-240px/2)] lg:left-[calc(50%-339px/2)] xl:left-[calc(50%-509px/2)] md:w-[280px] md:h-[156px] lg:w-[359px] lg:h-[195px] xl:w-[509px] xl:h-[270px]">
           <Image
             src={
               variant === "dark"
@@ -96,6 +108,7 @@ export default function Footer({ className }: { className?: string }) {
             className="object-cover"
           />
         </div>
+
         <div className="flex flex-col gap-10 md:flex-row md:justify-between">
           <div className="flex flex-col gap-6">
             <Logo className="h-14 lg:h-18" />

@@ -34,7 +34,7 @@ export default function CartButton({
       onClick={onOpen}
       aria-label={label}
       className={cn(
-        "group relative flex size-8 cursor-pointer items-center justify-center rounded-full bg-red transition duration-300 ease-out enabled:active:scale-95 xl:hover:bg-red-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 lg:size-[41px]",
+        "group relative flex size-8 cursor-pointer items-center justify-center rounded-full bg-red transition duration-300 ease-out enabled:active:scale-95 xl:hover:bg-red-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 xl:size-10",
         className,
       )}
     >
@@ -45,7 +45,7 @@ export default function CartButton({
       >
         <Sheen />
       </span>
-      <CartIcon className="relative z-[1] size-4.5 text-white lg:size-6" />
+      <CartIcon className="relative z-[1] size-4.5 text-white xl:size-6" />
       {showCount && (
         <span className="absolute -right-1 -top-1 z-[1] flex min-w-5 items-center justify-center rounded-full bg-white px-1 text-10med text-navy shadow-sm ring-1 ring-navy/10">
           {count}

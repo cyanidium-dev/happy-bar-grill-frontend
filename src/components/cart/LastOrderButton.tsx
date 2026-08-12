@@ -29,7 +29,7 @@ export default function LastOrderButton({
       onClick={onOpen}
       aria-label={label}
       className={cn(
-        "group relative flex size-8 cursor-pointer items-center justify-center rounded-full bg-red transition duration-300 ease-out enabled:active:scale-95 xl:hover:bg-red-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 lg:size-[41px]",
+        "group relative flex size-8 cursor-pointer items-center justify-center rounded-full bg-red transition duration-300 ease-out enabled:active:scale-95 xl:hover:bg-red-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 xl:size-10",
         className,
       )}
     >

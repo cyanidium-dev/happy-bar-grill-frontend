@@ -42,7 +42,7 @@ export default function HeaderCartActions({
     "relative z-[1] flex h-full cursor-pointer items-center transition-colors duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/60 xl:hover:bg-red-dark";
 
   return (
-    <div className="relative h-8 lg:h-[41px]">
+    <div className="relative h-8 xl:h-10">
       <div className="relative flex h-full items-stretch overflow-hidden rounded-full bg-red transition duration-300 ease-out active:scale-95">
         <span
           aria-hidden
@@ -60,7 +60,7 @@ export default function HeaderCartActions({
             "justify-end rounded-l-full pl-2 pr-1 lg:pl-2.5 lg:pr-0.5",
           )}
         >
-          <ReceiptIcon className="size-4.5 text-white lg:size-6" />
+          <ReceiptIcon className="size-4.5 text-white xl:size-6" />
         </button>
 
         <span
@@ -78,7 +78,7 @@ export default function HeaderCartActions({
             "justify-start rounded-r-full pr-2 pl-1 lg:pr-2.5 lg:pl-0.5",
           )}
         >
-          <CartIcon className="size-4.5 text-white lg:size-6" />
+          <CartIcon className="size-4.5 text-white xl:size-6" />
         </button>
       </div>
 

@@ -121,7 +121,7 @@ export default function Header({ className }: { className?: string }) {
                   variant: "secondary",
                   size: "sm",
                   className: cn(
-                    "px-2 xl:px-4 py-1.75 xl:py-3",
+                    "box-border h-8 px-2 py-0 xl:h-10 xl:px-4",
                     onDark
                       ? "border-white bg-white text-navy xl:hover:border-white xl:hover:bg-navy/30 xl:hover:text-white transition-colors duration-300 ease-in-out"
                       : "border-navy-dark bg-navy-dark text-white xl:hover:border-navy xl:hover:bg-navy xl:hover:text-white transition-colors duration-300 ease-in-out",

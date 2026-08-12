@@ -3,6 +3,7 @@ import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrappe
 import PhoneButton from "@/components/shared/buttons/PhoneButton";
 import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
+import Image from "next/image";
 import { DELIVERY_COST, DELIVERY_TIME, MIN_ORDER } from "@/constants/contacts";
 
 /**
@@ -22,11 +23,23 @@ export default async function DeliveryConditions() {
   ].filter(Boolean) as { label: string; value: string }[];
 
   return (
-    <Section background="beige" waveTop="white">
+    <Section
+      background="beige"
+      className="rounded-[24px] lg:rounded-[36px] relative z-15"
+    >
+      <div className="absolute -z-10 -bottom-1 right-[-180px] lg:-bottom-8 xl:-bottom-14 lg:-right-62 xl:right-40 w-[318px] h-[159px] lg:w-[412px] lg:h-[205px]">
+        <Image
+          src="/images/home/popular/grill-plate.webp"
+          alt={t("alts.grillPlate")}
+          fill
+          className="object-cover"
+        />
+      </div>
+
       <div className="flex flex-col gap-8">
         <AnimatedWrapper className="flex flex-col gap-3">
           <SectionTitle>{t("title")}</SectionTitle>
-          <p className="max-w-2xl text-16reg text-graphite">{t("lead")}</p>
+          <p className="max-w-[380px] text-16reg text-graphite">{t("lead")}</p>
         </AnimatedWrapper>
 
         <ul className="grid gap-3 sm:grid-cols-2 md:gap-4 xl:grid-cols-4">

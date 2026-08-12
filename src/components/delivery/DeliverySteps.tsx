@@ -57,7 +57,7 @@ export default async function DeliverySteps() {
   const decorFade = fadeIn(delayAfterCards(keys.length, { stagger: 0.06 }));
 
   return (
-    <Section background="white" waveTop="white" className="z-15">
+    <Section background="white" waveTop="white" className="z-20">
       <AnimatedWrapper
         className="pointer-events-none absolute hidden md:bottom-[-220px] md:right-[-150px] md:block md:h-[458px] md:w-[535px] lg:right-[-100px] lg:bottom-[-240px] xl:bottom-[-240px] xl:right-[-150px] lg:h-[458px] lg:w-[535px]"
         animation={decorFade}
@@ -117,11 +117,11 @@ export default async function DeliverySteps() {
                   <span className="flex size-12 items-center justify-center rounded-tl-lg rounded-br-lg bg-red/10 text-red">
                     {icons[key]}
                   </span>
-                  <span className="font-findsans text-36bold leading-none text-navy/40">
+                  <span className="font-findsans text-36bold leading-none text-navy/70">
                     {index + 1}
                   </span>
                 </div>
-                <h3 className="text-18semi text-navy">
+                <h3 className="font-findsans text-18semi text-navy">
                   {t(`items.${key}.title`)}
                 </h3>
                 <p className="text-14reg leading-relaxed text-graphite">

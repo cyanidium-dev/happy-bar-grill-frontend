@@ -130,7 +130,7 @@ export default function Header({ className }: { className?: string }) {
                 })}
               >
                 <Sheen />
-                <span className="relative z-[1] inline-flex items-center gap-2 font-findsans text-9bold lg:text-14semi">
+                <span className="relative z-[1] inline-flex items-center gap-2 font-findsans text-9bold lg:text-12semi">
                   <PhoneIcon className="size-4" />
                   {PHONE}
                 </span>

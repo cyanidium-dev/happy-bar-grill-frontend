@@ -7,7 +7,10 @@ import Container from "@/components/shared/container/Container";
 import Input from "@/components/shared/forms/Input";
 import Button from "@/components/shared/buttons/Button";
 import CartItemRow from "@/components/cart/CartItemRow";
+import SwiperWrapper from "@/components/shared/swiper/SwiperWrapper";
 import PhoneField from "./PhoneField";
+import TimeSlotSelect from "./TimeSlotSelect";
+import { ADDRESS } from "@/constants/contacts";
 import { sendTelegramMessage } from "@/lib/telegram/client";
 import { formatOrderTelegramMessage } from "@/lib/telegram/formatOrder";
 import {
@@ -15,10 +18,15 @@ import {
   useCartHydrated,
   useCartStore,
 } from "@/store/cartStore";
+import type { DeliveryType, OrderTimeMode } from "@/types/cart";
 import { generateOrderNumber } from "@/utils/orderNumber";
+import {
+  getAvailableTimeSlots,
+  isAvailableTimeSlot,
+} from "@/utils/orderTimeSlots";
 import { cn } from "@/utils/cn";
 
-type Fields = "name" | "phone" | "address";
+type Fields = "name" | "phone" | "address" | "scheduled";
 
 /** Recommended (upsell) dishes as server-rendered DishCards, paired with slug. */
 export type UpsellCard = { slug: string; node: ReactNode };
@@ -30,6 +38,7 @@ export default function CheckoutView({
 }) {
   const t = useTranslations("Checkout");
   const tp = useTranslations("Product");
+  const tSlider = useTranslations("Common.slider");
   const router = useRouter();
 
   const hydrated = useCartHydrated();
@@ -42,7 +51,10 @@ export default function CheckoutView({
   const [values, setValues] = useState({
     name: "",
     phone: "", // 9 subscriber digits; full number is `+380${phone}`
+    deliveryType: "delivery" as DeliveryType,
     address: "",
+    timeMode: "asap" as OrderTimeMode,
+    scheduledTime: "",
     payment: payments[0],
     comment: "",
   });
@@ -50,9 +62,38 @@ export default function CheckoutView({
   const [submitError, setSubmitError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const set = (field: keyof typeof values, value: string) => {
-    setValues((v) => ({ ...v, [field]: value }));
-    if (field !== "payment" && errors[field as Fields]) {
+  const set = <K extends keyof typeof values>(
+    field: K,
+    value: (typeof values)[K],
+  ) => {
+    setValues((v) => {
+      if (field === "deliveryType") {
+        const nextType = value as DeliveryType;
+        const slots = getAvailableTimeSlots(nextType);
+        return {
+          ...v,
+          deliveryType: nextType,
+          scheduledTime:
+            v.scheduledTime && slots.includes(v.scheduledTime)
+              ? v.scheduledTime
+              : "",
+        };
+      }
+      return { ...v, [field]: value };
+    });
+
+    if (field === "deliveryType") {
+      setErrors((e) => ({ ...e, address: undefined, scheduled: undefined }));
+    }
+    if (field === "timeMode" || field === "scheduledTime") {
+      setErrors((e) => ({ ...e, scheduled: undefined }));
+    }
+    if (
+      field !== "payment" &&
+      field !== "deliveryType" &&
+      field !== "timeMode" &&
+      errors[field as Fields]
+    ) {
       setErrors((e) => ({ ...e, [field]: undefined }));
     }
   };
@@ -61,7 +102,21 @@ export default function CheckoutView({
     const next: Partial<Record<Fields, string>> = {};
     if (values.name.trim().length < 2) next.name = t("errors.name");
     if (values.phone.length < 9) next.phone = t("errors.phone");
-    if (values.address.trim().length < 4) next.address = t("errors.address");
+    if (
+      values.deliveryType === "delivery" &&
+      values.address.trim().length < 4
+    ) {
+      next.address = t("errors.address");
+    }
+    if (values.timeMode === "scheduled") {
+      if (!values.scheduledTime) {
+        next.scheduled = t("errors.scheduled");
+      } else if (
+        !isAvailableTimeSlot(values.deliveryType, values.scheduledTime)
+      ) {
+        next.scheduled = t("errors.scheduledClosed");
+      }
+    }
     setErrors(next);
     return Object.keys(next).length === 0;
   };
@@ -76,7 +131,14 @@ export default function CheckoutView({
     const customer = {
       name: values.name.trim(),
       phone: `+380${values.phone}`,
-      address: values.address.trim(),
+      deliveryType: values.deliveryType,
+      address:
+        values.deliveryType === "delivery"
+          ? values.address.trim()
+          : undefined,
+      timeMode: values.timeMode,
+      scheduledAt:
+        values.timeMode === "scheduled" ? values.scheduledTime : undefined,
       payment: values.payment,
       comment: values.comment.trim() || undefined,
     };
@@ -105,9 +167,31 @@ export default function CheckoutView({
   }
 
   const isEmpty = items.length === 0;
-  const visibleUpsell = upsellCards
-    .filter((card) => !items.some((it) => it.id === card.slug))
-    .slice(0, 4);
+  const visibleUpsell = upsellCards.filter(
+    (card) => !items.some((it) => it.id === card.slug),
+  );
+
+  const isDelivery = values.deliveryType === "delivery";
+  const isScheduled = values.timeMode === "scheduled";
+  const timeSlots = getAvailableTimeSlots(values.deliveryType);
+
+  const deliveryOptions: { value: DeliveryType; label: string }[] = [
+    { value: "delivery", label: t("deliveryOption") },
+    { value: "pickup", label: t("pickupOption") },
+  ];
+
+  const timeOptions: { value: OrderTimeMode; label: string }[] = [
+    { value: "asap", label: t("timeAsap") },
+    { value: "scheduled", label: t("timeScheduled") },
+  ];
+
+  const radioClass = (active: boolean) =>
+    cn(
+      "flex cursor-pointer items-center gap-3 rounded-full border px-5 py-3.5 text-14reg transition-colors duration-300 md:text-16reg",
+      active
+        ? "border-navy bg-navy/5 text-navy"
+        : "border-navy/15 text-graphite hover:border-navy/40",
+    );
 
   return (
     <Container className="pb-16 pt-10 md:pb-20 md:pt-14">
@@ -133,6 +217,82 @@ export default function CheckoutView({
               className="rounded-tl-2xl rounded-br-2xl border border-navy/12 bg-white p-6 md:p-8"
             >
               <h2 className="mb-5 text-20semi text-navy">
+                {t("deliveryTitle")}
+              </h2>
+              <div className="flex flex-col gap-3">
+                {deliveryOptions.map(({ value, label }) => {
+                  const active = values.deliveryType === value;
+                  return (
+                    <label key={value} className={radioClass(active)}>
+                      <input
+                        type="radio"
+                        name="deliveryType"
+                        value={value}
+                        checked={active}
+                        onChange={() => set("deliveryType", value)}
+                        className="size-4 accent-navy"
+                      />
+                      {label}
+                    </label>
+                  );
+                })}
+              </div>
+
+              {isDelivery ? (
+                <div className="mt-4">
+                  <Input
+                    label={t("address")}
+                    required
+                    value={values.address}
+                    onChange={(e) => set("address", e.target.value)}
+                    error={errors.address}
+                    autoComplete="street-address"
+                  />
+                </div>
+              ) : (
+                <p className="mt-4 text-14reg text-grey-dark">
+                  {t("pickupHint")}: {ADDRESS}
+                </p>
+              )}
+
+              <h2 className="mb-4 mt-8 text-20semi text-navy">
+                {t("timeTitle")}
+              </h2>
+              <div className="flex flex-col gap-3">
+                {timeOptions.map(({ value, label }) => {
+                  const active = values.timeMode === value;
+                  return (
+                    <label key={value} className={radioClass(active)}>
+                      <input
+                        type="radio"
+                        name="timeMode"
+                        value={value}
+                        checked={active}
+                        onChange={() => set("timeMode", value)}
+                        className="size-4 accent-navy"
+                      />
+                      {label}
+                    </label>
+                  );
+                })}
+              </div>
+
+              {isScheduled && (
+                <div className="mt-4">
+                  <TimeSlotSelect
+                    label={t("scheduledTime")}
+                    placeholder={t("scheduledTimePlaceholder")}
+                    required
+                    value={values.scheduledTime}
+                    options={timeSlots}
+                    onChange={(slot) => set("scheduledTime", slot)}
+                    error={errors.scheduled}
+                    emptyMessage={t("scheduledNoSlots")}
+                  />
+                </div>
+              )}
+
+              <h2 className="mb-5 mt-8 text-20semi text-navy">
                 {t("contactsTitle")}
               </h2>
               <div className="flex flex-col gap-4">
@@ -151,14 +311,6 @@ export default function CheckoutView({
                   onChange={(digits) => set("phone", digits)}
                   error={errors.phone}
                 />
-                <Input
-                  label={t("address")}
-                  required
-                  value={values.address}
-                  onChange={(e) => set("address", e.target.value)}
-                  error={errors.address}
-                  autoComplete="street-address"
-                />
               </div>
 
               <h2 className="mb-4 mt-8 text-20semi text-navy">
@@ -168,22 +320,14 @@ export default function CheckoutView({
                 {payments.map((option) => {
                   const active = values.payment === option;
                   return (
-                    <label
-                      key={option}
-                      className={cn(
-                        "flex cursor-pointer items-center gap-3 rounded-full border px-5 py-3.5 text-14reg transition-colors duration-300 md:text-16reg",
-                        active
-                          ? "border-navy bg-navy/5 text-navy"
-                          : "border-navy/15 text-graphite hover:border-navy/40",
-                      )}
-                    >
+                    <label key={option} className={radioClass(active)}>
                       <input
                         type="radio"
                         name="payment"
                         value={option}
                         checked={active}
                         onChange={() => set("payment", option)}
-                        className="size-4 accent-red"
+                        className="size-4 accent-navy"
                       />
                       {option}
                     </label>
@@ -240,17 +384,28 @@ export default function CheckoutView({
             </form>
 
             {visibleUpsell.length > 0 && (
-              <section>
-                <h2 className="mb-6 font-findsans text-24bold uppercase text-navy">
+              <section className="relative">
+                <h2 className="mb-6 pr-24 font-findsans text-24bold uppercase text-navy sm:pr-28">
                   {t("upsellTitle")}
                 </h2>
-                <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
-                  {visibleUpsell.map((card) => (
-                    <li key={card.slug} className="h-full">
+                <SwiperWrapper
+                  spaceBetween={16}
+                  slidesPerView={1}
+                  breakpoints={{
+                    640: { slidesPerView: 1, spaceBetween: 16 },
+                    768: { slidesPerView: 2, spaceBetween: 24 },
+                    1024: { slidesPerView: 1, spaceBetween: 24 },
+                    1280: { slidesPerView: 2, spaceBetween: 24 },
+                  }}
+                  buttonsClassName="absolute right-0 top-0"
+                  prevLabel={tSlider("prev")}
+                  nextLabel={tSlider("next")}
+                  slides={visibleUpsell.map((card) => (
+                    <div key={card.slug} className="h-full">
                       {card.node}
-                    </li>
+                    </div>
                   ))}
-                </ul>
+                />
               </section>
             )}
           </div>

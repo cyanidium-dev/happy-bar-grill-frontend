@@ -31,7 +31,7 @@ export default function DishTabs({ tabs }: { tabs: DishTab[] }) {
         role="tablist"
         aria-orientation="horizontal"
         onKeyDown={onKeyDown}
-        className="flex flex-wrap gap-x-6 border-b border-navy/15"
+        className="flex gap-x-6 overflow-x-auto border-b border-navy/15 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {tabs.map((tab, i) => {
           const selected = i === active;
@@ -49,7 +49,7 @@ export default function DishTabs({ tabs }: { tabs: DishTab[] }) {
               tabIndex={selected ? 0 : -1}
               onClick={() => setActive(i)}
               className={cn(
-                "relative -mb-px cursor-pointer whitespace-nowrap py-3 text-16semi transition-colors duration-300 focus-visible:outline-none",
+                "relative -mb-px shrink-0 cursor-pointer whitespace-nowrap py-3 text-16semi transition-colors duration-300 focus-visible:outline-none",
                 selected ? "text-red" : "text-navy hover:text-red",
               )}
             >

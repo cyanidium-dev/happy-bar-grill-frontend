@@ -129,7 +129,7 @@ export default function Header({ className }: { className?: string }) {
                 })}
               >
                 <Sheen />
-                <span className="relative z-[1] inline-flex items-center gap-2 text-9bold xs:text-10semi xl:text-12semi">
+                <span className="relative z-[1] inline-flex items-center gap-1 text-10bold xs:text-10semi xl:text-12semi">
                   <PhoneIcon className="size-4" />
                   {PHONE}
                 </span>
@@ -154,7 +154,7 @@ export default function Header({ className }: { className?: string }) {
               aria-label={open ? th("closeMenu") : th("openMenu")}
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
-              className="flex size-6 flex-col items-center justify-center gap-1.5 lg:hidden"
+              className="flex size-5 flex-col items-center justify-center gap-1.5 lg:hidden"
             >
               <span
                 className={cn(

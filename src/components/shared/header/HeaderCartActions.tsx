@@ -39,11 +39,11 @@ export default function HeaderCartActions({
   }
 
   const segmentClass =
-    "relative z-[1] flex cursor-pointer items-center transition duration-300 ease-out active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/60 xl:hover:bg-red-dark";
+    "relative z-[1] flex h-full cursor-pointer items-center transition-colors duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/60 xl:hover:bg-red-dark";
 
   return (
     <div className="relative h-8 lg:h-[41px]">
-      <div className="relative flex h-full items-stretch rounded-full bg-red px-2 lg:px-2.5">
+      <div className="relative flex h-full items-stretch overflow-hidden rounded-full bg-red transition duration-300 ease-out active:scale-95">
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 overflow-hidden rounded-full"
@@ -55,7 +55,10 @@ export default function HeaderCartActions({
           type="button"
           onClick={onOpenLastOrder}
           aria-label={lastOrderLabel}
-          className={cn(segmentClass, "justify-end pr-1 lg:pr-0.5")}
+          className={cn(
+            segmentClass,
+            "justify-end rounded-l-full pl-2 pr-1 lg:pl-2.5 lg:pr-0.5",
+          )}
         >
           <ReceiptIcon className="size-4.5 text-white lg:size-6" />
         </button>
@@ -70,7 +73,10 @@ export default function HeaderCartActions({
           id={CART_FLY_TARGET_ID}
           onClick={onOpenCart}
           aria-label={cartLabel}
-          className={cn(segmentClass, "justify-start pl-1 lg:pl-0.5")}
+          className={cn(
+            segmentClass,
+            "justify-start rounded-r-full pr-2 pl-1 lg:pr-2.5 lg:pl-0.5",
+          )}
         >
           <CartIcon className="size-4.5 text-white lg:size-6" />
         </button>

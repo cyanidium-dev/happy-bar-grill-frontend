@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import Logo from "@/components/shared/logo/Logo";
+import LocaleSwitcher from "@/components/shared/LocaleSwitcher";
 import { buttonStyles, Sheen } from "@/components/shared/buttons/Button";
 import CloseIcon from "@/components/shared/icons/CloseIcon";
 import PhoneIcon from "@/components/shared/icons/PhoneIcon";
@@ -55,20 +56,23 @@ export default function MobileMenu({
         aria-modal="true"
         aria-label={th("menu")}
         className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-[86%] max-w-sm flex-col bg-navy text-white shadow-2xl transition-transform duration-300 ease-out",
+          "fixed inset-y-0 right-0 z-50 flex w-[86%] max-w-sm flex-col bg-navy-dark text-white shadow-2xl transition-transform duration-300 ease-out",
           open ? "translate-x-0" : "translate-x-full",
         )}
       >
-        <div className="flex items-center justify-between px-6 pt-6">
+        <div className="flex items-center justify-between gap-3 px-6 pt-6">
           <Logo onClick={onClose} />
-          <button
-            type="button"
-            aria-label={th("closeMenu")}
-            onClick={onClose}
-            className="flex size-10 items-center justify-center rounded-full text-white transition-colors hover:text-red"
-          >
-            <CloseIcon className="size-6" />
-          </button>
+          <div className="flex items-center gap-2">
+            <LocaleSwitcher className="ml-0" onLocaleChange={onClose} />
+            <button
+              type="button"
+              aria-label={th("closeMenu")}
+              onClick={onClose}
+              className="flex size-10 items-center justify-center rounded-full text-white transition-colors hover:text-red"
+            >
+              <CloseIcon className="size-6" />
+            </button>
+          </div>
         </div>
 
         <nav className="flex-1 overflow-y-auto px-6 py-12 scrollbar-brand">

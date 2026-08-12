@@ -43,7 +43,7 @@ export default function HeaderCartActions({
 
   return (
     <div className="relative h-8 lg:h-[41px]">
-      <div className="relative flex h-full items-stretch overflow-hidden rounded-full bg-red px-2 lg:px-2.5">
+      <div className="relative flex h-full items-stretch rounded-full bg-red px-2 lg:px-2.5">
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 overflow-hidden rounded-full"
@@ -72,16 +72,15 @@ export default function HeaderCartActions({
           aria-label={cartLabel}
           className={cn(segmentClass, "justify-start pl-1 lg:pl-0.5")}
         >
-          <span className="relative inline-flex items-center justify-center">
-            <CartIcon className="size-4.5 text-white lg:size-6" />
-            {showCount && (
-              <span className="absolute -right-3 -top-2.5 flex min-w-5 items-center justify-center rounded-full bg-white px-1 text-10med text-navy shadow-sm ring-1 ring-navy/10 lg:-right-3.5 lg:-top-3">
-                {count}
-              </span>
-            )}
-          </span>
+          <CartIcon className="size-4.5 text-white lg:size-6" />
         </button>
       </div>
+
+      {showCount && (
+        <span className="absolute -right-1 -top-1 z-[2] flex min-w-5 items-center justify-center rounded-full bg-white px-1 text-10med text-navy shadow-sm ring-1 ring-navy/10">
+          {count}
+        </span>
+      )}
     </div>
   );
 }

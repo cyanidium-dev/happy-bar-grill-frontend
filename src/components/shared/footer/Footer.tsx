@@ -86,7 +86,7 @@ export default function Footer({ className }: { className?: string }) {
         <Image
           src={
             variant === "dark"
-              ? "/images/footer/decor-dark-mob.webp"
+              ? "/images/footer/decor-mob-dark.webp"
               : "/images/footer/decor-mob.webp"
           }
           alt=""

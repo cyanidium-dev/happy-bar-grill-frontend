@@ -49,6 +49,8 @@ export const DISH_BY_SLUG_QUERY = defineQuery(/* groq */ `
   *[_type == "menuDish" && slug.current == $slug
     && category->slug.current == $category][0] {
     ${dishFields},
+    calories,
+    allergens,
     "ingredients": ${localized("ingredients")},
     "gallery": gallery[]{
       "url": asset->url,
@@ -70,7 +72,7 @@ export const SIMILAR_DISHES_QUERY = defineQuery(/* groq */ `
     }
 `);
 
-/** Dishes from categories flagged `upsell` — recommended at checkout. */
+/** Dishes from categories flagged `upsell` (Допродажі) — checkout and dish page. */
 export const UPSELL_DISHES_QUERY = defineQuery(/* groq */ `
   *[_type == "menuDish" && available != false && category->upsell == true]
     | order(order asc) [0...8] {

@@ -12,14 +12,16 @@ import DishGallery from "@/components/menu/dish/DishGallery";
 import DishDetails from "@/components/menu/dish/DishDetails";
 import DishTabs, { type DishTab } from "@/components/menu/dish/DishTabs";
 import SimilarDishes from "@/components/menu/dish/SimilarDishes";
+import UpsellDishes from "@/components/menu/dish/UpsellDishes";
 import Image from "next/image";
 import {
   getAllDishes,
   getCategoryBySlug,
   getDishBySlug,
   getSimilarDishes,
+  getUpsellDishes,
 } from "@/data/menu";
-import type { GalleryImage, Dish } from "@/types/content";
+import { ALLERGENS, type GalleryImage, type Dish } from "@/types/content";
 import type { PageProps } from "@/types/page";
 
 type DishProps = PageProps<{ category: string; dish: string }>;
@@ -69,7 +71,19 @@ export default async function DishPage({ params }: DishProps) {
 
   if (!categoryDoc || !dishDoc) notFound();
 
-  const similar = await getSimilarDishes(category, dish, locale);
+  const [similar, upsell] = await Promise.all([
+    getSimilarDishes(category, dish, locale),
+    getUpsellDishes(locale),
+  ]);
+
+  const similarKeys = new Set(
+    similar.map((item) => `${item.categorySlug}/${item.slug}`),
+  );
+  const upsellDishes = upsell.filter((item) => {
+    const key = `${item.categorySlug}/${item.slug}`;
+    return key !== `${category}/${dish}` && !similarKeys.has(key);
+  });
+
   const images = galleryImages(dishDoc);
 
   const deliveryLink = (
@@ -81,6 +95,10 @@ export default async function DishPage({ params }: DishProps) {
     </Link>
   );
 
+  const knownAllergens = (dishDoc.allergens ?? []).filter((code) =>
+    ALLERGENS.includes(code),
+  );
+
   const tabs: DishTab[] = [
     ...(dishDoc.ingredients
       ? [
@@ -88,6 +106,21 @@ export default async function DishPage({ params }: DishProps) {
             id: "ingredients",
             label: t("tabIngredients"),
             content: <p>{dishDoc.ingredients}</p>,
+          },
+        ]
+      : []),
+    ...(knownAllergens.length
+      ? [
+          {
+            id: "allergens",
+            label: t("tabAllergens"),
+            content: (
+              <ul className="flex list-disc flex-col gap-1 pl-5">
+                {knownAllergens.map((code) => (
+                  <li key={code}>{t(`allergens.${code}`)}</li>
+                ))}
+              </ul>
+            ),
           },
         ]
       : []),
@@ -175,11 +208,12 @@ export default async function DishPage({ params }: DishProps) {
         </Container>
       </section>
 
+      <UpsellDishes dishes={upsellDishes} />
       <SimilarDishes dishes={similar} />
 
       <Section
         background="white"
-        className="relative -top-18 -z-10 pt-10 pb-[120px] md:pb-[140px] xl:pb-[160px]"
+        className="relative -top-18 pt-10 pb-[120px] md:pb-[140px] xl:pb-[160px]"
         sectionAside={
           <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
             <Image

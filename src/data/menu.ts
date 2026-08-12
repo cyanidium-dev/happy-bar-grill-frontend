@@ -179,7 +179,7 @@ export const getHeroDishes = cache(async (locale?: Locale): Promise<Dish[]> => {
   });
 });
 
-/** Dishes from `upsell`-flagged categories, recommended at checkout. */
+/** Dishes from `upsell`-flagged categories (Допродажі) — checkout and dish page. */
 export const getUpsellDishes = cache(
   async (locale?: Locale): Promise<Dish[]> => {
     return sanityFetch<Dish[]>({

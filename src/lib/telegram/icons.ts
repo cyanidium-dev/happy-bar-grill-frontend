@@ -5,6 +5,7 @@ export const TG = {
   name: "👤",
   phone: "📞",
   location: "📍",
+  fulfillment: "🚚",
   time: "🕒",
   payment: "💳",
   message: "💬",

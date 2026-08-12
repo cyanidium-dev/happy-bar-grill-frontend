@@ -2,11 +2,18 @@ import { ADDRESS } from "@/constants/contacts";
 import type { CartItem, OrderCustomer } from "@/types/cart";
 import { TG } from "./icons";
 
-function formatDeliveryLine(customer: OrderCustomer): string {
+function formatFulfillmentTypeLine(customer: OrderCustomer): string {
   if (customer.deliveryType === "pickup") {
-    return `${TG.location} <b>Отримання:</b> Самовивіз (${ADDRESS})\n`;
+    return `${TG.fulfillment} <b>Спосіб отримання:</b> Самовивіз\n`;
   }
-  return `${TG.location} <b>Адреса:</b> ${customer.address}\n`;
+  return `${TG.fulfillment} <b>Спосіб отримання:</b> Доставка\n`;
+}
+
+function formatAddressLine(customer: OrderCustomer): string {
+  if (customer.deliveryType === "pickup") {
+    return `${TG.location} <b>Адреса самовивозу:</b> ${ADDRESS}\n`;
+  }
+  return `${TG.location} <b>Адреса доставки:</b> ${customer.address}\n`;
 }
 
 function formatTimeLine(customer: OrderCustomer): string {
@@ -48,7 +55,8 @@ export function formatOrderTelegramMessage({
     `${TG.number} <b>Номер:</b> ${orderNumber}\n\n` +
     `${TG.name} <b>Ім'я:</b> ${customer.name}\n` +
     `${TG.phone} <b>Телефон:</b> ${customer.phone}\n` +
-    formatDeliveryLine(customer) +
+    formatFulfillmentTypeLine(customer) +
+    formatAddressLine(customer) +
     formatTimeLine(customer) +
     `${TG.payment} <b>Оплата:</b> ${customer.payment}\n` +
     (customer.comment

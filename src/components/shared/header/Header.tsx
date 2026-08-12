@@ -8,10 +8,9 @@ import LocaleSwitcher from "@/components/shared/LocaleSwitcher";
 import { buttonStyles, Sheen } from "@/components/shared/buttons/Button";
 import Container from "@/components/shared/container/Container";
 import PhoneIcon from "@/components/shared/icons/PhoneIcon";
-import CartButton from "./CartButton";
+import HeaderCartActions from "./HeaderCartActions";
 import MobileMenu from "./MobileMenu";
 import CartModal from "@/components/cart/CartModal";
-import LastOrderButton from "@/components/cart/LastOrderButton";
 import LastOrderModal from "@/components/cart/LastOrderModal";
 import { navLinks } from "@/config/navigation";
 import { PHONE, PHONE_HREF } from "@/constants/contacts";
@@ -88,7 +87,7 @@ export default function Header({ className }: { className?: string }) {
         )}
       >
         <Container className="relative flex items-center gap-3">
-          <Logo className="h-10 md:h-12 xl:h-16" />
+          <Logo className="h-9 md:h-12 xl:h-16" />
           <nav className="ml-8 hidden lg:block xl:ml-12">
             <ul className="flex items-center gap-4 xl:gap-8">
               {navLinks.map(({ href, key }) => (
@@ -130,25 +129,23 @@ export default function Header({ className }: { className?: string }) {
                 })}
               >
                 <Sheen />
-                <span className="relative z-[1] inline-flex items-center gap-2 font-findsans text-9bold xl:text-12semi">
+                <span className="relative z-[1] inline-flex items-center gap-2 text-9bold xs:text-10semi xl:text-12semi">
                   <PhoneIcon className="size-4" />
                   {PHONE}
                 </span>
               </a>
             </div>
 
-            <LastOrderButton
-              label={th("lastOrder")}
-              onOpen={() => {
-                setCartOpen(false);
-                setLastOrderOpen(true);
-              }}
-            />
-            <CartButton
-              label={th("cart")}
-              onOpen={() => {
+            <HeaderCartActions
+              cartLabel={th("cart")}
+              lastOrderLabel={th("lastOrder")}
+              onOpenCart={() => {
                 setLastOrderOpen(false);
                 setCartOpen(true);
+              }}
+              onOpenLastOrder={() => {
+                setCartOpen(false);
+                setLastOrderOpen(true);
               }}
             />
 

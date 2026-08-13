@@ -6,9 +6,9 @@ import {
   sendTelegramHtml,
   TelegramConfigError,
 } from "@/lib/telegram/sendMessage";
+import { isPersonName } from "@/utils/personName";
 import { isUaPhoneE164 } from "@/utils/phone";
 
-const MAX_NAME = 80;
 const MAX_MESSAGE = 1000;
 
 function parseContact(body: unknown): {
@@ -23,7 +23,7 @@ function parseContact(body: unknown): {
   const phone = typeof data.phone === "string" ? data.phone.trim() : "";
   const message = typeof data.message === "string" ? data.message.trim() : "";
 
-  if (name.length < 2 || name.length > MAX_NAME) return null;
+  if (!isPersonName(name)) return null;
   if (!isUaPhoneE164(phone)) return null;
   if (message.length < 5 || message.length > MAX_MESSAGE) return null;
 

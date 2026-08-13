@@ -8,6 +8,7 @@ import PhoneField from "@/components/checkout/PhoneField";
 import CheckIcon from "@/components/shared/icons/CheckIcon";
 import { sendContactMessage } from "@/lib/telegram/client";
 import { cn } from "@/utils/cn";
+import { isPersonName } from "@/utils/personName";
 import { isUaSubscriberDigits } from "@/utils/phone";
 
 type Field = "name" | "phone" | "message";
@@ -33,7 +34,7 @@ export default function ContactForm({ formToken }: { formToken: string }) {
 
   const validate = (): boolean => {
     const next: Partial<Record<Field, string>> = {};
-    if (values.name.trim().length < 2) next.name = t("errors.name");
+    if (!isPersonName(values.name)) next.name = t("errors.name");
     if (!isUaSubscriberDigits(values.phone)) next.phone = t("errors.phone");
     if (values.message.trim().length < 5) next.message = t("errors.message");
     setErrors(next);

@@ -7,7 +7,7 @@ import { cn } from "@/utils/cn";
 import { MAX_CART_QUANTITY } from "@/utils/cartQuantity";
 
 const btn =
-  "flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full text-navy transition-colors duration-300 hover:text-red disabled:cursor-not-allowed disabled:text-navy/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy/40";
+  "flex size-6 shrink-0 items-center justify-center rounded-full text-navy transition-colors duration-300 enabled:cursor-pointer enabled:hover:text-red disabled:cursor-not-allowed disabled:pointer-events-none disabled:text-navy/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy/40";
 
 /** Quantity stepper for a cart line, wired to the store. */
 export default function CartCounter({
@@ -27,6 +27,7 @@ export default function CartCounter({
   const increase = useCartStore((s) => s.increase);
   const decrease = useCartStore((s) => s.decrease);
   const isLocked = useCartStore((s) => s.isLocked);
+  const atMax = quantity >= MAX_CART_QUANTITY;
 
   return (
     <div
@@ -49,8 +50,11 @@ export default function CartCounter({
       </span>
       <button
         type="button"
-        onClick={() => increase(id)}
-        disabled={isLocked || quantity >= MAX_CART_QUANTITY}
+        onClick={() => {
+          if (atMax) return;
+          increase(id);
+        }}
+        disabled={isLocked || atMax}
         aria-label={labels.increase}
         className={btn}
       >

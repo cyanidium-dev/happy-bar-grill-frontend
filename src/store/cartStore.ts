@@ -86,9 +86,14 @@ export const useCartStore = create<CartState>()(
         set((state) => ({
           items: state.items.map((it) => {
             if (it.id !== id) return it;
-            const current = normalizeCartQuantity(it.quantity) ?? 0;
-            if (current >= MAX_CART_QUANTITY) return it;
-            return { ...it, quantity: current + 1 };
+            const current =
+              typeof it.quantity === "number" && Number.isFinite(it.quantity)
+                ? Math.trunc(it.quantity)
+                : 0;
+            return {
+              ...it,
+              quantity: Math.min(MAX_CART_QUANTITY, Math.max(0, current) + 1),
+            };
           }),
         }));
       },
@@ -144,15 +149,20 @@ export const useCartStore = create<CartState>()(
         items: state.items,
         lastOrder: state.lastOrder,
       }),
-      onRehydrateStorage: () => (state) => {
-        if (!state) return;
-        state.items = sanitizeCartItems(state.items);
-        if (state.lastOrder) {
-          state.lastOrder = {
-            ...state.lastOrder,
-            items: sanitizeCartItems(state.lastOrder.items),
-          };
-        }
+      merge: (persisted, current) => {
+        const stored = persisted as Partial<CartState> | undefined;
+        return {
+          ...current,
+          ...stored,
+          items: sanitizeCartItems(stored?.items ?? current.items),
+          lastOrder: stored?.lastOrder
+            ? {
+                ...stored.lastOrder,
+                items: sanitizeCartItems(stored.lastOrder.items),
+              }
+            : current.lastOrder,
+          isLocked: false,
+        };
       },
     },
   ),

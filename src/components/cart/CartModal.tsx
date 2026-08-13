@@ -91,7 +91,7 @@ export default function CartModal({
           ) : (
             <ul className="flex flex-col overflow-x-clip pb-4">
               {items.map((item) => (
-                <CartItemRow key={item.id} item={item} />
+                <CartItemRow key={item.id} item={item} onNavigate={onClose} />
               ))}
             </ul>
           )}

@@ -6,16 +6,15 @@ import Input from "@/components/shared/forms/Input";
 import Button from "@/components/shared/buttons/Button";
 import PhoneField from "@/components/checkout/PhoneField";
 import CheckIcon from "@/components/shared/icons/CheckIcon";
-import { sendTelegramMessage } from "@/lib/telegram/client";
-import { formatContactTelegramMessage } from "@/lib/telegram/formatContact";
+import { sendContactMessage } from "@/lib/telegram/client";
 import { cn } from "@/utils/cn";
 
 type Field = "name" | "phone" | "message";
 
 /**
- * Contact / feedback form. Sends the message to Telegram via the existing
- * `/api/telegram` endpoint (same infra as checkout). Shows loading, an error
- * on failure, and a success state on send.
+ * Contact / feedback form. Sends the message to Telegram via
+ * `/api/telegram`. Shows loading, an error on failure, and a success
+ * state on send.
  */
 export default function ContactForm({ formToken }: { formToken: string }) {
   const t = useTranslations("ContactsPage");
@@ -47,12 +46,10 @@ export default function ContactForm({ formToken }: { formToken: string }) {
     setSubmitError(false);
     setIsSubmitting(true);
     try {
-      await sendTelegramMessage(
-        formatContactTelegramMessage({
-          name: values.name.trim(),
-          phone: `+380${values.phone}`,
-          message: values.message.trim(),
-        }),
+      await sendContactMessage(
+        values.name.trim(),
+        `+380${values.phone}`,
+        values.message.trim(),
         formToken,
       );
       setSuccess(true);

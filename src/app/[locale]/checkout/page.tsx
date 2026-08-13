@@ -41,6 +41,7 @@ export default async function CheckoutPage({ params }: PageProps) {
         <CheckoutView
           upsellCards={upsellCards}
           formToken={createFormToken()}
+          locale={locale}
         />
         <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
       </section>

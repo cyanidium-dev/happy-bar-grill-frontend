@@ -20,8 +20,8 @@ function sign(payload: string): string {
 
 /**
  * Mints a short-lived, signed token in a Server Component and hands it to
- * a client form. The `/api/telegram` route only accepts requests that
- * carry a token it can verify with the same (server-only) secret, which
+ * a client form. `/api/telegram` and `/api/orders` only accept requests that
+ * carry a token they can verify with the same (server-only) secret, which
  * means a request must originate from a page we actually rendered.
  */
 export function createFormToken(): string {

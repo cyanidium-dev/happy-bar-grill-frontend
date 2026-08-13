@@ -115,6 +115,7 @@ export default async function DishCard({
           <QuickAddButton
             line={{
               id: dish.slug,
+              categorySlug: dish.categorySlug,
               name: dish.name,
               price: dish.price,
               image: dish.image,

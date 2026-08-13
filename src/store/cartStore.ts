@@ -7,7 +7,6 @@ import type {
   LastOrder,
   OrderCustomer,
 } from "@/types/cart";
-import { generateOrderNumber } from "@/utils/orderNumber";
 
 interface CartState {
   items: CartItem[];
@@ -19,10 +18,13 @@ interface CartState {
   removeItem: (id: string) => void;
   clear: () => void;
   /**
-   * Snapshots the cart into `lastOrder`, empties the cart, returns the order.
-   * Pass `orderNumber` when it was already generated (e.g. for Telegram notify).
+   * Snapshots a server-verified order into `lastOrder`, empties the cart,
+   * and returns the order. Totals/lines must come from `/api/orders`.
    */
-  placeOrder: (customer: OrderCustomer, orderNumber?: string) => LastOrder;
+  placeOrder: (
+    customer: OrderCustomer,
+    verified: { orderNumber: string; items: CartItem[]; total: number },
+  ) => LastOrder;
   /** Merges every line from `lastOrder` into the live cart (quantities add up). */
   repeatLastOrder: () => void;
 }
@@ -44,7 +46,9 @@ export const useCartStore = create<CartState>()(
           if (index !== -1) {
             return {
               items: state.items.map((it, i) =>
-                i === index ? { ...it, quantity: it.quantity + quantity } : it,
+                i === index
+                  ? { ...it, ...line, quantity: it.quantity + quantity }
+                  : it,
               ),
             };
           }
@@ -74,16 +78,11 @@ export const useCartStore = create<CartState>()(
 
       clear: () => set({ items: [] }),
 
-      placeOrder: (customer, orderNumber) => {
-        const { items } = get();
-        const total = items.reduce(
-          (sum, it) => sum + it.price * it.quantity,
-          0,
-        );
+      placeOrder: (customer, verified) => {
         const order: LastOrder = {
-          orderNumber: orderNumber ?? generateOrderNumber(),
-          items,
-          total,
+          orderNumber: verified.orderNumber,
+          items: verified.items,
+          total: verified.total,
           customer,
           createdAt: new Date().toISOString(),
         };

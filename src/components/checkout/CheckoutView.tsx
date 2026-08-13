@@ -11,15 +11,14 @@ import SwiperWrapper from "@/components/shared/swiper/SwiperWrapper";
 import PhoneField from "./PhoneField";
 import TimeSlotSelect from "./TimeSlotSelect";
 import { ADDRESS } from "@/constants/contacts";
-import { sendTelegramMessage } from "@/lib/telegram/client";
-import { formatOrderTelegramMessage } from "@/lib/telegram/formatOrder";
+import type { Locale } from "@/i18n/routing";
+import { OrderRequestError, submitOrder } from "@/lib/telegram/client";
 import {
   selectCartTotal,
   useCartHydrated,
   useCartStore,
 } from "@/store/cartStore";
-import type { DeliveryType, OrderTimeMode } from "@/types/cart";
-import { generateOrderNumber } from "@/utils/orderNumber";
+import type { DeliveryType, OrderTimeMode, PaymentMethod } from "@/types/cart";
 import {
   getAvailableTimeSlots,
   isAvailableTimeSlot,
@@ -34,9 +33,11 @@ export type UpsellCard = { slug: string; node: ReactNode };
 export default function CheckoutView({
   upsellCards,
   formToken,
+  locale,
 }: {
   upsellCards: UpsellCard[];
   formToken: string;
+  locale: Locale;
 }) {
   const t = useTranslations("Checkout");
   const tp = useTranslations("Product");
@@ -48,7 +49,10 @@ export default function CheckoutView({
   const total = useCartStore(selectCartTotal);
   const placeOrder = useCartStore((s) => s.placeOrder);
 
-  const payments = [t("paymentCash"), t("paymentCard")];
+  const payments: { value: PaymentMethod; label: string }[] = [
+    { value: "cash", label: t("paymentCash") },
+    { value: "card", label: t("paymentCard") },
+  ];
 
   const [values, setValues] = useState({
     name: "",
@@ -57,11 +61,13 @@ export default function CheckoutView({
     address: "",
     timeMode: "asap" as OrderTimeMode,
     scheduledTime: "",
-    payment: payments[0],
+    payment: "cash" as PaymentMethod,
     comment: "",
   });
   const [errors, setErrors] = useState<Partial<Record<Fields, string>>>({});
-  const [submitError, setSubmitError] = useState(false);
+  const [submitError, setSubmitError] = useState<
+    "submit" | "unavailable" | null
+  >(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const set = <K extends keyof typeof values>(
@@ -133,7 +139,7 @@ export default function CheckoutView({
     event.preventDefault();
     if (items.length === 0 || !validate() || isSubmitting) return;
 
-    setSubmitError(false);
+    setSubmitError(null);
     setIsSubmitting(true);
 
     const customer = {
@@ -151,22 +157,22 @@ export default function CheckoutView({
       payment: values.payment,
       comment: values.comment.trim() || undefined,
     };
-    const orderNumber = generateOrderNumber();
 
     try {
-      await sendTelegramMessage(
-        formatOrderTelegramMessage({
-          orderNumber,
-          customer,
-          items,
-          total,
-        }),
+      const verified = await submitOrder(
         formToken,
+        locale,
+        customer,
+        items.map(({ id, quantity }) => ({ id, quantity })),
       );
-      placeOrder(customer, orderNumber);
+      placeOrder(customer, verified);
       router.push("/confirmation");
-    } catch {
-      setSubmitError(true);
+    } catch (error) {
+      setSubmitError(
+        error instanceof OrderRequestError && error.code === "unavailable"
+          ? "unavailable"
+          : "submit",
+      );
       setIsSubmitting(false);
     }
   };
@@ -358,19 +364,19 @@ export default function CheckoutView({
                 {t("paymentTitle")}
               </h2>
               <div className="flex flex-col gap-3">
-                {payments.map((option) => {
-                  const active = values.payment === option;
+                {payments.map(({ value, label }) => {
+                  const active = values.payment === value;
                   return (
-                    <label key={option} className={radioClass(active)}>
+                    <label key={value} className={radioClass(active)}>
                       <input
                         type="radio"
                         name="payment"
-                        value={option}
+                        value={value}
                         checked={active}
-                        onChange={() => set("payment", option)}
+                        onChange={() => set("payment", value)}
                         className="size-4 accent-navy"
                       />
-                      {option}
+                      {label}
                     </label>
                   );
                 })}
@@ -389,6 +395,7 @@ export default function CheckoutView({
                   value={values.comment}
                   onChange={(e) => set("comment", e.target.value)}
                   placeholder={t("commentPlaceholder")}
+                  maxLength={500}
                   className="w-full resize-none rounded-sm border border-grey-dark bg-white px-6 py-3 text-14reg text-graphite placeholder-grey outline-none transition duration-300 ease-out focus:border-navy md:text-16reg"
                 />
               </div>
@@ -408,7 +415,7 @@ export default function CheckoutView({
 
               {submitError && (
                 <p className="mt-4 text-14reg text-red" role="alert">
-                  {t("errors.submit")}
+                  {t(`errors.${submitError}`)}
                 </p>
               )}
 

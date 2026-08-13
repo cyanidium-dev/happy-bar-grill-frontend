@@ -73,6 +73,7 @@ export default async function DishDetails({ dish }: { dish: Dish }) {
           <DishQuantityAdd
             line={{
               id: dish.slug,
+              categorySlug: dish.categorySlug,
               name: dish.name,
               price: dish.price,
               image: dish.image,

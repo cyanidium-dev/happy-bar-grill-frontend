@@ -3,11 +3,23 @@
  * the copy doc) — replace with real data, or move to the CMS, before launch.
  */
 
+import type { Locale } from "@/i18n/routing";
+
 export const PHONE = "+380 63 300 00 00";
 /** `tel:` target — digits only. */
 export const PHONE_HREF = "+380633000000";
 
-export const ADDRESS = "м. Миколаїв";
+export const ADDRESS_BY_LOCALE: Record<Locale, string> = {
+  uk: "м. Миколаїв",
+  ru: "г. Николаев",
+};
+
+/** Ukrainian default — Telegram and locale-agnostic uses. */
+export const ADDRESS = ADDRESS_BY_LOCALE.uk;
+
+export function venueAddress(locale: Locale): string {
+  return ADDRESS_BY_LOCALE[locale];
+}
 
 export const EMAIL = "info@vtiha.ua";
 

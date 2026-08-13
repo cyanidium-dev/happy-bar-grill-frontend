@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import Container from "@/components/shared/container/Container";
 import Logo from "@/components/shared/logo/Logo";
@@ -18,7 +18,6 @@ import {
   type FooterVariant,
 } from "@/config/footer";
 import {
-  ADDRESS,
   DEVELOPER_URL,
   EMAIL,
   INSTAGRAM_URL,
@@ -26,7 +25,9 @@ import {
   PHONE_HREF,
   TELEGRAM_URL,
   TIKTOK_URL,
+  venueAddress,
 } from "@/constants/contacts";
+import type { Locale } from "@/i18n/routing";
 import { cn } from "@/utils/cn";
 
 const socials = [
@@ -71,6 +72,7 @@ export default function Footer({ className }: { className?: string }) {
 
   const t = useTranslations("Nav");
   const tf = useTranslations("Footer");
+  const locale = useLocale() as Locale;
   const year = new Date().getFullYear();
 
   return (
@@ -135,7 +137,7 @@ export default function Footer({ className }: { className?: string }) {
           </div>
 
           <div className="flex flex-col gap-10 xs:flex-row xs:gap-20 md:contents">
-            <nav aria-label="Footer">
+            <nav aria-label={tf("nav")}>
               <ul className="flex flex-col gap-3 text-16med">
                 {navLinks.map(({ href, key }) => (
                   <li key={key}>
@@ -179,7 +181,7 @@ export default function Footer({ className }: { className?: string }) {
                 </a>
               </li>
               <li className="max-w-xs">
-                {tf("address")}: {ADDRESS}
+                {tf("address")}: {venueAddress(locale)}
               </li>
             </ul>
           </div>
@@ -192,7 +194,7 @@ export default function Footer({ className }: { className?: string }) {
           )}
         >
           <nav
-            aria-label="Правова інформація"
+            aria-label={tf("legal")}
             className="flex flex-col gap-x-6 gap-y-2"
           >
             <Link

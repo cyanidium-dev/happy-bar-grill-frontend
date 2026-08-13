@@ -10,7 +10,7 @@ import CartItemRow from "@/components/cart/CartItemRow";
 import SwiperWrapper from "@/components/shared/swiper/SwiperWrapper";
 import PhoneField from "./PhoneField";
 import TimeSlotSelect from "./TimeSlotSelect";
-import { ADDRESS, MIN_ORDER_AMOUNT } from "@/constants/contacts";
+import { MIN_ORDER_AMOUNT, venueAddress } from "@/constants/contacts";
 import type { Locale } from "@/i18n/routing";
 import { OrderRequestError, submitOrder } from "@/lib/telegram/client";
 import {
@@ -312,7 +312,7 @@ export default function CheckoutView({
                 </div>
               ) : (
                 <p className="mt-4 text-14reg text-grey-dark">
-                  {t("pickupHint")}: {ADDRESS}
+                  {t("pickupHint")}: {venueAddress(locale)}
                 </p>
               )}
 

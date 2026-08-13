@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import AnimatedWrapper from "@/components/shared/animatedWrappers/AnimatedWrapper";
 import Button from "@/components/shared/buttons/Button";
 import Section from "@/components/shared/Section";
@@ -6,13 +6,14 @@ import SectionTitle from "@/components/shared/titles/SectionTitle";
 import Image from "next/image";
 import { cn } from "@/utils/cn";
 import {
-  ADDRESS,
   DELIVERY_TIME,
   MAP_QUERY,
   PHONE,
   PHONE_HREF,
   SCHEDULE,
+  venueAddress,
 } from "@/constants/contacts";
+import type { Locale } from "@/i18n/routing";
 
 /**
  * Block 6 — delivery, contacts and map. All the essentials on the home page,
@@ -20,6 +21,7 @@ import {
  */
 export default async function DeliveryInfo() {
   const t = await getTranslations("HomePage.delivery");
+  const locale = (await getLocale()) as Locale;
 
   const rows: {
     label: string;
@@ -30,7 +32,7 @@ export default async function DeliveryInfo() {
     { label: t("deliveryTime"), value: DELIVERY_TIME },
     { label: t("schedule"), value: SCHEDULE },
     { label: t("phone"), value: PHONE, href: `tel:${PHONE_HREF}`, wide: true },
-    { label: t("address"), value: ADDRESS, wide: true },
+    { label: t("address"), value: venueAddress(locale), wide: true },
   ];
 
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(

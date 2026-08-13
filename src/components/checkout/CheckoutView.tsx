@@ -116,10 +116,7 @@ export default function CheckoutView({
     ) {
       next.address = t("errors.address");
     }
-    if (
-      values.deliveryType === "pickup" &&
-      values.timeMode === "scheduled"
-    ) {
+    if (values.deliveryType === "pickup" && values.timeMode === "scheduled") {
       if (!values.scheduledTime) {
         next.scheduled = t("errors.scheduled");
       } else if (!isAvailableTimeSlot("pickup", values.scheduledTime)) {
@@ -142,14 +139,11 @@ export default function CheckoutView({
       phone: `+380${values.phone}`,
       deliveryType: values.deliveryType,
       address:
-        values.deliveryType === "delivery"
-          ? values.address.trim()
-          : undefined,
+        values.deliveryType === "delivery" ? values.address.trim() : undefined,
       timeMode:
         values.deliveryType === "pickup" ? values.timeMode : ("asap" as const),
       scheduledAt:
-        values.deliveryType === "pickup" &&
-        values.timeMode === "scheduled"
+        values.deliveryType === "pickup" && values.timeMode === "scheduled"
           ? values.scheduledTime
           : undefined,
       payment: values.payment,
@@ -227,7 +221,7 @@ export default function CheckoutView({
           <div className="order-2 flex min-w-0 flex-1 flex-col gap-8 lg:order-1">
             {visibleUpsell.length > 0 && (
               <section className="relative">
-                <h2 className="mb-6 pr-24 font-findsans text-24bold uppercase text-navy sm:pr-28">
+                <h2 className="max-w-[360px] mb-8 font-findsans text-24bold uppercase text-navy">
                   {t("upsellTitle")}
                 </h2>
                 <SwiperWrapper
@@ -239,7 +233,7 @@ export default function CheckoutView({
                     1024: { slidesPerView: 1, spaceBetween: 24 },
                     1280: { slidesPerView: 2, spaceBetween: 24 },
                   }}
-                  buttonsClassName="absolute right-0 top-0"
+                  buttonsClassName="absolute right-0 top-11 sm:top-9"
                   prevLabel={tSlider("prev")}
                   nextLabel={tSlider("next")}
                   slides={visibleUpsell.map((card) => (

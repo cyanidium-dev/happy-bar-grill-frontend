@@ -11,6 +11,19 @@ export const SITE_ALLOW_INDEXING = false;
 /** Public path of the default share image (`public/opengraph-image.jpg`). */
 export const DEFAULT_SOCIAL_IMAGE_PATH = "/opengraph-image.jpg";
 
+/**
+ * Absolute URL of the default OG image.
+ * In `next dev`, points at localhost so the file is actually fetchable
+ * (metadataBase is the production origin and would 404 until deploy).
+ */
+export function defaultSocialImageUrl(): string {
+  const origin =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : SITE_URL.replace(/\/$/, "");
+  return `${origin}${DEFAULT_SOCIAL_IMAGE_PATH}`;
+}
+
 export const SITE_NAME = "Vtiha";
 
 export const OG_LOCALE: Record<"uk" | "ru", string> = {

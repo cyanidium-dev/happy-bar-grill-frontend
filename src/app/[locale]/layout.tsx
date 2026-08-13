@@ -8,7 +8,7 @@ import { routing, type Locale } from "@/i18n/routing";
 import Header from "@/components/shared/header/Header";
 import Footer from "@/components/shared/footer/Footer";
 import {
-  DEFAULT_SOCIAL_IMAGE_PATH,
+  defaultSocialImageUrl,
   OG_LOCALE,
   SITE_ALLOW_INDEXING,
   SITE_URL,
@@ -87,7 +87,7 @@ export async function generateMetadata({
       locale: OG_LOCALE[locale as Locale],
       images: [
         {
-          url: DEFAULT_SOCIAL_IMAGE_PATH,
+          url: defaultSocialImageUrl(),
           width: 1200,
           height: 630,
           alt: t("site.name"),
@@ -96,7 +96,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      images: [DEFAULT_SOCIAL_IMAGE_PATH],
+      images: [defaultSocialImageUrl()],
     },
   };
 }

@@ -50,6 +50,50 @@ function sanitizeCartItems(items: CartItem[]): CartItem[] {
   });
 }
 
+function sanitizeLastOrder(raw: unknown): LastOrder | null {
+  if (!raw || typeof raw !== "object") return null;
+  const order = raw as Partial<LastOrder>;
+  if (typeof order.orderNumber !== "string" || !order.orderNumber) return null;
+  return {
+    ...order,
+    orderNumber: order.orderNumber,
+    items: sanitizeCartItems(order.items ?? []),
+    total:
+      typeof order.total === "number" && Number.isFinite(order.total)
+        ? order.total
+        : 0,
+    customer: order.customer as LastOrder["customer"],
+    createdAt: typeof order.createdAt === "string" ? order.createdAt : "",
+  };
+}
+
+type PersistedCart = Pick<CartState, "items" | "lastOrder">;
+
+function toPersistedCart(raw: unknown): PersistedCart {
+  const stored =
+    raw && typeof raw === "object" ? (raw as Partial<PersistedCart>) : {};
+  return {
+    items: sanitizeCartItems(stored.items ?? []),
+    lastOrder: sanitizeLastOrder(stored.lastOrder),
+  };
+}
+
+/**
+ * Bump this when `PersistedCart` changes, and add a `fromVersion < N` step in
+ * `migrateCart`. Stored snapshots without `version` are treated as `0`.
+ */
+export const CART_PERSIST_VERSION = 1;
+
+function migrateCart(
+  persistedState: unknown,
+  fromVersion: number,
+): PersistedCart {
+  // v0 snapshots (no version / zustand default 0) are normalized here.
+  // When bumping CART_PERSIST_VERSION, add `if (fromVersion < N) { ... }`.
+  void fromVersion;
+  return toPersistedCart(persistedState);
+}
+
 /**
  * Catalog snapshot written into the cart. Always taken from the payload
  * (menu card / dish page), so a second add picks up CMS name/price/photo
@@ -187,22 +231,17 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: "vtiha-cart",
+      version: CART_PERSIST_VERSION,
+      migrate: migrateCart,
       partialize: (state) => ({
         items: state.items,
         lastOrder: state.lastOrder,
       }),
       merge: (persisted, current) => {
-        const stored = persisted as Partial<CartState> | undefined;
+        const stored = toPersistedCart(persisted);
         return {
           ...current,
           ...stored,
-          items: sanitizeCartItems(stored?.items ?? current.items),
-          lastOrder: stored?.lastOrder
-            ? {
-                ...stored.lastOrder,
-                items: sanitizeCartItems(stored.lastOrder.items),
-              }
-            : current.lastOrder,
           isLocked: false,
         };
       },

@@ -10,8 +10,8 @@ import {
   MAP_QUERY,
   PHONE,
   PHONE_HREF,
-  SCHEDULE,
   venueAddress,
+  venueSchedule,
 } from "@/constants/contacts";
 import type { Locale } from "@/i18n/routing";
 
@@ -30,7 +30,7 @@ export default async function DeliveryInfo() {
     wide?: boolean;
   }[] = [
     { label: t("deliveryTime"), value: DELIVERY_TIME },
-    { label: t("schedule"), value: SCHEDULE },
+    { label: t("schedule"), value: venueSchedule(locale) },
     { label: t("phone"), value: PHONE, href: `tel:${PHONE_HREF}`, wide: true },
     { label: t("address"), value: venueAddress(locale), wide: true },
   ];

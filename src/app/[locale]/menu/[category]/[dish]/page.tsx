@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { Link } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import Container from "@/components/shared/container/Container";
 import Section from "@/components/shared/Section";
@@ -18,12 +18,14 @@ import {
   getAllDishes,
   getCategoryBySlug,
   getDishBySlug,
+  getDishPathBySlug,
   getSimilarDishes,
   getUpsellDishes,
 } from "@/data/menu";
-import { buildMetadataFromSeo } from "@/lib/seo/pageSeo";
+import { buildMetadataFromSeo, fallbackSeoDescription } from "@/lib/seo/pageSeo";
 import { SchemaJsonFromSeo } from "@/components/seo/SchemaJsonFromSeo";
 import { ALLERGENS, type GalleryImage, type Dish } from "@/types/content";
+import type { Locale } from "@/i18n/routing";
 import type { PageProps } from "@/types/page";
 
 type DishProps = PageProps<{ category: string; dish: string }>;
@@ -32,6 +34,29 @@ type DishProps = PageProps<{ category: string; dish: string }>;
 function galleryImages(dish: Dish): GalleryImage[] {
   const extra = (dish.gallery ?? []).filter((img) => img.url !== dish.image);
   return [{ url: dish.image, alt: dish.name }, ...extra];
+}
+
+/** Load the dish, or send wrong-category URLs to the canonical permalink. */
+async function requireDish(category: string, dish: string, locale: Locale) {
+  const [categoryDoc, dishDoc] = await Promise.all([
+    getCategoryBySlug(category, locale),
+    getDishBySlug(category, dish, locale),
+  ]);
+  if (categoryDoc && dishDoc) return { categoryDoc, dishDoc };
+
+  const canonical = await getDishPathBySlug(dish, locale);
+  if (
+    canonical?.categorySlug &&
+    canonical.slug &&
+    canonical.categorySlug !== category
+  ) {
+    redirect({
+      href: `/menu/${canonical.categorySlug}/${canonical.slug}`,
+      locale,
+    });
+  }
+
+  notFound();
 }
 
 // Pre-render every dish (unknown slugs still 404 via notFound below).
@@ -49,16 +74,18 @@ export async function generateMetadata({
   const { locale, category, dish } = await params;
   setRequestLocale(locale);
 
-  const found = await getDishBySlug(category, dish, locale);
-  if (!found) return {};
+  const found = await requireDish(category, dish, locale);
 
   return buildMetadataFromSeo({
-    seo: found.seo,
+    seo: found.dishDoc.seo,
     locale,
     path: `/menu/${category}/${dish}`,
-    defaultTitle: found.name,
-    defaultDescription: found.description || "",
-    fallbackImageUrl: found.image,
+    defaultTitle: found.dishDoc.name,
+    defaultDescription: fallbackSeoDescription(
+      found.dishDoc.name,
+      found.dishDoc.description,
+    ),
+    fallbackImageUrl: found.dishDoc.image,
   });
 }
 
@@ -66,14 +93,11 @@ export default async function DishPage({ params }: DishProps) {
   const { locale, category, dish } = await params;
   setRequestLocale(locale);
 
-  const [t, tMeta, categoryDoc, dishDoc] = await Promise.all([
+  const [t, tMeta, { categoryDoc, dishDoc }] = await Promise.all([
     getTranslations("DishPage"),
     getTranslations("Metadata"),
-    getCategoryBySlug(category, locale),
-    getDishBySlug(category, dish, locale),
+    requireDish(category, dish, locale),
   ]);
-
-  if (!categoryDoc || !dishDoc) notFound();
 
   const [similar, upsell] = await Promise.all([
     getSimilarDishes(category, dish, locale),

@@ -11,6 +11,7 @@ import type {
 } from "@/types/cart";
 import { isAvailableTimeSlot } from "@/utils/orderTimeSlots";
 import { cartLineId, parseCartLineId } from "@/utils/cartLine";
+import { isUaPhoneE164 } from "@/utils/phone";
 
 export class OrderError extends Error {
   constructor(public readonly code: "invalid" | "unavailable") {
@@ -26,7 +27,6 @@ const MAX_NAME = 80;
 const MAX_ADDRESS = 200;
 const MAX_COMMENT = 500;
 const MAX_ID = 160;
-const PHONE_RE = /^\+380\d{9}$/;
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/i;
 
 type OrderDish = {
@@ -143,7 +143,7 @@ function parseCustomer(raw: unknown): OrderCustomer {
 
   const name = parseBoundedString(data.name, 2, MAX_NAME);
   const phone = typeof data.phone === "string" ? data.phone.trim() : "";
-  if (!name || !PHONE_RE.test(phone)) throw new OrderError("invalid");
+  if (!name || !isUaPhoneE164(phone)) throw new OrderError("invalid");
 
   const deliveryType = data.deliveryType;
   if (deliveryType !== "delivery" && deliveryType !== "pickup") {

@@ -19,6 +19,7 @@ import {
   useCartStore,
 } from "@/store/cartStore";
 import type { DeliveryType, OrderTimeMode, PaymentMethod } from "@/types/cart";
+import { isUaSubscriberDigits } from "@/utils/phone";
 import {
   getAvailableTimeSlots,
   isAvailableTimeSlot,
@@ -119,7 +120,7 @@ export default function CheckoutView({
   const validate = (): boolean => {
     const next: Partial<Record<Fields, string>> = {};
     if (values.name.trim().length < 2) next.name = t("errors.name");
-    if (values.phone.length < 9) next.phone = t("errors.phone");
+    if (!isUaSubscriberDigits(values.phone)) next.phone = t("errors.phone");
     if (
       values.deliveryType === "delivery" &&
       values.address.trim().length < 4

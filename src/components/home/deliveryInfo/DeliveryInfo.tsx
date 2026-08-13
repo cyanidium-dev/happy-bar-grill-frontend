@@ -50,11 +50,12 @@ export default async function DeliveryInfo() {
         <Image
           src="/images/home/delivery/decor.webp"
           alt={t("alts.decor")}
-          fill
-          className="object-cover"
-        />
-      </div>
-      <div className="flex flex-col gap-8 md:mt-2 lg:flex-row lg:items-stretch lg:gap-12">
+            fill
+            sizes="103px"
+            className="object-cover"
+          />
+        </div>
+        <div className="flex flex-col gap-8 md:mt-2 lg:flex-row lg:items-stretch lg:gap-12">
         <div className="flex flex-col gap-6 lg:flex-1">
           <AnimatedWrapper className="flex flex-col gap-3">
             <SectionTitle>{t("title")}</SectionTitle>
@@ -93,6 +94,7 @@ export default async function DeliveryInfo() {
                   src="/images/home/delivery/tomato.webp"
                   alt={t("alts.tomato")}
                   fill
+                  sizes="273px"
                   className="object-cover"
                 />
               </div>

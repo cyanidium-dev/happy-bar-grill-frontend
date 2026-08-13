@@ -1,3 +1,5 @@
+import type { PageSeo } from "@/types/seo";
+
 /**
  * Content types shaped to match Sanity `menuDish` / `menuCategory` projections.
  * Localized CMS fields (`name`, `description`) arrive already resolved to the
@@ -80,6 +82,7 @@ export type Dish = {
    * `DISH_BY_SLUG_QUERY` projects this — catalog/card queries omit it.
    */
   ingredients?: string;
+  seo?: PageSeo | null;
 };
 
 export type Category = {
@@ -89,6 +92,8 @@ export type Category = {
   slug: string;
   /** Image URL from Sanity CDN. */
   image: string;
+  description?: string | null;
+  seo?: PageSeo | null;
 };
 
 export type Review = {

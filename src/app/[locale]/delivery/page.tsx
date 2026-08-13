@@ -5,6 +5,7 @@ import DeliveryHero from "@/components/delivery/DeliveryHero";
 import DeliverySteps from "@/components/delivery/DeliverySteps";
 import PaymentMethods from "@/components/delivery/PaymentMethods";
 import DeliveryConditions from "@/components/delivery/DeliveryConditions";
+import { SitePageSeo } from "@/components/seo/SitePageSeo";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
 
@@ -28,6 +29,7 @@ export default async function DeliveryPage({ params }: PageProps) {
       <DeliverySteps />
       <DeliveryConditions />
       <PaymentMethods />
+      <SitePageSeo pageId="seoDeliveryPage" />
     </>
   );
 }

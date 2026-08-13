@@ -40,6 +40,7 @@ export default async function UpsellDishes({ dishes }: { dishes: Dish[] }) {
           src="/images/home/popular/grill-plate.webp"
           alt={t("alts.grillPlate")}
           fill
+          sizes="(min-width: 1024px) 412px, 318px"
           className="object-cover"
         />
       </AnimatedWrapper>
@@ -52,6 +53,7 @@ export default async function UpsellDishes({ dishes }: { dishes: Dish[] }) {
           src="/images/home/popular/sushi-chopsticks.webp"
           alt={t("alts.sushiChopsticks")}
           fill
+          sizes="317px"
           className="object-cover"
         />
         <div className="absolute top-[95px] right-[-140px] w-[204px] h-[160px] rounded-full bg-beige blur-[6px]" />
@@ -67,6 +69,7 @@ export default async function UpsellDishes({ dishes }: { dishes: Dish[] }) {
                 src="/images/home/popular/decor.webp"
                 alt={t("alts.decor")}
                 fill
+                sizes="(min-width: 1024px) 85px, 55px"
                 className="object-cover"
               />
             </div>

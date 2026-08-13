@@ -25,6 +25,7 @@ export default async function AboutMenuTeaser() {
             src="/images/home/categories/fork.webp"
             alt={t("alts.fork")}
             fill
+            sizes="275px"
             className="object-cover"
           />
           <div className="absolute left-[-170px] w-[204px] h-[140px] rounded-full bg-beige blur-[10px]" />
@@ -46,6 +47,7 @@ export default async function AboutMenuTeaser() {
             src="/images/home/categories/bg-image.webp"
             alt={t("alts.bgImage")}
             fill
+            sizes="(max-width: 640px) 515px, 715px"
             className="object-cover"
           />
         </div>

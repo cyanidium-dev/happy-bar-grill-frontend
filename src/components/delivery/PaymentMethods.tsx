@@ -62,24 +62,26 @@ export default async function PaymentMethods() {
         <Image
           src="/images/home/seo-text/onion-small.webp"
           alt={t("alts.onionSmall")}
-          fill
-          className="object-cover"
-        />
-      </div>
+            fill
+            sizes="110px"
+            className="object-cover"
+          />
+        </div>
 
-      <div
-        aria-hidden
-        className="pointer-events-none absolute z-1 hidden h-[229px] w-[213px] md:left-140 md:top-18 md:block lg:left-180 lg:top-24 xl:left-220 xl:top-30"
+        <div
+          aria-hidden
+          className="pointer-events-none absolute z-1 hidden h-[229px] w-[213px] md:left-140 md:top-18 md:block lg:left-180 lg:top-24 xl:left-220 xl:top-30"
       >
         <Image
           src="/images/home/seo-text/onion-large.webp"
           alt={t("alts.onionLarge")}
-          fill
-          className="object-cover"
-        />
-      </div>
+            fill
+            sizes="213px"
+            className="object-cover"
+          />
+        </div>
 
-      <div className="relative z-10 flex flex-col gap-8">
+        <div className="relative z-10 flex flex-col gap-8">
         <AnimatedWrapper className="flex flex-col gap-3">
           <SectionTitle variant="white">{t("title")}</SectionTitle>
           <p className="max-w-[340px] text-16reg text-white/80">{t("note")}</p>

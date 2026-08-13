@@ -10,6 +10,7 @@ import type {
   PaymentMethod,
 } from "@/types/cart";
 import { isAvailableTimeSlot } from "@/utils/orderTimeSlots";
+import { cartLineId, parseCartLineId } from "@/utils/cartLine";
 
 export class OrderError extends Error {
   constructor(public readonly code: "invalid" | "unavailable") {
@@ -24,6 +25,7 @@ const MAX_TOTAL_QUANTITY = 100;
 const MAX_NAME = 80;
 const MAX_ADDRESS = 200;
 const MAX_COMMENT = 500;
+const MAX_ID = 160;
 const PHONE_RE = /^\+380\d{9}$/;
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/i;
 
@@ -61,22 +63,40 @@ function parseLocale(value: unknown): Locale {
   return routing.defaultLocale;
 }
 
-function parseLines(raw: unknown): { id: string; quantity: number }[] {
+function parseLines(
+  raw: unknown,
+): {
+  id: string;
+  categorySlug: string | null;
+  slug: string;
+  quantity: number;
+}[] {
   if (!Array.isArray(raw) || raw.length === 0 || raw.length > MAX_LINES) {
     throw new OrderError("invalid");
   }
 
-  const merged = new Map<string, number>();
+  const merged = new Map<
+    string,
+    { categorySlug: string | null; slug: string; quantity: number }
+  >();
   const order: string[] = [];
 
   for (const entry of raw) {
     const item = asRecord(entry);
     if (!item) throw new OrderError("invalid");
 
-    const id = typeof item.id === "string" ? item.id.trim() : "";
-    if (!id || id.length > 80 || !SLUG_RE.test(id)) {
+    const rawId = typeof item.id === "string" ? item.id.trim() : "";
+    if (!rawId || rawId.length > MAX_ID) throw new OrderError("invalid");
+
+    const parsed = parseCartLineId(rawId);
+    const slug = parsed.slug;
+    const categorySlug = parsed.categorySlug;
+    if (!SLUG_RE.test(slug)) throw new OrderError("invalid");
+    if (categorySlug && !SLUG_RE.test(categorySlug)) {
       throw new OrderError("invalid");
     }
+
+    const key = categorySlug ? cartLineId(categorySlug, slug) : slug;
 
     const quantity = item.quantity;
     if (
@@ -88,16 +108,22 @@ function parseLines(raw: unknown): { id: string; quantity: number }[] {
       throw new OrderError("invalid");
     }
 
-    const next = (merged.get(id) ?? 0) + quantity;
+    const next = (merged.get(key)?.quantity ?? 0) + quantity;
     if (next > MAX_QUANTITY) throw new OrderError("invalid");
-    if (!merged.has(id)) order.push(id);
-    merged.set(id, next);
+    if (!merged.has(key)) order.push(key);
+    merged.set(key, { categorySlug, slug, quantity: next });
   }
 
-  const totalQuantity = [...merged.values()].reduce((sum, n) => sum + n, 0);
+  const totalQuantity = [...merged.values()].reduce(
+    (sum, line) => sum + line.quantity,
+    0,
+  );
   if (totalQuantity > MAX_TOTAL_QUANTITY) throw new OrderError("invalid");
 
-  return order.map((id) => ({ id, quantity: merged.get(id)! }));
+  return order.map((id) => {
+    const line = merged.get(id)!;
+    return { id, ...line };
+  });
 }
 
 function parseBoundedString(
@@ -179,9 +205,12 @@ function parseCustomer(raw: unknown): OrderCustomer {
 }
 
 function toCartItem(dish: OrderDish, quantity: number, name: string): CartItem {
+  const categorySlug = dish.categorySlug || undefined;
+  const id = categorySlug ? cartLineId(categorySlug, dish.slug) : dish.slug;
   return {
-    id: dish.slug,
-    categorySlug: dish.categorySlug ?? "",
+    id,
+    slug: dish.slug,
+    categorySlug,
     name,
     price: dish.price,
     image: dish.image ?? "",
@@ -189,6 +218,20 @@ function toCartItem(dish: OrderDish, quantity: number, name: string): CartItem {
     weight: dish.weight ?? undefined,
     quantity,
   };
+}
+
+function matchDish(
+  dishes: OrderDish[],
+  line: { categorySlug: string | null; slug: string },
+): OrderDish | undefined {
+  if (line.categorySlug) {
+    return dishes.find(
+      (dish) =>
+        dish.slug === line.slug && dish.categorySlug === line.categorySlug,
+    );
+  }
+  const matches = dishes.filter((dish) => dish.slug === line.slug);
+  return matches.length === 1 ? matches[0] : undefined;
 }
 
 /**
@@ -202,7 +245,7 @@ export async function resolveOrder(body: unknown): Promise<ResolvedOrder> {
   const customer = parseCustomer(data.customer);
   const lines = parseLines(data.items);
   const locale = parseLocale(data.locale);
-  const slugs = lines.map((line) => line.id);
+  const slugs = [...new Set(lines.map((line) => line.slug))];
 
   const dishes = await client.fetch<OrderDish[]>(
     DISHES_BY_SLUGS_QUERY,
@@ -210,12 +253,11 @@ export async function resolveOrder(body: unknown): Promise<ResolvedOrder> {
     { next: { revalidate: 0 } },
   );
 
-  const bySlug = new Map(dishes.map((dish) => [dish.slug, dish]));
   const items: CartItem[] = [];
   const telegramItems: CartItem[] = [];
 
   for (const line of lines) {
-    const dish = bySlug.get(line.id);
+    const dish = matchDish(dishes, line);
     if (
       !dish ||
       typeof dish.price !== "number" ||

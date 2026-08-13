@@ -4,8 +4,10 @@
  */
 
 export type CartLine = {
-  /** Stable id — the dish slug (unique per dish). */
+  /** Unique cart key — `categorySlug/dishSlug`. */
   id: string;
+  /** Dish slug (URL segment). */
+  slug: string;
   /** Category slug for `/menu/[category]/[dish]`. Missing on older cart snapshots. */
   categorySlug?: string;
   name: string;

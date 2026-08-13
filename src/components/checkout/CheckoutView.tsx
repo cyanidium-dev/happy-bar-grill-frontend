@@ -23,6 +23,7 @@ import {
   getAvailableTimeSlots,
   isAvailableTimeSlot,
 } from "@/utils/orderTimeSlots";
+import { dishSlugOf } from "@/utils/cartLine";
 import { cn } from "@/utils/cn";
 
 type Fields = "name" | "phone" | "address" | "scheduled";
@@ -190,7 +191,7 @@ export default function CheckoutView({
 
   const isEmpty = items.length === 0;
   const visibleUpsell = upsellCards.filter(
-    (card) => !items.some((it) => it.id === card.slug),
+    (card) => !items.some((it) => dishSlugOf(it) === card.slug),
   );
 
   const isDelivery = values.deliveryType === "delivery";

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Badge from "@/components/shared/badges/Badge";
 import DishQuantityAdd from "./DishQuantityAdd";
 import type { Dish } from "@/types/content";
+import { cartLineFromDish } from "@/utils/cartLine";
 
 /**
  * Right-hand info panel on a dish page: name, description, weight/calories,
@@ -71,15 +72,7 @@ export default async function DishDetails({ dish }: { dish: Dish }) {
 
         <div className="mt-1">
           <DishQuantityAdd
-            line={{
-              id: dish.slug,
-              categorySlug: dish.categorySlug,
-              name: dish.name,
-              price: dish.price,
-              image: dish.image,
-              imageAlt: dish.name,
-              weight: dish.weight,
-            }}
+            line={cartLineFromDish(dish)}
             labels={{
               addToCart: tp("addToCart"),
               decrease: t("quantityDecrease"),

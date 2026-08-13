@@ -8,6 +8,7 @@ import type {
   OrderCustomer,
 } from "@/types/cart";
 import { MAX_CART_QUANTITY, normalizeCartQuantity } from "@/utils/cartQuantity";
+import { cartLineId, dishSlugOf, parseCartLineId } from "@/utils/cartLine";
 
 interface CartState {
   items: CartItem[];
@@ -39,7 +40,13 @@ function sanitizeCartItems(items: CartItem[]): CartItem[] {
   return items.flatMap((item) => {
     const quantity = normalizeCartQuantity(item?.quantity);
     if (!item?.id || quantity === null) return [];
-    return [{ ...item, quantity }];
+
+    const parsed = parseCartLineId(item.id);
+    const slug = item.slug || parsed.slug;
+    const categorySlug = item.categorySlug || parsed.categorySlug || undefined;
+    const id = categorySlug ? cartLineId(categorySlug, slug) : item.id;
+
+    return [{ ...item, id, slug, categorySlug, quantity }];
   });
 }
 
@@ -54,9 +61,12 @@ function fromCatalogLine(
   existing?: CartItem,
 ): CartItem {
   const name = line.name.trim();
+  const slug = line.slug || dishSlugOf(line);
+  const categorySlug = line.categorySlug || existing?.categorySlug;
   return {
-    id: line.id,
-    categorySlug: line.categorySlug || existing?.categorySlug,
+    id: categorySlug ? cartLineId(categorySlug, slug) : line.id,
+    slug,
+    categorySlug,
     name,
     price: line.price,
     image: line.image,
@@ -87,7 +97,13 @@ export const useCartStore = create<CartState>()(
         const qty = normalizeCartQuantity(quantity);
         if (qty === null) return;
         set((state) => {
-          const index = state.items.findIndex((it) => it.id === line.id);
+          const index = state.items.findIndex(
+            (it) =>
+              it.id === line.id ||
+              (Boolean(line.categorySlug) &&
+                it.categorySlug === line.categorySlug &&
+                dishSlugOf(it) === dishSlugOf(line)),
+          );
           if (index !== -1) {
             return {
               items: state.items.map((it, i) => {

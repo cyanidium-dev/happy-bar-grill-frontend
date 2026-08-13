@@ -50,7 +50,7 @@ export default async function MenuCategoryPage({ params }: MenuCategoryProps) {
   const tMenu = await getTranslations("Metadata");
 
   return (
-    <>
+    <main className="flex-1">
       <MenuBanner />
       <BreadCrumbs
         items={[
@@ -60,6 +60,6 @@ export default async function MenuCategoryPage({ params }: MenuCategoryProps) {
       />
       <MenuView activeSlug={category} />
       <SchemaJsonFromSeo seo={found.seo} />
-    </>
+    </main>
   );
 }

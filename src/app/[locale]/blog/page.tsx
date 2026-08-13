@@ -28,7 +28,7 @@ export default async function BlogPage({ params }: PageProps) {
   ]);
 
   return (
-    <>
+    <main className="flex-1">
       <section
         className="relative flex items-end overflow-hidden pt-[200px] pb-40 rounded-b-[24px] lg:rounded-b-[36px]"
         style={{ marginTop: "calc(var(--header-height) * -1)" }}
@@ -63,6 +63,6 @@ export default async function BlogPage({ params }: PageProps) {
         </Container>
       </section>
       <SitePageSeo pageId="blogPage" />
-    </>
+    </main>
   );
 }

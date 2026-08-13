@@ -23,13 +23,13 @@ export default async function DeliveryPage({ params }: PageProps) {
   const t = await getTranslations("Metadata");
 
   return (
-    <>
+    <main className="flex-1">
       <DeliveryHero />
       <BreadCrumbs items={[{ label: t("delivery.title") }]} />
       <DeliverySteps />
       <DeliveryConditions />
       <PaymentMethods />
       <SitePageSeo pageId="seoDeliveryPage" />
-    </>
+    </main>
   );
 }

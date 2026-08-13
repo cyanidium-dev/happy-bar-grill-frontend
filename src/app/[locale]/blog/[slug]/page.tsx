@@ -75,7 +75,7 @@ export default async function BlogArticlePage({ params }: BlogArticleProps) {
   };
 
   return (
-    <>
+    <main className="flex-1">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
@@ -106,6 +106,6 @@ export default async function BlogArticlePage({ params }: BlogArticleProps) {
           <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
         </Container>
       </section>
-    </>
+    </main>
   );
 }

@@ -1,6 +1,6 @@
 import type { PageSeo } from "@/types/seo";
 import { urlForImage } from "@/sanity/lib/image";
-import { DEFAULT_SOCIAL_IMAGE_URL } from "@/lib/seo/constants";
+import { DEFAULT_SOCIAL_IMAGE_PATH } from "@/lib/seo/constants";
 
 /** Resolve OG image URL from Sanity `seoSettings.opengraphImage` (1200×630). */
 export function resolveOpengraphImageUrl(
@@ -15,7 +15,8 @@ export function resolveOpengraphImageUrl(
 }
 
 /**
- * CMS OG image → optional page-specific fallback (hero/product) → site default.
+ * CMS OG image → dish/article photo (if provided) → site default
+ * (`public/opengraph-image.jpg`).
  */
 export function resolveSocialImageUrl(
   seo?: PageSeo | null,
@@ -23,6 +24,6 @@ export function resolveSocialImageUrl(
 ): string {
   const fallback = fallbackImageUrl?.trim() || undefined;
   return (
-    resolveOpengraphImageUrl(seo) ?? fallback ?? DEFAULT_SOCIAL_IMAGE_URL
+    resolveOpengraphImageUrl(seo) ?? fallback ?? DEFAULT_SOCIAL_IMAGE_PATH
   );
 }

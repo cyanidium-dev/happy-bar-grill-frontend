@@ -7,7 +7,12 @@ import { notFound } from "next/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import Header from "@/components/shared/header/Header";
 import Footer from "@/components/shared/footer/Footer";
-import { OG_LOCALE, SITE_ALLOW_INDEXING, SITE_URL } from "@/lib/seo/constants";
+import {
+  DEFAULT_SOCIAL_IMAGE_PATH,
+  OG_LOCALE,
+  SITE_ALLOW_INDEXING,
+  SITE_URL,
+} from "@/lib/seo/constants";
 import "../globals.css";
 
 const montserrat = Montserrat({
@@ -80,9 +85,18 @@ export async function generateMetadata({
       type: "website",
       siteName: t("site.name"),
       locale: OG_LOCALE[locale as Locale],
+      images: [
+        {
+          url: DEFAULT_SOCIAL_IMAGE_PATH,
+          width: 1200,
+          height: 630,
+          alt: t("site.name"),
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
+      images: [DEFAULT_SOCIAL_IMAGE_PATH],
     },
   };
 }

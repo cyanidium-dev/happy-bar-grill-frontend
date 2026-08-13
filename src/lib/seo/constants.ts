@@ -8,8 +8,8 @@ export const SITE_URL =
  */
 export const SITE_ALLOW_INDEXING = false;
 
-/** Default share image — `src/app/opengraph-image.jpg` served by Next.js. */
-export const DEFAULT_SOCIAL_IMAGE_URL = `${SITE_URL.replace(/\/$/, "")}/opengraph-image.jpg`;
+/** Public path of the default share image (`public/opengraph-image.jpg`). */
+export const DEFAULT_SOCIAL_IMAGE_PATH = "/opengraph-image.jpg";
 
 export const SITE_NAME = "Vtiha";
 

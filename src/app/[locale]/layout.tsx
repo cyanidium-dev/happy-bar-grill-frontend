@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import Header from "@/components/shared/header/Header";
 import Footer from "@/components/shared/footer/Footer";
+import { OG_LOCALE, SITE_ALLOW_INDEXING, SITE_URL } from "@/lib/seo/constants";
 import "../globals.css";
 
 const montserrat = Montserrat({
@@ -64,13 +65,25 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
-    metadataBase: new URL("https://happy-bar-grill.vercel.app"),
+    metadataBase: new URL(SITE_URL),
     title: {
       default: t("site.title"),
       // Page titles render as "<page> | Vtiha".
       template: `%s | ${t("site.name")}`,
     },
     description: t("site.description"),
+    // Temporary site-wide block until the permanent domain is live.
+    ...(!SITE_ALLOW_INDEXING
+      ? { robots: { index: false, follow: false } }
+      : {}),
+    openGraph: {
+      type: "website",
+      siteName: t("site.name"),
+      locale: OG_LOCALE[locale as Locale],
+    },
+    twitter: {
+      card: "summary_large_image",
+    },
   };
 }
 

@@ -4,6 +4,30 @@ import { defineQuery } from "next-sanity";
 const localized = (field: string) =>
   /* groq */ `coalesce(${field}[$locale], ${field}.uk, ${field}.ru, ${field})`;
 
+/**
+ * Localized `seoSettings` projection. Text fields resolve to the active locale;
+ * `opengraphImage` keeps the asset ref so the frontend can crop to 1200×630.
+ */
+export const SEO_SETTINGS_PROJECTION = /* groq */ `{
+  "metaTitle": ${localized("metaTitle")},
+  "metaDescription": ${localized("metaDescription")},
+  "keywords": ${localized("keywords")},
+  "opengraphTitle": ${localized("opengraphTitle")},
+  "opengraphDescription": ${localized("opengraphDescription")},
+  "opengraphImage": opengraphImage{
+    ...,
+    "alt": ${localized("alt")}
+  },
+  "schemaJsonUrl": schemaJson.asset->url
+}`;
+
+/** Fetch SEO block from a site singleton by fixed document `_id`. */
+export const SITE_SEO_BY_DOCUMENT_ID = defineQuery(/* groq */ `
+  *[_id == $documentId][0]{
+    seo${SEO_SETTINGS_PROJECTION}
+  }
+`);
+
 const dishFields = /* groq */ `
   "slug": slug.current,
   "categorySlug": category->slug.current,
@@ -28,7 +52,9 @@ export const CATEGORY_BY_SLUG_QUERY = defineQuery(/* groq */ `
   *[_type == "menuCategory" && slug.current == $slug][0] {
     "slug": slug.current,
     "name": ${localized("name")},
-    "image": image.asset->url
+    "description": ${localized("description")},
+    "image": image.asset->url,
+    "seo": seo${SEO_SETTINGS_PROJECTION}
   }
 `);
 
@@ -55,7 +81,8 @@ export const DISH_BY_SLUG_QUERY = defineQuery(/* groq */ `
     "gallery": gallery[]{
       "url": asset->url,
       "alt": ${localized("alt")}
-    }
+    },
+    "seo": seo${SEO_SETTINGS_PROJECTION}
   }
 `);
 
@@ -163,17 +190,37 @@ export const BLOG_POST_BY_SLUG_QUERY = defineQuery(/* groq */ `
       "photoAlt": ${localized("photo.alt")},
       profileUrl
     },
-    "seo": {
-      "metaTitle": ${localized("seo.metaTitle")},
-      "metaDescription": ${localized("seo.metaDescription")},
-      "ogTitle": ${localized("seo.opengraphTitle")},
-      "ogDescription": ${localized("seo.opengraphDescription")},
-      "ogImage": seo.opengraphImage.asset->url
-    }
+    "seo": seo${SEO_SETTINGS_PROJECTION}
   }
 `);
 
 /** Slugs for `generateStaticParams` on the article route. */
 export const BLOG_POST_SLUGS_QUERY = defineQuery(/* groq */ `
   *[_type == "blogPost" && defined(slug.current)].slug.current
+`);
+
+/* ------------------------------- Sitemap -------------------------------- */
+
+export const SITEMAP_CATEGORIES_QUERY = defineQuery(/* groq */ `
+  *[_type == "menuCategory" && defined(slug.current)] | order(order asc) {
+    "slug": slug.current,
+    "updatedAt": _updatedAt
+  }
+`);
+
+export const SITEMAP_DISHES_QUERY = defineQuery(/* groq */ `
+  *[_type == "menuDish" && available != false
+    && defined(slug.current)
+    && defined(category->slug.current)] | order(order asc) {
+    "slug": slug.current,
+    "categorySlug": category->slug.current,
+    "updatedAt": _updatedAt
+  }
+`);
+
+export const SITEMAP_BLOG_POSTS_QUERY = defineQuery(/* groq */ `
+  *[_type == "blogPost" && defined(slug.current)] | order(_updatedAt desc) {
+    "slug": slug.current,
+    "updatedAt": _updatedAt
+  }
 `);

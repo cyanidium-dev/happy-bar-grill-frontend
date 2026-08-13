@@ -21,6 +21,8 @@ import {
   getSimilarDishes,
   getUpsellDishes,
 } from "@/data/menu";
+import { buildMetadataFromSeo } from "@/lib/seo/pageSeo";
+import { SchemaJsonFromSeo } from "@/components/seo/SchemaJsonFromSeo";
 import { ALLERGENS, type GalleryImage, type Dish } from "@/types/content";
 import type { PageProps } from "@/types/page";
 
@@ -50,12 +52,14 @@ export async function generateMetadata({
   const found = await getDishBySlug(category, dish, locale);
   if (!found) return {};
 
-  const images = galleryImages(found).map((img) => img.url);
-  return {
-    title: found.name,
-    description: found.description || undefined,
-    openGraph: { title: found.name, images },
-  };
+  return buildMetadataFromSeo({
+    seo: found.seo,
+    locale,
+    path: `/menu/${category}/${dish}`,
+    defaultTitle: found.name,
+    defaultDescription: found.description || "",
+    fallbackImageUrl: found.image,
+  });
 }
 
 export default async function DishPage({ params }: DishProps) {
@@ -210,6 +214,7 @@ export default async function DishPage({ params }: DishProps) {
 
       <UpsellDishes dishes={upsellDishes} />
       <SimilarDishes dishes={similar} />
+      <SchemaJsonFromSeo seo={dishDoc.seo} />
 
       <Section
         background="white"

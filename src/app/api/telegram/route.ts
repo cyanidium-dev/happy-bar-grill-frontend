@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { verifyFormToken } from "@/lib/telegram/formToken";
 
 const BOT_ID = process.env.TELEGRAM_BOT_ID ?? "";
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
@@ -7,12 +8,50 @@ function stripHtml(input: string): string {
   return input.replace(/<[^>]*>/g, "");
 }
 
+/**
+ * Mirrors the same-origin check Next.js applies to Server Actions: the
+ * `Origin` header (sent by browsers on every same-origin POST, not just
+ * cross-origin ones) must match the host the request was made to. This
+ * rejects requests fired directly at the endpoint from another site or a
+ * bare script that doesn't set an `Origin` header at all.
+ */
+function isSameOriginRequest(request: NextRequest): boolean {
+  const origin = request.headers.get("origin");
+  if (!origin) return false;
+
+  const requestHost =
+    request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  if (!requestHost) return false;
+
+  try {
+    return new URL(origin).host === requestHost;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json();
+    if (!isSameOriginRequest(request)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
-    if (typeof data !== "string" || !data.trim()) {
+    const body = await request.json();
+    const text =
+      typeof body === "object" && body !== null
+        ? (body as Record<string, unknown>).text
+        : undefined;
+    const token =
+      typeof body === "object" && body !== null
+        ? (body as Record<string, unknown>).token
+        : undefined;
+
+    if (typeof text !== "string" || !text.trim()) {
       return NextResponse.json({ error: "Invalid message" }, { status: 400 });
+    }
+
+    if (!verifyFormToken(token)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     if (!BOT_ID || !CHAT_ID) {
@@ -30,7 +69,7 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           chat_id: CHAT_ID,
           parse_mode: "HTML",
-          text: data,
+          text,
         }),
       },
     );
@@ -46,7 +85,7 @@ export async function POST(request: NextRequest) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             chat_id: CHAT_ID,
-            text: stripHtml(data),
+            text: stripHtml(text),
           }),
         },
       );
@@ -55,7 +94,7 @@ export async function POST(request: NextRequest) {
         const fallbackError = await fallback.text();
         console.error("[telegram] fallback failed:", fallbackError);
         return NextResponse.json(
-          { error: "Failed to send message", details: fallbackError },
+          { error: "Failed to send message" },
           { status: 500 },
         );
       }

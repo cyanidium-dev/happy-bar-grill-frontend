@@ -8,6 +8,7 @@ import DishCard from "@/components/shared/cards/DishCard";
 import { FOOTER_WAVE_HEIGHT_CLASS } from "@/config/footer";
 import { getUpsellDishes } from "@/data/menu";
 import { buildPageMetadata } from "@/lib/metadata";
+import { createFormToken } from "@/lib/telegram/formToken";
 import type { PageProps } from "@/types/page";
 
 export async function generateMetadata({
@@ -37,7 +38,10 @@ export default async function CheckoutPage({ params }: PageProps) {
     <>
       <BreadCrumbs items={[{ label: t("checkout.title") }]} />
       <section className="bg-white">
-        <CheckoutView upsellCards={upsellCards} />
+        <CheckoutView
+          upsellCards={upsellCards}
+          formToken={createFormToken()}
+        />
         <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
       </section>
     </>

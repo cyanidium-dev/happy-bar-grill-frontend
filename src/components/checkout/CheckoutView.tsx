@@ -33,8 +33,10 @@ export type UpsellCard = { slug: string; node: ReactNode };
 
 export default function CheckoutView({
   upsellCards,
+  formToken,
 }: {
   upsellCards: UpsellCard[];
+  formToken: string;
 }) {
   const t = useTranslations("Checkout");
   const tp = useTranslations("Product");
@@ -159,6 +161,7 @@ export default function CheckoutView({
           items,
           total,
         }),
+        formToken,
       );
       placeOrder(customer, orderNumber);
       router.push("/confirmation");

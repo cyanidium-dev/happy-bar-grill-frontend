@@ -1,3 +1,4 @@
+import { API_TIMEOUT_MS } from "@/lib/http/timeout";
 import type { CartItem, OrderCustomer, OrderLineRequest } from "@/types/cart";
 
 export class OrderRequestError extends Error {
@@ -17,6 +18,7 @@ export async function sendContactMessage(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, phone, message, token: formToken }),
+    signal: AbortSignal.timeout(API_TIMEOUT_MS),
   });
 
   if (!res.ok) {
@@ -34,6 +36,7 @@ export async function submitOrder(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ token: formToken, locale, customer, items }),
+    signal: AbortSignal.timeout(API_TIMEOUT_MS),
   });
 
   if (!res.ok) {

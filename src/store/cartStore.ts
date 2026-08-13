@@ -12,6 +12,10 @@ interface CartState {
   items: CartItem[];
   /** Persisted snapshot of the most recently placed order (for confirmation). */
   lastOrder: LastOrder | null;
+  /** When true, quantity/add/remove are no-ops (checkout request in flight). */
+  isLocked: boolean;
+  lockCart: () => void;
+  unlockCart: () => void;
   addItem: (line: CartLine, quantity?: number) => void;
   increase: (id: string) => void;
   decrease: (id: string) => void;
@@ -39,8 +43,13 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       items: [],
       lastOrder: null,
+      isLocked: false,
 
-      addItem: (line, quantity = 1) =>
+      lockCart: () => set({ isLocked: true }),
+      unlockCart: () => set({ isLocked: false }),
+
+      addItem: (line, quantity = 1) => {
+        if (get().isLocked) return;
         set((state) => {
           const index = state.items.findIndex((it) => it.id === line.id);
           if (index !== -1) {
@@ -53,16 +62,20 @@ export const useCartStore = create<CartState>()(
             };
           }
           return { items: [...state.items, { ...line, quantity }] };
-        }),
+        });
+      },
 
-      increase: (id) =>
+      increase: (id) => {
+        if (get().isLocked) return;
         set((state) => ({
           items: state.items.map((it) =>
             it.id === id ? { ...it, quantity: it.quantity + 1 } : it,
           ),
-        })),
+        }));
+      },
 
-      decrease: (id) =>
+      decrease: (id) => {
+        if (get().isLocked) return;
         set((state) => ({
           items: state.items.flatMap((it) =>
             it.id === id
@@ -71,12 +84,18 @@ export const useCartStore = create<CartState>()(
                 : []
               : [it],
           ),
-        })),
+        }));
+      },
 
-      removeItem: (id) =>
-        set((state) => ({ items: state.items.filter((it) => it.id !== id) })),
+      removeItem: (id) => {
+        if (get().isLocked) return;
+        set((state) => ({ items: state.items.filter((it) => it.id !== id) }));
+      },
 
-      clear: () => set({ items: [] }),
+      clear: () => {
+        if (get().isLocked) return;
+        set({ items: [] });
+      },
 
       placeOrder: (customer, verified) => {
         const order: LastOrder = {
@@ -86,11 +105,12 @@ export const useCartStore = create<CartState>()(
           customer,
           createdAt: new Date().toISOString(),
         };
-        set({ lastOrder: order, items: [] });
+        set({ lastOrder: order, items: [], isLocked: false });
         return order;
       },
 
       repeatLastOrder: () => {
+        if (get().isLocked) return;
         const { lastOrder, addItem } = get();
         if (!lastOrder) return;
         for (const item of lastOrder.items) {

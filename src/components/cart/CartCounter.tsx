@@ -25,6 +25,7 @@ export default function CartCounter({
 }) {
   const increase = useCartStore((s) => s.increase);
   const decrease = useCartStore((s) => s.decrease);
+  const isLocked = useCartStore((s) => s.isLocked);
 
   return (
     <div
@@ -36,6 +37,7 @@ export default function CartCounter({
       <button
         type="button"
         onClick={() => (onDecrease ? onDecrease() : decrease(id))}
+        disabled={isLocked}
         aria-label={labels.decrease}
         className={btn}
       >
@@ -47,6 +49,7 @@ export default function CartCounter({
       <button
         type="button"
         onClick={() => increase(id)}
+        disabled={isLocked}
         aria-label={labels.increase}
         className={btn}
       >

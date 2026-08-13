@@ -35,6 +35,7 @@ export default function DishQuantityAdd({
 }) {
   const [quantity, setQuantity] = useState(1);
   const addItem = useCartStore((s) => s.addItem);
+  const isLocked = useCartStore((s) => s.isLocked);
 
   return (
     <div className="inline-flex flex-col gap-3 sm:gap-4">
@@ -70,7 +71,9 @@ export default function DishQuantityAdd({
         variant="primary"
         shape="leaf"
         className={cn("flex-1", "sm:flex-none sm:min-w-56")}
+        disabled={isLocked}
         onClick={(event) => {
+          if (isLocked) return;
           flyToCart(event.currentTarget, line.image, () => {
             flushSync(() => addItem(line, quantity));
           });

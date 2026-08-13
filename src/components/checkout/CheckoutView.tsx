@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import Container from "@/components/shared/container/Container";
@@ -69,6 +69,7 @@ export default function CheckoutView({
     "submit" | "unavailable" | null
   >(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const submittingRef = useRef(false);
 
   const set = <K extends keyof typeof values>(
     field: K,
@@ -137,8 +138,16 @@ export default function CheckoutView({
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (items.length === 0 || !validate() || isSubmitting) return;
+    if (submittingRef.current) return;
+    if (!validate()) return;
 
+    const lines = useCartStore
+      .getState()
+      .items.map(({ id, quantity }) => ({ id, quantity }));
+    if (lines.length === 0) return;
+
+    submittingRef.current = true;
+    useCartStore.getState().lockCart();
     setSubmitError(null);
     setIsSubmitting(true);
 
@@ -159,15 +168,12 @@ export default function CheckoutView({
     };
 
     try {
-      const verified = await submitOrder(
-        formToken,
-        locale,
-        customer,
-        items.map(({ id, quantity }) => ({ id, quantity })),
-      );
+      const verified = await submitOrder(formToken, locale, customer, lines);
       placeOrder(customer, verified);
       router.push("/confirmation");
     } catch (error) {
+      useCartStore.getState().unlockCart();
+      submittingRef.current = false;
       setSubmitError(
         error instanceof OrderRequestError && error.code === "unavailable"
           ? "unavailable"
@@ -257,6 +263,7 @@ export default function CheckoutView({
             <form
               onSubmit={onSubmit}
               noValidate
+              aria-busy={isSubmitting || undefined}
               className="rounded-tl-2xl rounded-br-2xl border border-navy/12 bg-white p-6 md:p-8"
             >
               <h2 className="mb-5 text-20semi text-navy">

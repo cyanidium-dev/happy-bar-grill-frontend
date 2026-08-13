@@ -29,6 +29,7 @@ export default function CartItemRow({
   const tc = useTranslations("Cart");
   const removeItem = useCartStore((s) => s.removeItem);
   const decrease = useCartStore((s) => s.decrease);
+  const isLocked = useCartStore((s) => s.isLocked);
   const [phase, setPhase] = useState<ExitPhase>("idle");
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export default function CartItemRow({
   }, [phase, item.id, removeItem]);
 
   const requestRemove = () => {
-    if (phase !== "idle") return;
+    if (phase !== "idle" || isLocked) return;
     // globals.css zeros out transitions under prefers-reduced-motion —
     // skip the staged exit so we don't leave a blank gap for ~500ms.
     if (
@@ -135,7 +136,7 @@ export default function CartItemRow({
             <button
               type="button"
               onClick={requestRemove}
-              disabled={isExiting}
+              disabled={isExiting || isLocked}
               aria-label={tc("remove")}
               className="size-8 shrink-0 cursor-pointer text-grey-dark transition-colors duration-300 hover:text-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy/40 disabled:pointer-events-none"
             >

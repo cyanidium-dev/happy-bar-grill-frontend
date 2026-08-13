@@ -33,6 +33,7 @@ export default function LastOrderModal({
   const hydrated = useCartHydrated();
   const lastOrder = useCartStore((s) => s.lastOrder);
   const repeatLastOrder = useCartStore((s) => s.repeatLastOrder);
+  const isLocked = useCartStore((s) => s.isLocked);
 
   useEffect(() => {
     if (!open) return;
@@ -50,6 +51,7 @@ export default function LastOrderModal({
   if (!hydrated || !lastOrder) return null;
 
   const handleRepeat = () => {
+    if (isLocked) return;
     repeatLastOrder();
     onClose();
     onOpenCart();
@@ -151,6 +153,7 @@ export default function LastOrderModal({
               <button
                 type="button"
                 onClick={handleRepeat}
+                disabled={isLocked}
                 className={buttonStyles({
                   variant: "primary",
                   shape: "leaf",

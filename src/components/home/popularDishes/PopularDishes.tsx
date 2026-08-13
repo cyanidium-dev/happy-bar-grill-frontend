@@ -85,7 +85,10 @@ export default async function PopularDishes() {
             prevLabel={tSlider("prev")}
             nextLabel={tSlider("next")}
             slides={popularDishes.map((dish) => (
-              <DishCard key={dish.slug} dish={dish} />
+              <DishCard
+                key={`${dish.categorySlug}-${dish.slug}`}
+                dish={dish}
+              />
             ))}
           />
         </AnimatedWrapper>

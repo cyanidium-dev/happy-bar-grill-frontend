@@ -93,7 +93,7 @@ export default async function Promotions() {
       <ul className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:gap-6 md:grid-cols-2 xl:grid-cols-3">
         {promotions.map((dish, index) => (
           <AnimatedWrapper
-            key={dish.slug}
+            key={`${dish.categorySlug}-${dish.slug}`}
             as="li"
             animation={{ y: 24, delay: index * 0.08 }}
             className="h-full"

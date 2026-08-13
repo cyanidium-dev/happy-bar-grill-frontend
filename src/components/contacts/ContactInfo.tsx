@@ -7,10 +7,10 @@ import {
   INSTAGRAM_URL,
   PHONE,
   PHONE_HREF,
-  SCHEDULE,
   TELEGRAM_URL,
   TIKTOK_URL,
   venueAddress,
+  venueSchedule,
 } from "@/constants/contacts";
 import type { Locale } from "@/i18n/routing";
 import type { ComponentType } from "react";
@@ -25,11 +25,12 @@ export default async function ContactInfo() {
   const locale = (await getLocale()) as Locale;
 
   const address = venueAddress(locale);
+  const schedule = venueSchedule(locale);
 
   const rows: { label: string; value: string; href?: string }[] = [
     PHONE && { label: t("phone"), value: PHONE, href: `tel:${PHONE_HREF}` },
     EMAIL && { label: t("email"), value: EMAIL, href: `mailto:${EMAIL}` },
-    SCHEDULE && { label: t("schedule"), value: SCHEDULE },
+    schedule && { label: t("schedule"), value: schedule },
     address && { label: t("address"), value: address },
   ].filter(Boolean) as { label: string; value: string; href?: string }[];
 

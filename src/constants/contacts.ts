@@ -45,7 +45,23 @@ export const ORDER_SLOT_INTERVAL_MINUTES = 30;
  */
 export const ORDER_PREP_MINUTES = 60;
 
-export const SCHEDULE = `Щодня ${String(OPENING_HOUR).padStart(2, "0")}:${String(OPENING_MINUTE).padStart(2, "0")}–${String(CLOSING_HOUR).padStart(2, "0")}:${String(CLOSING_MINUTE).padStart(2, "0")}`;
+function formatClock(hour: number, minute: number): string {
+  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+}
+
+const SCHEDULE_HOURS = `${formatClock(OPENING_HOUR, OPENING_MINUTE)}–${formatClock(CLOSING_HOUR, CLOSING_MINUTE)}`;
+
+const SCHEDULE_PREFIX: Record<Locale, string> = {
+  uk: "Щодня",
+  ru: "Ежедневно",
+};
+
+export function venueSchedule(locale: Locale): string {
+  return `${SCHEDULE_PREFIX[locale]} ${SCHEDULE_HOURS}`;
+}
+
+/** Ukrainian default — Telegram and locale-agnostic uses. */
+export const SCHEDULE = venueSchedule("uk");
 
 /** [орієнтовний час] placeholder from the copy doc. */
 export const DELIVERY_TIME = "40–60 хв";

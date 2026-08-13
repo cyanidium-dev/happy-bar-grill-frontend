@@ -44,6 +44,29 @@ function sanitizeCartItems(items: CartItem[]): CartItem[] {
 }
 
 /**
+ * Catalog snapshot written into the cart. Always taken from the payload
+ * (menu card / dish page), so a second add picks up CMS name/price/photo
+ * changes instead of keeping the first-add localStorage values.
+ */
+function fromCatalogLine(
+  line: CartLine,
+  quantity: number,
+  existing?: CartItem,
+): CartItem {
+  const name = line.name.trim();
+  return {
+    id: line.id,
+    categorySlug: line.categorySlug || existing?.categorySlug,
+    name,
+    price: line.price,
+    image: line.image,
+    imageAlt: line.imageAlt?.trim() || name,
+    weight: line.weight,
+    quantity,
+  };
+}
+
+/**
  * Cart store (zustand + localStorage persistence). Holds the live cart and the
  * last placed order. UI reads counts/totals via the selectors below; guard
  * rendered counts with `useCartHydrated` to avoid SSR/client mismatches.
@@ -69,15 +92,17 @@ export const useCartStore = create<CartState>()(
               items: state.items.map((it, i) => {
                 if (i !== index) return it;
                 const current = normalizeCartQuantity(it.quantity) ?? 0;
-                return {
-                  ...it,
-                  ...line,
-                  quantity: Math.min(MAX_CART_QUANTITY, current + qty),
-                };
+                return fromCatalogLine(
+                  line,
+                  Math.min(MAX_CART_QUANTITY, current + qty),
+                  it,
+                );
               }),
             };
           }
-          return { items: [...state.items, { ...line, quantity: qty }] };
+          return {
+            items: [...state.items, fromCatalogLine(line, qty)],
+          };
         });
       },
 

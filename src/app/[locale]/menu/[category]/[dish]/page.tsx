@@ -22,7 +22,7 @@ import {
   getSimilarDishes,
   getUpsellDishes,
 } from "@/data/menu";
-import { buildMetadataFromSeo } from "@/lib/seo/pageSeo";
+import { buildMetadataFromSeo, fallbackSeoDescription } from "@/lib/seo/pageSeo";
 import { SchemaJsonFromSeo } from "@/components/seo/SchemaJsonFromSeo";
 import { ALLERGENS, type GalleryImage, type Dish } from "@/types/content";
 import type { Locale } from "@/i18n/routing";
@@ -81,7 +81,10 @@ export async function generateMetadata({
     locale,
     path: `/menu/${category}/${dish}`,
     defaultTitle: found.dishDoc.name,
-    defaultDescription: found.dishDoc.description || "",
+    defaultDescription: fallbackSeoDescription(
+      found.dishDoc.name,
+      found.dishDoc.description,
+    ),
     fallbackImageUrl: found.dishDoc.image,
   });
 }

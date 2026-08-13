@@ -13,7 +13,7 @@ import {
   getBlogPostSlugs,
   getOtherBlogPosts,
 } from "@/data/blog";
-import { buildMetadataFromSeo } from "@/lib/seo/pageSeo";
+import { buildMetadataFromSeo, fallbackSeoDescription } from "@/lib/seo/pageSeo";
 import { SchemaJsonFromSeo } from "@/components/seo/SchemaJsonFromSeo";
 import type { PageProps } from "@/types/page";
 
@@ -39,7 +39,7 @@ export async function generateMetadata({
     locale,
     path: `/blog/${slug}`,
     defaultTitle: post.title,
-    defaultDescription: post.description || "",
+    defaultDescription: fallbackSeoDescription(post.title, post.description),
     absoluteTitle: Boolean(post.seo?.metaTitle?.trim()),
     openGraphType: "article",
     publishedTime: post.createdAt,

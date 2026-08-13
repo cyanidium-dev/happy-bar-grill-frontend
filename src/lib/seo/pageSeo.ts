@@ -56,6 +56,23 @@ function absoluteUrl(pathname: string): string {
   return `${base}${pathname.startsWith("/") ? pathname : `/${pathname}`}`;
 }
 
+/**
+ * Meta description when CMS `metaDescription` is empty: product/article
+ * title plus its body copy.
+ */
+export function fallbackSeoDescription(
+  title: string,
+  body?: string | null,
+): string {
+  const name = title.trim();
+  const text = body?.trim() ?? "";
+  if (name && text) {
+    const sep = /[.!?…]$/.test(name) ? " " : ". ";
+    return `${name}${sep}${text}`;
+  }
+  return name || text;
+}
+
 /** Canonical + hreflang alternates for uk/ru. */
 export function buildLanguageAlternates(
   path: string,

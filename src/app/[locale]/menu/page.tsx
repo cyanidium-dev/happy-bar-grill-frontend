@@ -22,7 +22,7 @@ export default async function MenuPage({ params }: PageProps) {
   const t = await getTranslations("Metadata");
 
   return (
-    <main className="flex-1">
+    <div className="flex-1">
       <MenuBanner />
       <BreadCrumbs items={[{ label: t("menu.title") }]} />
       <MenuView activeSlug="all" />
@@ -32,6 +32,6 @@ export default async function MenuPage({ params }: PageProps) {
         titleClassName="max-w-[200px] xs:max-w-none md:max-w-[220px]"
       />
       <SitePageSeo pageId="seoMenuPage" />
-    </main>
+    </div>
   );
 }

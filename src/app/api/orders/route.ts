@@ -17,24 +17,13 @@ import {
 } from "@/lib/telegram/sendMessage";
 import { generateOrderNumber } from "@/utils/orderNumber";
 
-/** Soft brake against token-reuse spam; retries share the idempotency key. */
+/** Soft brake: 5 unique idempotency keys / min / IP (retries of the same key free). */
 const RATE = { limit: 5, windowMs: 60_000 };
 
 export async function POST(request: NextRequest) {
   try {
     if (!isSameOriginRequest(request)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
-    const limited = rateLimit(`orders:${getClientIp(request)}`, RATE);
-    if (!limited.ok) {
-      return NextResponse.json(
-        { error: "Too many requests" },
-        {
-          status: 429,
-          headers: { "Retry-After": String(limited.retryAfterSec) },
-        },
-      );
     }
 
     const body = await request.json();
@@ -46,6 +35,21 @@ export async function POST(request: NextRequest) {
       typeof body === "object" && body !== null
         ? (body as Record<string, unknown>).idempotencyKey
         : undefined;
+
+    const limited = rateLimit(
+      `orders:${getClientIp(request)}`,
+      RATE,
+      isIdempotencyKey(idempotencyKey) ? idempotencyKey : undefined,
+    );
+    if (!limited.ok) {
+      return NextResponse.json(
+        { error: "Too many requests" },
+        {
+          status: 429,
+          headers: { "Retry-After": String(limited.retryAfterSec) },
+        },
+      );
+    }
 
     if (!verifyFormToken(token)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });

@@ -132,14 +132,14 @@ export default async function RootLayout({ children, params }: LayoutProps) {
               `fixed` (floats over the page), so this wrapper reserves its
               height as top padding — `Hero` cancels it back out to sit
               behind the header instead. */}
-          <div
+          <main
             id="main-content"
             tabIndex={-1}
             className="flex flex-1 flex-col overflow-x-clip outline-none"
             style={{ paddingTop: "var(--header-height)" }}
           >
             {children}
-          </div>
+          </main>
           <Footer />
         </NextIntlClientProvider>
       </body>

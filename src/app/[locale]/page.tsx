@@ -23,7 +23,7 @@ export default async function HomePage({ params }: PageProps) {
   setRequestLocale(locale);
 
   return (
-    <main className="flex-1">
+    <div className="flex-1">
       <Hero />
       <Categories />
       <Promotions />
@@ -32,6 +32,6 @@ export default async function HomePage({ params }: PageProps) {
       <DeliveryInfo />
       <SeoText />
       <SitePageSeo pageId="seoHomePage" />
-    </main>
+    </div>
   );
 }

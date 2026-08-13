@@ -37,7 +37,6 @@ export async function generateMetadata({
     path: `/menu/${category}`,
     defaultTitle: found.name,
     defaultDescription: found.description || found.name,
-    fallbackImageUrl: found.image,
   });
 }
 

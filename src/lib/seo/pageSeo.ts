@@ -30,7 +30,10 @@ export type BuildMetadataParams = {
   modifiedTime?: string;
   /** When set, skips indexing (checkout, confirmation, etc.). */
   robots?: Metadata["robots"];
-  /** Used when CMS has no `opengraphImage` (e.g. article hero, dish photo). */
+  /**
+   * Dish photo / article hero when CMS has no `opengraphImage`.
+   * Other pages fall through to the site default OG image.
+   */
   fallbackImageUrl?: string | null;
 };
 

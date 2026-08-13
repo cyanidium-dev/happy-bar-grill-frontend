@@ -10,7 +10,7 @@ import CartItemRow from "@/components/cart/CartItemRow";
 import SwiperWrapper from "@/components/shared/swiper/SwiperWrapper";
 import PhoneField from "./PhoneField";
 import TimeSlotSelect from "./TimeSlotSelect";
-import { ADDRESS } from "@/constants/contacts";
+import { ADDRESS, MIN_ORDER_AMOUNT } from "@/constants/contacts";
 import type { Locale } from "@/i18n/routing";
 import { OrderRequestError, submitOrder } from "@/lib/telegram/client";
 import {
@@ -70,7 +70,7 @@ export default function CheckoutView({
   });
   const [errors, setErrors] = useState<Partial<Record<Fields, string>>>({});
   const [submitError, setSubmitError] = useState<
-    "submit" | "unavailable" | null
+    "submit" | "unavailable" | "minOrder" | null
   >(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submittingRef = useRef(false);
@@ -145,10 +145,17 @@ export default function CheckoutView({
     if (submittingRef.current) return;
     if (!validate()) return;
 
-    const lines = useCartStore
-      .getState()
-      .items.map(({ id, quantity }) => ({ id, quantity }));
+    const snapshot = useCartStore.getState();
+    const lines = snapshot.items.map(({ id, quantity }) => ({ id, quantity }));
     if (lines.length === 0) return;
+
+    if (
+      values.deliveryType === "delivery" &&
+      selectCartTotal(snapshot) < MIN_ORDER_AMOUNT
+    ) {
+      setSubmitError("minOrder");
+      return;
+    }
 
     submittingRef.current = true;
     useCartStore.getState().lockCart();
@@ -179,9 +186,7 @@ export default function CheckoutView({
       useCartStore.getState().unlockCart();
       submittingRef.current = false;
       setSubmitError(
-        error instanceof OrderRequestError && error.code === "unavailable"
-          ? "unavailable"
-          : "submit",
+        error instanceof OrderRequestError ? error.code : "submit",
       );
       setIsSubmitting(false);
     }
@@ -201,6 +206,8 @@ export default function CheckoutView({
   const isPickup = values.deliveryType === "pickup";
   const isScheduled = isPickup && values.timeMode === "scheduled";
   const timeSlots = getAvailableTimeSlots("pickup");
+  const remainingToMin = Math.max(0, MIN_ORDER_AMOUNT - total);
+  const belowMinDelivery = isDelivery && remainingToMin > 0;
 
   const deliveryOptions: { value: DeliveryType; label: string }[] = [
     { value: "delivery", label: t("deliveryOption") },
@@ -424,7 +431,16 @@ export default function CheckoutView({
                 })}
               </p>
 
-              {submitError && (
+              {belowMinDelivery && (
+                <p className="mt-4 text-14reg text-red" role="alert">
+                  {t("errors.minOrder", {
+                    amount: MIN_ORDER_AMOUNT,
+                    remaining: remainingToMin,
+                  })}
+                </p>
+              )}
+
+              {submitError && submitError !== "minOrder" && (
                 <p className="mt-4 text-14reg text-red" role="alert">
                   {t(`errors.${submitError}`)}
                 </p>
@@ -437,6 +453,7 @@ export default function CheckoutView({
                 fullWidth
                 className="mt-4"
                 isLoading={isSubmitting}
+                disabled={belowMinDelivery}
               >
                 {t("placeOrder")}
               </Button>
@@ -458,6 +475,14 @@ export default function CheckoutView({
                   {total} {tp("currency")}
                 </span>
               </div>
+              {belowMinDelivery && (
+                <p className="mt-3 text-14reg text-red" role="status">
+                  {t("errors.minOrder", {
+                    amount: MIN_ORDER_AMOUNT,
+                    remaining: remainingToMin,
+                  })}
+                </p>
+              )}
             </div>
           </aside>
         </div>

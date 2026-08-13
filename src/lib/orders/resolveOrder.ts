@@ -1,4 +1,5 @@
 import "server-only";
+import { MIN_ORDER_AMOUNT } from "@/constants/contacts";
 import { routing, type Locale } from "@/i18n/routing";
 import { client } from "@/sanity/lib/client";
 import { DISHES_BY_SLUGS_QUERY } from "@/sanity/lib/queries";
@@ -16,7 +17,9 @@ import { isPersonName } from "@/utils/personName";
 import { isUaPhoneE164 } from "@/utils/phone";
 
 export class OrderError extends Error {
-  constructor(public readonly code: "invalid" | "unavailable") {
+  constructor(
+    public readonly code: "invalid" | "unavailable" | "minOrder",
+  ) {
     super(code);
     this.name = "OrderError";
   }
@@ -286,6 +289,10 @@ export async function resolveOrder(body: unknown): Promise<ResolvedOrder> {
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
+
+  if (customer.deliveryType === "delivery" && total < MIN_ORDER_AMOUNT) {
+    throw new OrderError("minOrder");
+  }
 
   return { customer, items, telegramItems, total };
 }

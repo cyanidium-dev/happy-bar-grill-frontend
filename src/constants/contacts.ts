@@ -39,7 +39,8 @@ export const SCHEDULE = `Щодня ${String(OPENING_HOUR).padStart(2, "0")}:${S
 export const DELIVERY_TIME = "40–60 хв";
 
 /** Used on the /delivery page (not shown in the home block). */
-export const MIN_ORDER = "300 грн";
+export const MIN_ORDER_AMOUNT = 300;
+export const MIN_ORDER = `${MIN_ORDER_AMOUNT} грн`;
 export const DELIVERY_COST = "від 0 грн у межах міста";
 
 /** Used to build the Google Maps embed query. */

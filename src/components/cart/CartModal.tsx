@@ -12,6 +12,7 @@ import CartItemRow from "./CartItemRow";
 import CartIcon from "@/components/shared/icons/CartIcon";
 import CloseIcon from "@/components/shared/icons/CloseIcon";
 import { buttonStyles, Sheen } from "@/components/shared/buttons/Button";
+import { MIN_ORDER_AMOUNT } from "@/constants/contacts";
 import { lockBodyScroll } from "@/lib/lockBodyScroll";
 import { cn } from "@/utils/cn";
 
@@ -105,6 +106,11 @@ export default function CartModal({
                 {total} {tp("currency")}
               </span>
             </div>
+            {total < MIN_ORDER_AMOUNT && (
+              <p className="mb-4 text-14reg text-graphite">
+                {t("minOrder", { remaining: MIN_ORDER_AMOUNT - total })}
+              </p>
+            )}
             <Link
               href="/checkout"
               onClick={onClose}

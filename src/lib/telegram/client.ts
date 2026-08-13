@@ -1,7 +1,7 @@
 import type { CartItem, OrderCustomer, OrderLineRequest } from "@/types/cart";
 
 export class OrderRequestError extends Error {
-  constructor(public readonly code: "unavailable" | "submit") {
+  constructor(public readonly code: "unavailable" | "minOrder" | "submit") {
     super(code);
     this.name = "OrderRequestError";
   }
@@ -41,7 +41,9 @@ export async function submitOrder(
       error?: string;
     } | null;
     throw new OrderRequestError(
-      payload?.error === "unavailable" ? "unavailable" : "submit",
+      payload?.error === "unavailable" || payload?.error === "minOrder"
+        ? payload.error
+        : "submit",
     );
   }
 

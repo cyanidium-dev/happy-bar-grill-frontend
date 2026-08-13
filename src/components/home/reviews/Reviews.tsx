@@ -30,6 +30,7 @@ export default async function Reviews() {
             src="/images/home/reviews/bg-image.webp"
             alt={t("alts.bgImage")}
             fill
+            sizes="100vw"
             className="object-cover"
           />
         </div>
@@ -44,40 +45,43 @@ export default async function Reviews() {
         <Image
           src="/images/home/reviews/onion-small.webp"
           alt={t("alts.onionSmall")}
-          fill
-          className="object-cover"
-        />
-      </AnimatedWrapper>
+            fill
+            sizes="144px"
+            className="object-cover"
+          />
+        </AnimatedWrapper>
 
-      <AnimatedWrapper
-        aria-hidden
-        className="pointer-events-none absolute z-1 top-48 left-50 xs:left-70 sm:left-90 md:left-auto md:top-90 xl:top-45 right-50 lg:right-70 xl:right-110 z-10 h-[229px] w-[213px]"
+        <AnimatedWrapper
+          aria-hidden
+          className="pointer-events-none absolute z-1 top-48 left-50 xs:left-70 sm:left-90 md:left-auto md:top-90 xl:top-45 right-50 lg:right-70 xl:right-110 z-10 h-[229px] w-[213px]"
         animation={decorFade}
         amount={0.01}
       >
         <Image
           src="/images/home/reviews/onion-large.webp"
           alt={t("alts.onionLarge")}
-          fill
-          className="object-cover"
-        />
-      </AnimatedWrapper>
+            fill
+            sizes="213px"
+            className="object-cover"
+          />
+        </AnimatedWrapper>
 
-      <AnimatedWrapper
-        aria-hidden
-        className="pointer-events-none absolute z-1 -bottom-80 xl:-bottom-80 left-20 md:left-60 xl:left-22 z-10 w-[843px] h-[432px]"
+        <AnimatedWrapper
+          aria-hidden
+          className="pointer-events-none absolute z-1 -bottom-80 xl:-bottom-80 left-20 md:left-60 xl:left-22 z-10 w-[843px] h-[432px]"
         animation={decorFade}
         amount={0.01}
       >
         <Image
           src="/images/home/reviews/grill-plate.webp"
           alt={t("alts.grillPlate")}
-          fill
-          className="object-cover"
-        />
-      </AnimatedWrapper>
+            fill
+            sizes="843px"
+            className="object-cover"
+          />
+        </AnimatedWrapper>
 
-      <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <AnimatedWrapper className="flex max-w-2xl flex-col gap-3 text-white">
           <SectionTitle
             variant="white"

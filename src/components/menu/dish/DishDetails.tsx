@@ -21,6 +21,7 @@ export default async function DishDetails({ dish }: { dish: Dish }) {
           src="/images/home/categories/bg-image.webp"
           alt={t("alts.bgImage")}
           fill
+          sizes="500px"
           className="object-cover"
         />
       </div>

@@ -91,6 +91,7 @@ export default function Footer({ className }: { className?: string }) {
           }
           alt=""
           fill
+          sizes="184px"
           className="object-cover"
         />
       </div>
@@ -105,6 +106,7 @@ export default function Footer({ className }: { className?: string }) {
             }
             alt=""
             fill
+            sizes="(max-width: 1024px) 280px, (max-width: 1280px) 359px, 509px"
             className="object-cover"
           />
         </div>

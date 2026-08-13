@@ -33,10 +33,11 @@ export default async function PopularDishes() {
         <Image
           src="/images/home/popular/sushi-chopsticks.webp"
           alt={t("alts.sushiChopsticks")}
-          fill
-          className="object-cover"
-        />
-        <div className="absolute top-[100px] right-[-140px] w-[204px] h-[160px] rounded-full bg-white blur-[10px]" />
+            fill
+            sizes="(min-width: 1024px) 317px, 257px"
+            className="object-cover"
+          />
+          <div className="absolute top-[100px] right-[-140px] w-[204px] h-[160px] rounded-full bg-white blur-[10px]" />
       </AnimatedWrapper>
       <AnimatedWrapper
         className="absolute -bottom-8 left-[-140px] lg:bottom-21 lg:-left-62 w-[318px] h-[159px] lg:w-[412px] lg:h-[205px]"
@@ -46,11 +47,12 @@ export default async function PopularDishes() {
         <Image
           src="/images/home/popular/grill-plate.webp"
           alt={t("alts.grillPlate")}
-          fill
-          className="object-cover"
-        />
-      </AnimatedWrapper>
-      <div className="relative flex flex-col gap-3">
+            fill
+            sizes="(min-width: 1024px) 412px, 318px"
+            className="object-cover"
+          />
+        </AnimatedWrapper>
+        <div className="relative flex flex-col gap-3">
         <AnimatedWrapper className="flex flex-col gap-3 pr-24 sm:pr-28">
           <div className="relative w-fit">
             <SectionTitle className="max-w-[420px] sm:max-w-full w-fit">
@@ -61,6 +63,7 @@ export default async function PopularDishes() {
                 src="/images/home/popular/decor.webp"
                 alt={t("alts.decor")}
                 fill
+                sizes="(min-width: 1024px) 85px, 55px"
                 className="object-cover"
               />
             </div>

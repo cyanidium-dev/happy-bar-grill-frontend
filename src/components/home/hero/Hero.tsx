@@ -32,6 +32,7 @@ export default async function Hero() {
           src="/images/home/hero/bg.webp"
           alt={t("bgImageAlt")}
           fill
+          sizes="100vw"
           className="object-cover object-[60%_50%]"
         />
       </div>
@@ -63,6 +64,7 @@ export default async function Hero() {
             src="/images/home/hero/burger.webp"
             alt={t("burgerImageAlt")}
             fill
+            sizes="(max-width: 480px) 409px, (max-width: 1024px) 590px, (max-width: 1280px) 750px, 959px"
             className="object-cover"
           />
         </div>
@@ -72,6 +74,7 @@ export default async function Hero() {
             src="/images/home/hero/navy-ellipse-mob.svg"
             alt={t("ellipseMobileAlt")}
             fill
+            sizes="550px"
             className="object-cover"
           />
         </div>
@@ -80,6 +83,7 @@ export default async function Hero() {
             src="/images/home/hero/navy-ellipse-desk.svg"
             alt={t("ellipseDesktopAlt")}
             fill
+            sizes="1331px"
             className="object-cover"
           />
         </div>
@@ -88,6 +92,7 @@ export default async function Hero() {
             src="/images/home/hero/lighter-small.svg"
             alt={t("lightingAlt")}
             fill
+            sizes="1331px"
             className="object-cover"
           />
         </div>

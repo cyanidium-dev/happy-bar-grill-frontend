@@ -225,6 +225,7 @@ export default async function DishPage({ params }: DishProps) {
               src="/images/home/seo-text/bg-image.webp"
               alt={t("alts.bgImage")}
               fill
+              sizes="100vw"
               className="object-cover -scale-x-100"
             />
           </div>
@@ -238,6 +239,7 @@ export default async function DishPage({ params }: DishProps) {
             src="/images/home/seo-text/onion-small.webp"
             alt={t("alts.onionSmall")}
             fill
+            sizes="110px"
             className="object-cover"
           />
         </div>
@@ -250,6 +252,7 @@ export default async function DishPage({ params }: DishProps) {
             src="/images/home/seo-text/onion-large.webp"
             alt={t("alts.onionLarge")}
             fill
+            sizes="213px"
             className="object-cover"
           />
         </div>

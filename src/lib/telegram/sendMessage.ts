@@ -42,12 +42,13 @@ export async function sendTelegramHtml(html: string): Promise<void> {
   }
 
   const safeText = sanitizeTelegramHtml(html);
-  const signal = AbortSignal.timeout(TELEGRAM_TIMEOUT_MS);
 
   try {
+    // Fresh timeout per attempt — reusing one signal would let a slow HTML
+    // request leave the plain-text fallback with almost no remaining budget.
     const res = await postSendMessage(
       { chat_id: CHAT_ID, parse_mode: "HTML", text: safeText },
-      signal,
+      AbortSignal.timeout(TELEGRAM_TIMEOUT_MS),
     );
 
     if (res.ok) return;
@@ -57,7 +58,7 @@ export async function sendTelegramHtml(html: string): Promise<void> {
 
     const fallback = await postSendMessage(
       { chat_id: CHAT_ID, text: stripHtml(safeText) },
-      signal,
+      AbortSignal.timeout(TELEGRAM_TIMEOUT_MS),
     );
 
     if (!fallback.ok) {

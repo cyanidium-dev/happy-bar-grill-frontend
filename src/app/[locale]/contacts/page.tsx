@@ -49,17 +49,6 @@ export default async function ContactsPage({ params }: PageProps) {
           </div>
 
           <div className="relative -z-10 grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-10">
-            {/* <div
-              aria-hidden
-              className="hidden xl:block pointer-events-none absolute -z-10 -bottom-26 -left-40 w-[600px] h-[226px]"
-            >
-              <Image
-                src="/images/home/seo-text/grill-plate.webp"
-                alt={t("alts.grillPlate")}
-                fill
-                className="object-cover"
-              />
-            </div> */}
             <ContactInfo />
             <ContactForm />
           </div>

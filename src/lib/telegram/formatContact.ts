@@ -1,3 +1,4 @@
+import { escapeHtml } from "./escapeHtml";
 import { TG } from "./icons";
 
 /** HTML-текст повідомлення про звернення з форми контактів для Telegram. */
@@ -12,8 +13,8 @@ export function formatContactTelegramMessage({
 }): string {
   return (
     `${TG.message} <b>Нове звернення з сайту</b>\n\n` +
-    `${TG.name} <b>Ім'я:</b> ${name}\n` +
-    `${TG.phone} <b>Телефон:</b> ${phone}\n\n` +
-    `${TG.form} <b>Повідомлення:</b>\n${message}`
+    `${TG.name} <b>Ім'я:</b> ${escapeHtml(name)}\n` +
+    `${TG.phone} <b>Телефон:</b> ${escapeHtml(phone)}\n\n` +
+    `${TG.form} <b>Повідомлення:</b>\n${escapeHtml(message)}`
   );
 }

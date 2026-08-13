@@ -17,7 +17,7 @@ type Field = "name" | "phone" | "message";
  * `/api/telegram` endpoint (same infra as checkout). Shows loading, an error
  * on failure, and a success state on send.
  */
-export default function ContactForm() {
+export default function ContactForm({ formToken }: { formToken: string }) {
   const t = useTranslations("ContactsPage");
 
   const [values, setValues] = useState({ name: "", phone: "", message: "" });
@@ -53,6 +53,7 @@ export default function ContactForm() {
           phone: `+380${values.phone}`,
           message: values.message.trim(),
         }),
+        formToken,
       );
       setSuccess(true);
       setValues({ name: "", phone: "", message: "" });

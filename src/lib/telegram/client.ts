@@ -1,8 +1,11 @@
-export async function sendTelegramMessage(text: string): Promise<void> {
+export async function sendTelegramMessage(
+  text: string,
+  formToken: string,
+): Promise<void> {
   const res = await fetch("/api/telegram", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(text),
+    body: JSON.stringify({ text, token: formToken }),
   });
 
   if (!res.ok) {

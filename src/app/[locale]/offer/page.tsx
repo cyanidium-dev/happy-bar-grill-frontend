@@ -21,9 +21,9 @@ export default async function PublicOfferPage({ params }: PageProps) {
   const t = await getTranslations("Metadata");
 
   return (
-    <main className="flex-1">
+    <div className="flex-1">
       <BreadCrumbs items={[{ label: t("offer.title") }]} />
       <LegalPage title={t("offer.title")} doc={offerDoc[locale as Locale]} />
-    </main>
+    </div>
   );
 }

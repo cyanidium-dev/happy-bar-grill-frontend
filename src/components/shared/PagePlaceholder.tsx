@@ -14,7 +14,7 @@ export default function PagePlaceholder({
   className?: string;
 }) {
   return (
-    <main
+    <div
       className={cn(
         "mx-auto flex min-h-[60vh] w-full max-w-6xl flex-col items-center justify-center gap-3 px-4 py-24 text-center",
         className,
@@ -24,6 +24,6 @@ export default function PagePlaceholder({
       <p className="text-sm text-zinc-500">
         Sections for this page will be added later.
       </p>
-    </main>
+    </div>
   );
 }

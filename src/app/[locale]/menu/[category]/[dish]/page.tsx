@@ -189,7 +189,7 @@ export default async function DishPage({ params }: DishProps) {
   };
 
   return (
-    <main className="flex-1">
+    <div className="flex-1">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
@@ -298,6 +298,6 @@ export default async function DishPage({ params }: DishProps) {
           </div>
         </AnimatedWrapper>
       </Section>
-    </main>
+    </div>
   );
 }

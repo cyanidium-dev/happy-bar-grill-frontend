@@ -35,7 +35,7 @@ export default async function CheckoutPage({ params }: PageProps) {
   }));
 
   return (
-    <main className="flex-1">
+    <div className="flex-1">
       <BreadCrumbs items={[{ label: t("checkout.title") }]} />
       <section className="bg-white">
         <CheckoutView
@@ -45,6 +45,6 @@ export default async function CheckoutPage({ params }: PageProps) {
         />
         <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
       </section>
-    </main>
+    </div>
   );
 }

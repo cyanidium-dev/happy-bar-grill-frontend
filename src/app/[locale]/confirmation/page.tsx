@@ -20,12 +20,12 @@ export default async function ConfirmationPage({ params }: PageProps) {
   const t = await getTranslations("Metadata");
 
   return (
-    <main className="flex-1">
+    <div className="flex-1">
       <BreadCrumbs items={[{ label: t("confirmation.title") }]} />
       <section className="bg-white">
         <ConfirmationView />
         <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
       </section>
-    </main>
+    </div>
   );
 }

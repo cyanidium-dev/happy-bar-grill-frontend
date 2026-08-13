@@ -111,6 +111,8 @@ export default async function RootLayout({ children, params }: LayoutProps) {
   // Enables static rendering for this request's locale.
   setRequestLocale(locale as Locale);
 
+  const t = await getTranslations({ locale, namespace: "Common" });
+
   return (
     <html
       lang={locale}
@@ -118,6 +120,12 @@ export default async function RootLayout({ children, params }: LayoutProps) {
     >
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-sm focus:bg-white focus:px-4 focus:py-3 focus:text-14med focus:text-navy focus:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-sky"
+          >
+            {t("skipToContent")}
+          </a>
           <Header />
           {/* `overflow-x-clip` here (not on `body`) prevents a horizontal
               scrollbar from off-screen slide-in animations. The header is
@@ -125,7 +133,9 @@ export default async function RootLayout({ children, params }: LayoutProps) {
               height as top padding — `Hero` cancels it back out to sit
               behind the header instead. */}
           <div
-            className="flex flex-1 flex-col overflow-x-clip"
+            id="main-content"
+            tabIndex={-1}
+            className="flex flex-1 flex-col overflow-x-clip outline-none"
             style={{ paddingTop: "var(--header-height)" }}
           >
             {children}

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getClientIp } from "@/lib/http/clientIp";
+import { rateLimit } from "@/lib/http/rateLimit";
 import { isSameOriginRequest } from "@/lib/http/sameOrigin";
 import {
   IdempotencyConflictError,
@@ -15,10 +17,24 @@ import {
 } from "@/lib/telegram/sendMessage";
 import { generateOrderNumber } from "@/utils/orderNumber";
 
+/** Soft brake against token-reuse spam; retries share the idempotency key. */
+const RATE = { limit: 5, windowMs: 60_000 };
+
 export async function POST(request: NextRequest) {
   try {
     if (!isSameOriginRequest(request)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const limited = rateLimit(`orders:${getClientIp(request)}`, RATE);
+    if (!limited.ok) {
+      return NextResponse.json(
+        { error: "Too many requests" },
+        {
+          status: 429,
+          headers: { "Retry-After": String(limited.retryAfterSec) },
+        },
+      );
     }
 
     const body = await request.json();

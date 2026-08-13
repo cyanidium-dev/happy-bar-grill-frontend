@@ -22,12 +22,12 @@ export default async function AboutPage({ params }: PageProps) {
   const t = await getTranslations("Metadata");
 
   return (
-    <>
+    <main className="flex-1">
       <AboutIntro />
       <BreadCrumbs items={[{ label: t("about.title") }]} />
       <AboutValues />
       <AboutMenuTeaser />
       <SitePageSeo pageId="seoAboutPage" />
-    </>
+    </main>
   );
 }

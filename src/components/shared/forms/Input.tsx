@@ -70,6 +70,7 @@ export default function Input({
       {error ? (
         <p
           id={errorId}
+          role="alert"
           className="absolute top-full left-0 mt-1 text-12med text-red"
         >
           {error}

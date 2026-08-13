@@ -28,7 +28,7 @@ export default async function ContactsPage({ params }: PageProps) {
   ]);
 
   return (
-    <>
+    <main className="flex-1">
       <BreadCrumbs items={[{ label: tMeta("contacts.title") }]} />
 
       <section className="relative z-10 overflow-hidden bg-white">
@@ -72,6 +72,6 @@ export default async function ContactsPage({ params }: PageProps) {
         </Container>
       </section>
       <SitePageSeo pageId="seoContactsPage" />
-    </>
+    </main>
   );
 }

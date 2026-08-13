@@ -130,7 +130,9 @@ export default function ContactForm({ formToken }: { formToken: string }) {
             )}
           />
           {errors.message && (
-            <p className="text-12med text-red">{errors.message}</p>
+            <p className="text-12med text-red" role="alert">
+              {errors.message}
+            </p>
           )}
         </div>
       </div>

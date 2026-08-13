@@ -19,6 +19,7 @@ import {
   useCartStore,
 } from "@/store/cartStore";
 import type { DeliveryType, OrderTimeMode, PaymentMethod } from "@/types/cart";
+import { isDeliveryAddress } from "@/utils/address";
 import { isPersonName } from "@/utils/personName";
 import { isUaSubscriberDigits } from "@/utils/phone";
 import {
@@ -124,7 +125,7 @@ export default function CheckoutView({
     if (!isUaSubscriberDigits(values.phone)) next.phone = t("errors.phone");
     if (
       values.deliveryType === "delivery" &&
-      values.address.trim().length < 4
+      !isDeliveryAddress(values.address)
     ) {
       next.address = t("errors.address");
     }

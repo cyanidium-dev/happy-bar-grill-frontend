@@ -10,6 +10,7 @@ import type {
   PaymentMethod,
 } from "@/types/cart";
 import { isAvailableTimeSlot } from "@/utils/orderTimeSlots";
+import { isDeliveryAddress } from "@/utils/address";
 import { cartLineId, parseCartLineId } from "@/utils/cartLine";
 import { isPersonName } from "@/utils/personName";
 import { isUaPhoneE164 } from "@/utils/phone";
@@ -24,7 +25,6 @@ export class OrderError extends Error {
 const MAX_LINES = 50;
 const MAX_QUANTITY = 99;
 const MAX_TOTAL_QUANTITY = 100;
-const MAX_ADDRESS = 200;
 const MAX_COMMENT = 500;
 const MAX_ID = 160;
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/i;
@@ -161,9 +161,9 @@ function parseCustomer(raw: unknown): OrderCustomer {
 
   let address: string | undefined;
   if (typedDelivery === "delivery") {
-    const parsed = parseBoundedString(data.address, 4, MAX_ADDRESS);
-    if (!parsed) throw new OrderError("invalid");
-    address = parsed;
+    const rawAddress = typeof data.address === "string" ? data.address : "";
+    if (!isDeliveryAddress(rawAddress)) throw new OrderError("invalid");
+    address = rawAddress.trim();
   }
 
   let timeMode: OrderTimeMode = "asap";

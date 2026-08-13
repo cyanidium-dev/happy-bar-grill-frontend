@@ -5,7 +5,6 @@ import Container from "@/components/shared/container/Container";
 import ContactInfo from "@/components/contacts/ContactInfo";
 import ContactForm from "@/components/contacts/ContactForm";
 import ContactsMap from "@/components/contacts/ContactsMap";
-import Image from "next/image";
 import { FOOTER_WAVE_HEIGHT_CLASS } from "@/config/footer";
 import { SitePageSeo } from "@/components/seo/SitePageSeo";
 import { buildPageMetadata } from "@/lib/metadata";

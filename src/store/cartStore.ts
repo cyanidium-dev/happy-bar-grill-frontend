@@ -67,9 +67,10 @@ function fromCatalogLine(
 }
 
 /**
- * Cart store (zustand + localStorage persistence). Holds the live cart and the
- * last placed order. UI reads counts/totals via the selectors below; guard
- * rendered counts with `useCartHydrated` to avoid SSR/client mismatches.
+ * Cart store (zustand + localStorage persistence, synced across tabs). Holds
+ * the live cart and the last placed order. UI reads counts/totals via the
+ * selectors below; guard rendered counts with `useCartHydrated` to avoid
+ * SSR/client mismatches.
  */
 export const useCartStore = create<CartState>()(
   persist(
@@ -198,6 +199,19 @@ export const selectCartCount = (state: CartState) =>
 
 export const selectCartTotal = (state: CartState) =>
   state.items.reduce((sum, it) => sum + it.price * it.quantity, 0);
+
+/**
+ * Keep sibling tabs in sync. `storage` fires only in *other* windows when
+ * localStorage changes, so this tab's in-flight checkout (`isLocked`) is left
+ * alone until it finishes writing the order snapshot.
+ */
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (event) => {
+    if (event.key !== useCartStore.persist.getOptions().name) return;
+    if (useCartStore.getState().isLocked) return;
+    void useCartStore.persist.rehydrate();
+  });
+}
 
 /**
  * `true` once the persisted store has hydrated on the client. Use it to defer

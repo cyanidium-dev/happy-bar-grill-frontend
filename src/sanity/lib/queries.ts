@@ -89,7 +89,7 @@ export const DISHES_BY_CATEGORY_QUERY = defineQuery(/* groq */ `
 `);
 
 export const DISH_BY_SLUG_QUERY = defineQuery(/* groq */ `
-  *[_type == "menuDish" && slug.current == $slug
+  *[_type == "menuDish" && available != false && slug.current == $slug
     && category->slug.current == $category][0] {
     ${dishFields},
     calories,
@@ -105,7 +105,7 @@ export const DISH_BY_SLUG_QUERY = defineQuery(/* groq */ `
 
 /** Resolve a dish permalink when the cart only has the dish slug (legacy last-order). */
 export const DISH_PATH_BY_SLUG_QUERY = defineQuery(/* groq */ `
-  *[_type == "menuDish" && slug.current == $slug][0] {
+  *[_type == "menuDish" && available != false && slug.current == $slug][0] {
     "slug": slug.current,
     "categorySlug": category->slug.current
   }

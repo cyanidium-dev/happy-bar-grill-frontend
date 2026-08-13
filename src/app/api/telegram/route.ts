@@ -1,34 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sanitizeTelegramHtml } from "@/lib/telegram/escapeHtml";
+import { isSameOriginRequest } from "@/lib/http/sameOrigin";
+import { formatContactTelegramMessage } from "@/lib/telegram/formatContact";
 import { verifyFormToken } from "@/lib/telegram/formToken";
+import {
+  sendTelegramHtml,
+  TelegramConfigError,
+} from "@/lib/telegram/sendMessage";
+import { isPersonName } from "@/utils/personName";
+import { isUaPhoneE164 } from "@/utils/phone";
 
-const BOT_ID = process.env.TELEGRAM_BOT_ID ?? "";
-const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+const MAX_MESSAGE = 1000;
 
-function stripHtml(input: string): string {
-  return input.replace(/<[^>]*>/g, "");
-}
+function parseContact(body: unknown): {
+  name: string;
+  phone: string;
+  message: string;
+} | null {
+  if (typeof body !== "object" || body === null) return null;
+  const data = body as Record<string, unknown>;
 
-/**
- * Mirrors the same-origin check Next.js applies to Server Actions: the
- * `Origin` header (sent by browsers on every same-origin POST, not just
- * cross-origin ones) must match the host the request was made to. This
- * rejects requests fired directly at the endpoint from another site or a
- * bare script that doesn't set an `Origin` header at all.
- */
-function isSameOriginRequest(request: NextRequest): boolean {
-  const origin = request.headers.get("origin");
-  if (!origin) return false;
+  const name = typeof data.name === "string" ? data.name.trim() : "";
+  const phone = typeof data.phone === "string" ? data.phone.trim() : "";
+  const message = typeof data.message === "string" ? data.message.trim() : "";
 
-  const requestHost =
-    request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  if (!requestHost) return false;
+  if (!isPersonName(name)) return null;
+  if (!isUaPhoneE164(phone)) return null;
+  if (message.length < 5 || message.length > MAX_MESSAGE) return null;
 
-  try {
-    return new URL(origin).host === requestHost;
-  } catch {
-    return false;
-  }
+  return { name, phone, message };
 }
 
 export async function POST(request: NextRequest) {
@@ -38,73 +37,30 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const text =
-      typeof body === "object" && body !== null
-        ? (body as Record<string, unknown>).text
-        : undefined;
     const token =
       typeof body === "object" && body !== null
         ? (body as Record<string, unknown>).token
         : undefined;
 
-    if (typeof text !== "string" || !text.trim()) {
-      return NextResponse.json({ error: "Invalid message" }, { status: 400 });
-    }
-
     if (!verifyFormToken(token)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    if (!BOT_ID || !CHAT_ID) {
+    const contact = parseContact(body);
+    if (!contact) {
+      return NextResponse.json({ error: "Invalid message" }, { status: 400 });
+    }
+
+    await sendTelegramHtml(formatContactTelegramMessage(contact));
+
+    return NextResponse.json({ message: "Data sent successfully" });
+  } catch (error) {
+    if (error instanceof TelegramConfigError) {
       return NextResponse.json(
         { error: "Telegram not configured" },
         { status: 500 },
       );
     }
-
-    const safeText = sanitizeTelegramHtml(text);
-
-    const res = await fetch(
-      `https://api.telegram.org/bot${BOT_ID}/sendMessage`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          parse_mode: "HTML",
-          text: safeText,
-        }),
-      },
-    );
-
-    if (!res.ok) {
-      const firstError = await res.text();
-      console.error("[telegram] sendMessage failed:", firstError);
-
-      const fallback = await fetch(
-        `https://api.telegram.org/bot${BOT_ID}/sendMessage`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: CHAT_ID,
-            text: stripHtml(safeText),
-          }),
-        },
-      );
-
-      if (!fallback.ok) {
-        const fallbackError = await fallback.text();
-        console.error("[telegram] fallback failed:", fallbackError);
-        return NextResponse.json(
-          { error: "Failed to send message" },
-          { status: 500 },
-        );
-      }
-    }
-
-    return NextResponse.json({ message: "Data sent successfully" });
-  } catch (error) {
     console.error("[telegram] unexpected error:", error);
     return NextResponse.json(
       { error: "Failed to send message" },

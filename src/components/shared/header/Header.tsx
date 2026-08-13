@@ -140,10 +140,12 @@ export default function Header({ className }: { className?: string }) {
               cartLabel={th("cart")}
               lastOrderLabel={th("lastOrder")}
               onOpenCart={() => {
+                setOpen(false);
                 setLastOrderOpen(false);
                 setCartOpen(true);
               }}
               onOpenLastOrder={() => {
+                setOpen(false);
                 setCartOpen(false);
                 setLastOrderOpen(true);
               }}
@@ -153,7 +155,11 @@ export default function Header({ className }: { className?: string }) {
               type="button"
               aria-label={open ? th("closeMenu") : th("openMenu")}
               aria-expanded={open}
-              onClick={() => setOpen((v) => !v)}
+              onClick={() => {
+                setCartOpen(false);
+                setLastOrderOpen(false);
+                setOpen((v) => !v);
+              }}
               className="flex size-6 flex-col items-center justify-center gap-1.5 lg:hidden"
             >
               <span
@@ -187,7 +193,11 @@ export default function Header({ className }: { className?: string }) {
       <LastOrderModal
         open={lastOrderOpen}
         onClose={() => setLastOrderOpen(false)}
-        onOpenCart={() => setCartOpen(true)}
+        onOpenCart={() => {
+          setOpen(false);
+          setLastOrderOpen(false);
+          setCartOpen(true);
+        }}
       />
     </header>
   );

@@ -7,7 +7,6 @@ export const MENU_CATALOG_ID = "menu-catalog";
 /** sessionStorage flag set by category nav before soft-navigating. */
 export const MENU_SCROLL_FLAG = "scrollToMenuCatalog";
 
-/** Fixed price-filter track on the menu catalog (UAH). */
+/** Price-filter slider (UAH). Max comes from the dishes in the catalog. */
 export const PRICE_FILTER_MIN = 0;
-export const PRICE_FILTER_MAX = 2000;
 export const PRICE_FILTER_STEP = 10;

@@ -4,9 +4,14 @@
  */
 
 export type CartLine = {
-  /** Stable id — the dish slug (unique per dish). */
+  /** Unique cart key — `categorySlug/dishSlug`. */
   id: string;
+  /** Dish slug (URL segment). */
+  slug: string;
+  /** Category slug for `/menu/[category]/[dish]`. Missing on older cart snapshots. */
+  categorySlug?: string;
   name: string;
+  /** Display price from the catalog; `/api/orders` recalculates from Sanity. */
   price: number;
   image: string;
   imageAlt?: string;
@@ -18,6 +23,13 @@ export type CartItem = CartLine & { quantity: number };
 
 export type DeliveryType = "delivery" | "pickup";
 export type OrderTimeMode = "asap" | "scheduled";
+export type PaymentMethod = "cash" | "card";
+
+/** Ids + quantities sent to `/api/orders`. Prices are never trusted from the client. */
+export type OrderLineRequest = {
+  id: string;
+  quantity: number;
+};
 
 export type OrderCustomer = {
   name: string;
@@ -28,7 +40,7 @@ export type OrderCustomer = {
   timeMode: OrderTimeMode;
   /** Desired time (`HH:mm`) when `timeMode` is `"scheduled"`. */
   scheduledAt?: string;
-  payment: string;
+  payment: PaymentMethod;
   /** Optional free-form note for the order. */
   comment?: string;
 };

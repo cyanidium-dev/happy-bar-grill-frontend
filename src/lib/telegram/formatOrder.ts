@@ -1,7 +1,12 @@
 import { ADDRESS } from "@/constants/contacts";
-import type { CartItem, OrderCustomer } from "@/types/cart";
+import type { CartItem, OrderCustomer, PaymentMethod } from "@/types/cart";
 import { escapeHtml } from "./escapeHtml";
 import { TG } from "./icons";
+
+const PAYMENT_LABELS: Record<PaymentMethod, string> = {
+  cash: "Готівкою при отриманні",
+  card: "Карткою при отриманні",
+};
 
 function formatFulfillmentTypeLine(customer: OrderCustomer): string {
   if (customer.deliveryType === "pickup") {
@@ -59,7 +64,7 @@ export function formatOrderTelegramMessage({
     formatFulfillmentTypeLine(customer) +
     formatAddressLine(customer) +
     formatTimeLine(customer) +
-    `${TG.payment} <b>Оплата:</b> ${escapeHtml(customer.payment)}\n` +
+    `${TG.payment} <b>Оплата:</b> ${PAYMENT_LABELS[customer.payment]}\n` +
     (customer.comment
       ? `${TG.message} <b>Коментар:</b> ${escapeHtml(customer.comment)}\n`
       : "") +

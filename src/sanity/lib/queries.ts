@@ -64,6 +64,23 @@ export const ALL_DISHES_QUERY = defineQuery(/* groq */ `
   }
 `);
 
+/**
+ * Canonical dish data for order placement. Prices/names come from Sanity so
+ * the API never trusts the cart snapshot in localStorage. `nameUk` is always
+ * Ukrainian for the kitchen Telegram message; `name` follows `$locale`.
+ */
+export const DISHES_BY_SLUGS_QUERY = defineQuery(/* groq */ `
+  *[_type == "menuDish" && available != false && slug.current in $slugs] {
+    "slug": slug.current,
+    "categorySlug": category->slug.current,
+    "name": ${localized("name")},
+    "nameUk": coalesce(name.uk, name.ru, name),
+    price,
+    weight,
+    "image": image.asset->url
+  }
+`);
+
 export const DISHES_BY_CATEGORY_QUERY = defineQuery(/* groq */ `
   *[_type == "menuDish" && available != false && category->slug.current == $slug]
     | order(order asc) {
@@ -72,7 +89,7 @@ export const DISHES_BY_CATEGORY_QUERY = defineQuery(/* groq */ `
 `);
 
 export const DISH_BY_SLUG_QUERY = defineQuery(/* groq */ `
-  *[_type == "menuDish" && slug.current == $slug
+  *[_type == "menuDish" && available != false && slug.current == $slug
     && category->slug.current == $category][0] {
     ${dishFields},
     calories,
@@ -83,6 +100,14 @@ export const DISH_BY_SLUG_QUERY = defineQuery(/* groq */ `
       "alt": ${localized("alt")}
     },
     "seo": seo${SEO_SETTINGS_PROJECTION}
+  }
+`);
+
+/** Resolve a dish permalink when the cart only has the dish slug (legacy last-order). */
+export const DISH_PATH_BY_SLUG_QUERY = defineQuery(/* groq */ `
+  *[_type == "menuDish" && available != false && slug.current == $slug][0] {
+    "slug": slug.current,
+    "categorySlug": category->slug.current
   }
 `);
 

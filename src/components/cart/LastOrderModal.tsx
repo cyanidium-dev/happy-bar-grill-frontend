@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { useCartHydrated, useCartStore } from "@/store/cartStore";
 import ReceiptIcon from "@/components/shared/icons/ReceiptIcon";
 import CloseIcon from "@/components/shared/icons/CloseIcon";
@@ -10,6 +11,7 @@ import Container from "@/components/shared/container/Container";
 import { buttonStyles, Sheen } from "@/components/shared/buttons/Button";
 import { lockBodyScroll } from "@/lib/lockBodyScroll";
 import { cn } from "@/utils/cn";
+import { dishHref } from "@/utils/dishHref";
 
 /**
  * Compact previous-order panel. Anchored to the page container (same gutters as
@@ -31,6 +33,7 @@ export default function LastOrderModal({
   const hydrated = useCartHydrated();
   const lastOrder = useCartStore((s) => s.lastOrder);
   const repeatLastOrder = useCartStore((s) => s.repeatLastOrder);
+  const isLocked = useCartStore((s) => s.isLocked);
 
   useEffect(() => {
     if (!open) return;
@@ -48,6 +51,7 @@ export default function LastOrderModal({
   if (!hydrated || !lastOrder) return null;
 
   const handleRepeat = () => {
+    if (isLocked) return;
     repeatLastOrder();
     onClose();
     onOpenCart();
@@ -96,35 +100,47 @@ export default function LastOrderModal({
             </div>
 
             <ul className="flex-1 overflow-y-auto px-4 pb-3 scrollbar-brand sm:px-5">
-              {lastOrder.items.map((item) => (
-                <li
-                  key={item.id}
-                  className="flex items-center gap-3 border-b border-navy/8 py-2.5 last:border-b-0"
-                >
-                  <div className="relative size-12 shrink-0 overflow-hidden rounded-tl-lg rounded-br-lg">
-                    {item.image && (
-                      <Image
-                        src={item.image}
-                        alt={item.imageAlt || item.name}
-                        fill
-                        sizes="48px"
-                        className="object-cover"
-                      />
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="line-clamp-1 text-14semi text-navy">
-                      {item.name}
-                    </p>
-                    <p className="text-12med text-grey-dark">
-                      {item.quantity} × {item.price} {tp("currency")}
-                    </p>
-                  </div>
-                  <span className="shrink-0 text-14semi text-navy">
-                    {item.price * item.quantity} {tp("currency")}
-                  </span>
-                </li>
-              ))}
+              {lastOrder.items.map((item) => {
+                const href = dishHref(item);
+                return (
+                  <li
+                    key={item.id}
+                    className="flex items-center gap-3 border-b border-navy/8 py-2.5 last:border-b-0"
+                  >
+                    <Link
+                      href={href}
+                      onClick={onClose}
+                      aria-label={item.name}
+                      className="relative size-12 shrink-0 overflow-hidden rounded-tl-lg rounded-br-lg"
+                    >
+                      {item.image ? (
+                        <Image
+                          src={item.image}
+                          alt=""
+                          fill
+                          sizes="48px"
+                          className="object-cover"
+                        />
+                      ) : null}
+                    </Link>
+                    <div className="min-w-0 flex-1">
+                      <Link
+                        href={href}
+                        onClick={onClose}
+                        className="line-clamp-1 text-14semi text-navy transition-colors duration-300 hover:text-red"
+                      >
+                        {item.name}
+                      </Link>
+                      <p className="text-12med text-grey-dark">
+                        {item.quantity} × {item.price} {tp("currency")}
+                      </p>
+                    </div>
+                    <span className="shrink-0 text-14semi text-navy">
+                      {item.price * item.quantity} {tp("currency")}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
 
             <div className="border-t border-navy/10 bg-white px-4 py-4 sm:px-5">
@@ -137,6 +153,7 @@ export default function LastOrderModal({
               <button
                 type="button"
                 onClick={handleRepeat}
+                disabled={isLocked}
                 className={buttonStyles({
                   variant: "primary",
                   shape: "leaf",

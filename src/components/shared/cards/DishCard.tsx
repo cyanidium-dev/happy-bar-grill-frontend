@@ -6,6 +6,7 @@ import DishDescription from "@/components/shared/cards/DishDescription";
 import QuickAddButton from "@/components/shared/cards/QuickAddButton";
 import type { Dish } from "@/types/content";
 import { cn } from "@/utils/cn";
+import { cartLineFromDish } from "@/utils/cartLine";
 
 export type DishCardVariant = "default" | "beige";
 
@@ -113,14 +114,7 @@ export default async function DishCard({
           </div>
 
           <QuickAddButton
-            line={{
-              id: dish.slug,
-              name: dish.name,
-              price: dish.price,
-              image: dish.image,
-              imageAlt: dish.name,
-              weight: dish.weight,
-            }}
+            line={cartLineFromDish(dish)}
             label={t("addToCart")}
           />
         </div>

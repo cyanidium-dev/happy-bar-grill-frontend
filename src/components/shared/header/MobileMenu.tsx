@@ -10,6 +10,7 @@ import CloseIcon from "@/components/shared/icons/CloseIcon";
 import PhoneIcon from "@/components/shared/icons/PhoneIcon";
 import { navLinks } from "@/config/navigation";
 import { PHONE, PHONE_HREF } from "@/constants/contacts";
+import { lockBodyScroll } from "@/lib/lockBodyScroll";
 import { cn } from "@/utils/cn";
 
 /** Slide-in mobile navigation (below `lg`). */
@@ -25,12 +26,10 @@ export default function MobileMenu({
   const t = useTranslations("Nav");
   const th = useTranslations("Header");
 
-  // Lock body scroll while open.
+  // Lock body scroll while open (same helper as cart / last-order).
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    if (!open) return;
+    return lockBodyScroll();
   }, [open]);
 
   // Close on Escape.

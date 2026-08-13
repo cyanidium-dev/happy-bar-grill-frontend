@@ -6,16 +6,17 @@ import Input from "@/components/shared/forms/Input";
 import Button from "@/components/shared/buttons/Button";
 import PhoneField from "@/components/checkout/PhoneField";
 import CheckIcon from "@/components/shared/icons/CheckIcon";
-import { sendTelegramMessage } from "@/lib/telegram/client";
-import { formatContactTelegramMessage } from "@/lib/telegram/formatContact";
+import { sendContactMessage } from "@/lib/telegram/client";
 import { cn } from "@/utils/cn";
+import { isPersonName } from "@/utils/personName";
+import { isUaSubscriberDigits } from "@/utils/phone";
 
 type Field = "name" | "phone" | "message";
 
 /**
- * Contact / feedback form. Sends the message to Telegram via the existing
- * `/api/telegram` endpoint (same infra as checkout). Shows loading, an error
- * on failure, and a success state on send.
+ * Contact / feedback form. Sends the message to Telegram via
+ * `/api/telegram`. Shows loading, an error on failure, and a success
+ * state on send.
  */
 export default function ContactForm({ formToken }: { formToken: string }) {
   const t = useTranslations("ContactsPage");
@@ -33,8 +34,8 @@ export default function ContactForm({ formToken }: { formToken: string }) {
 
   const validate = (): boolean => {
     const next: Partial<Record<Field, string>> = {};
-    if (values.name.trim().length < 2) next.name = t("errors.name");
-    if (values.phone.length < 9) next.phone = t("errors.phone");
+    if (!isPersonName(values.name)) next.name = t("errors.name");
+    if (!isUaSubscriberDigits(values.phone)) next.phone = t("errors.phone");
     if (values.message.trim().length < 5) next.message = t("errors.message");
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -47,12 +48,10 @@ export default function ContactForm({ formToken }: { formToken: string }) {
     setSubmitError(false);
     setIsSubmitting(true);
     try {
-      await sendTelegramMessage(
-        formatContactTelegramMessage({
-          name: values.name.trim(),
-          phone: `+380${values.phone}`,
-          message: values.message.trim(),
-        }),
+      await sendContactMessage(
+        values.name.trim(),
+        `+380${values.phone}`,
+        values.message.trim(),
         formToken,
       );
       setSuccess(true);

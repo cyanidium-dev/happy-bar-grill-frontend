@@ -32,6 +32,12 @@ export const TIKTOK_URL = "https://tiktok.com";
 export const DEVELOPER_URL = "https://www.code-site.art/";
 export const DEVELOPER_NAME = "code-site.art";
 
+/**
+ * Venue local timezone. Opening hours and checkout slots are defined in this
+ * zone — never use the runtime’s local clock (browser vs UTC on Vercel).
+ */
+export const VENUE_TIMEZONE = "Europe/Kyiv";
+
 /** Opening hours used for schedule copy and checkout time slots. */
 export const OPENING_HOUR = 10;
 export const OPENING_MINUTE = 0;

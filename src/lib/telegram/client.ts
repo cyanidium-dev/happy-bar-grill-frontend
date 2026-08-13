@@ -31,11 +31,18 @@ export async function submitOrder(
   locale: string,
   customer: OrderCustomer,
   items: OrderLineRequest[],
+  idempotencyKey: string,
 ): Promise<{ orderNumber: string; items: CartItem[]; total: number }> {
   const res = await fetch("/api/orders", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ token: formToken, locale, customer, items }),
+    body: JSON.stringify({
+      token: formToken,
+      locale,
+      customer,
+      items,
+      idempotencyKey,
+    }),
     signal: AbortSignal.timeout(API_TIMEOUT_MS),
   });
 

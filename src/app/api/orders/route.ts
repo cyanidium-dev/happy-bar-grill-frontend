@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isSameOriginRequest } from "@/lib/http/sameOrigin";
+import {
+  IdempotencyConflictError,
+  isIdempotencyKey,
+  orderFingerprint,
+  runIdempotentOrder,
+} from "@/lib/orders/idempotency";
 import { OrderError, resolveOrder } from "@/lib/orders/resolveOrder";
 import { formatOrderTelegramMessage } from "@/lib/telegram/formatOrder";
 import { verifyFormToken } from "@/lib/telegram/formToken";
@@ -20,29 +26,47 @@ export async function POST(request: NextRequest) {
       typeof body === "object" && body !== null
         ? (body as Record<string, unknown>).token
         : undefined;
+    const idempotencyKey =
+      typeof body === "object" && body !== null
+        ? (body as Record<string, unknown>).idempotencyKey
+        : undefined;
 
     if (!verifyFormToken(token)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
+    if (!isIdempotencyKey(idempotencyKey)) {
+      return NextResponse.json({ error: "invalid" }, { status: 400 });
+    }
 
-    const order = await resolveOrder(body);
-    const orderNumber = generateOrderNumber();
+    const result = await runIdempotentOrder(
+      idempotencyKey,
+      orderFingerprint(body),
+      async () => {
+        const order = await resolveOrder(body);
+        const orderNumber = generateOrderNumber();
 
-    await sendTelegramHtml(
-      formatOrderTelegramMessage({
-        orderNumber,
-        customer: order.customer,
-        items: order.telegramItems,
-        total: order.total,
-      }),
+        await sendTelegramHtml(
+          formatOrderTelegramMessage({
+            orderNumber,
+            customer: order.customer,
+            items: order.telegramItems,
+            total: order.total,
+          }),
+        );
+
+        return {
+          orderNumber,
+          items: order.items,
+          total: order.total,
+        };
+      },
     );
 
-    return NextResponse.json({
-      orderNumber,
-      items: order.items,
-      total: order.total,
-    });
+    return NextResponse.json(result);
   } catch (error) {
+    if (error instanceof IdempotencyConflictError) {
+      return NextResponse.json({ error: "conflict" }, { status: 409 });
+    }
     if (error instanceof OrderError) {
       return NextResponse.json({ error: error.code }, { status: 400 });
     }

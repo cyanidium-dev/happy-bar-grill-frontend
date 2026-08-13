@@ -28,6 +28,10 @@ import {
 } from "@/utils/orderTimeSlots";
 import { dishSlugOf } from "@/utils/cartLine";
 import { cn } from "@/utils/cn";
+import {
+  clearOrderIdempotencyKey,
+  ensureOrderIdempotencyKey,
+} from "@/utils/orderIdempotency";
 
 type Fields = "name" | "phone" | "address" | "scheduled";
 
@@ -179,7 +183,14 @@ export default function CheckoutView({
     };
 
     try {
-      const verified = await submitOrder(formToken, locale, customer, lines);
+      const verified = await submitOrder(
+        formToken,
+        locale,
+        customer,
+        lines,
+        ensureOrderIdempotencyKey(JSON.stringify({ customer, items: lines })),
+      );
+      clearOrderIdempotencyKey();
       placeOrder(customer, verified);
       router.push("/confirmation");
     } catch (error) {

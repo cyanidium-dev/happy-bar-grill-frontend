@@ -61,6 +61,11 @@ export default function AnimatedWrapper({
   // identity values.
   const [settled, setSettled] = useState(false);
 
+  // Adjust during render when hidden again (avoids sync setState in an effect).
+  if (!visible && settled) {
+    setSettled(false);
+  }
+
   useEffect(() => {
     if (!node) return;
 
@@ -83,10 +88,7 @@ export default function AnimatedWrapper({
   }, [node, once, amount]);
 
   useEffect(() => {
-    if (!visible) {
-      setSettled(false);
-      return;
-    }
+    if (!visible) return;
     const timer = setTimeout(
       () => setSettled(true),
       (duration + delay) * 1000 + 50,

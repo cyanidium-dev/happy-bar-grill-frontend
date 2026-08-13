@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import Container from "@/components/shared/container/Container";
 import type { PriceBounds } from "@/components/menu/PriceFilter";
 import PriceFilterControl from "@/components/menu/PriceFilterControl";
@@ -52,11 +52,6 @@ function clampRange(range: PriceBounds, bounds: PriceBounds): PriceBounds {
   return { min, max };
 }
 
-function initialRange(bounds: PriceBounds): PriceBounds {
-  if (!persistedRange) return bounds;
-  return clampRange(persistedRange, bounds);
-}
-
 function persistRange(range: PriceBounds, bounds: PriceBounds) {
   persistedRange = isFullRange(range, bounds) ? null : range;
 }
@@ -74,35 +69,28 @@ export default function MenuCatalog({
   children,
 }: MenuCatalogProps) {
   const bounds = useMemo(() => getBounds(dishes), [dishes]);
-  const boundsMin = bounds?.min;
-  const boundsMax = bounds?.max;
-  const [range, setRange] = useState<PriceBounds | null>(() =>
-    bounds ? initialRange(bounds) : null,
+  // User selection only; null = full range. Displayed range is derived/clamped.
+  const [selection, setSelection] = useState<PriceBounds | null>(
+    () => persistedRange,
   );
   const [filterOpen, setFilterOpen] = useState(false);
 
-  useEffect(() => {
-    if (boundsMin == null || boundsMax == null) {
-      setRange(null);
-      return;
-    }
-    const nextBounds = { min: boundsMin, max: boundsMax };
-    const next = initialRange(nextBounds);
-    persistRange(next, nextBounds);
-    setRange((prev) =>
-      prev && prev.min === next.min && prev.max === next.max ? prev : next,
-    );
-  }, [boundsMin, boundsMax]);
+  const range = useMemo(() => {
+    if (!bounds) return null;
+    if (!selection) return bounds;
+    return clampRange(selection, bounds);
+  }, [bounds, selection]);
 
   const commit = (next: PriceBounds) => {
-    if (bounds) persistRange(next, bounds);
-    setRange(next);
+    if (!bounds) return;
+    const clamped = clampRange(next, bounds);
+    persistRange(clamped, bounds);
+    setSelection(isFullRange(clamped, bounds) ? null : clamped);
   };
 
   const reset = () => {
-    if (!bounds) return;
     persistedRange = null;
-    setRange(bounds);
+    setSelection(null);
   };
 
   const isFiltered = Boolean(

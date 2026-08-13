@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sanitizeTelegramHtml } from "@/lib/telegram/escapeHtml";
 import { verifyFormToken } from "@/lib/telegram/formToken";
 
 const BOT_ID = process.env.TELEGRAM_BOT_ID ?? "";
@@ -61,6 +62,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const safeText = sanitizeTelegramHtml(text);
+
     const res = await fetch(
       `https://api.telegram.org/bot${BOT_ID}/sendMessage`,
       {
@@ -69,7 +72,7 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           chat_id: CHAT_ID,
           parse_mode: "HTML",
-          text,
+          text: safeText,
         }),
       },
     );
@@ -85,7 +88,7 @@ export async function POST(request: NextRequest) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             chat_id: CHAT_ID,
-            text: stripHtml(text),
+            text: stripHtml(safeText),
           }),
         },
       );

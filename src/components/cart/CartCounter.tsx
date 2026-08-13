@@ -4,6 +4,7 @@ import { useCartStore } from "@/store/cartStore";
 import MinusIcon from "@/components/shared/icons/MinusIcon";
 import PlusIcon from "@/components/shared/icons/PlusIcon";
 import { cn } from "@/utils/cn";
+import { MAX_CART_QUANTITY } from "@/utils/cartQuantity";
 
 const btn =
   "flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full text-navy transition-colors duration-300 hover:text-red disabled:cursor-not-allowed disabled:text-navy/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy/40";
@@ -49,7 +50,7 @@ export default function CartCounter({
       <button
         type="button"
         onClick={() => increase(id)}
-        disabled={isLocked}
+        disabled={isLocked || quantity >= MAX_CART_QUANTITY}
         aria-label={labels.increase}
         className={btn}
       >

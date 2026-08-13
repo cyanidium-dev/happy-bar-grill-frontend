@@ -7,6 +7,7 @@ import type {
   LastOrder,
   OrderCustomer,
 } from "@/types/cart";
+import { MAX_CART_QUANTITY, normalizeCartQuantity } from "@/utils/cartQuantity";
 
 interface CartState {
   items: CartItem[];
@@ -33,6 +34,15 @@ interface CartState {
   repeatLastOrder: () => void;
 }
 
+function sanitizeCartItems(items: CartItem[]): CartItem[] {
+  if (!Array.isArray(items)) return [];
+  return items.flatMap((item) => {
+    const quantity = normalizeCartQuantity(item?.quantity);
+    if (!item?.id || quantity === null) return [];
+    return [{ ...item, quantity }];
+  });
+}
+
 /**
  * Cart store (zustand + localStorage persistence). Holds the live cart and the
  * last placed order. UI reads counts/totals via the selectors below; guard
@@ -50,27 +60,36 @@ export const useCartStore = create<CartState>()(
 
       addItem: (line, quantity = 1) => {
         if (get().isLocked) return;
+        const qty = normalizeCartQuantity(quantity);
+        if (qty === null) return;
         set((state) => {
           const index = state.items.findIndex((it) => it.id === line.id);
           if (index !== -1) {
             return {
-              items: state.items.map((it, i) =>
-                i === index
-                  ? { ...it, ...line, quantity: it.quantity + quantity }
-                  : it,
-              ),
+              items: state.items.map((it, i) => {
+                if (i !== index) return it;
+                const current = normalizeCartQuantity(it.quantity) ?? 0;
+                return {
+                  ...it,
+                  ...line,
+                  quantity: Math.min(MAX_CART_QUANTITY, current + qty),
+                };
+              }),
             };
           }
-          return { items: [...state.items, { ...line, quantity }] };
+          return { items: [...state.items, { ...line, quantity: qty }] };
         });
       },
 
       increase: (id) => {
         if (get().isLocked) return;
         set((state) => ({
-          items: state.items.map((it) =>
-            it.id === id ? { ...it, quantity: it.quantity + 1 } : it,
-          ),
+          items: state.items.map((it) => {
+            if (it.id !== id) return it;
+            const current = normalizeCartQuantity(it.quantity) ?? 0;
+            if (current >= MAX_CART_QUANTITY) return it;
+            return { ...it, quantity: current + 1 };
+          }),
         }));
       },
 
@@ -125,6 +144,16 @@ export const useCartStore = create<CartState>()(
         items: state.items,
         lastOrder: state.lastOrder,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+        state.items = sanitizeCartItems(state.items);
+        if (state.lastOrder) {
+          state.lastOrder = {
+            ...state.lastOrder,
+            items: sanitizeCartItems(state.lastOrder.items),
+          };
+        }
+      },
     },
   ),
 );

@@ -8,14 +8,13 @@ import { useCartStore } from "@/store/cartStore";
 import { flyToCart } from "@/lib/cartFly";
 import type { CartLine } from "@/types/cart";
 import { cn } from "@/utils/cn";
+import { MAX_CART_QUANTITY } from "@/utils/cartQuantity";
 
 export type DishQuantityAddLabels = {
   addToCart: string;
   decrease: string;
   increase: string;
 };
-
-const MAX_QUANTITY = 99;
 
 const stepBtn =
   "flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full text-20semi text-navy transition duration-300 ease-out hover:text-red disabled:cursor-not-allowed disabled:text-navy/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy/40";
@@ -57,8 +56,8 @@ export default function DishQuantityAdd({
         </span>
         <button
           type="button"
-          onClick={() => setQuantity((q) => Math.min(MAX_QUANTITY, q + 1))}
-          disabled={quantity >= MAX_QUANTITY}
+          onClick={() => setQuantity((q) => Math.min(MAX_CART_QUANTITY, q + 1))}
+          disabled={quantity >= MAX_CART_QUANTITY}
           aria-label={labels.increase}
           className={stepBtn}
         >

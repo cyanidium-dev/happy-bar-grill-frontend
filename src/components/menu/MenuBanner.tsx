@@ -1,8 +1,12 @@
-import Image from "next/image";
+import { getImageProps } from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import Container from "@/components/shared/container/Container";
 import { getMenuBanner } from "@/data/menu";
+
+/** Matches `Container` content width (padding + max-width at each breakpoint). */
+const BANNER_SIZES =
+  "(max-width: 639px) calc(100vw - 48px), (max-width: 767px) 592px, (max-width: 1023px) 720px, (max-width: 1279px) 864px, 1120px";
 
 function isExternalHref(href: string) {
   return /^https?:\/\//i.test(href);
@@ -21,25 +25,28 @@ export default async function MenuBanner() {
   const t = await getTranslations("Menu");
   const alt = banner.alt || t("bannerAlt");
 
+  const common = {
+    alt,
+    fill: true as const,
+    sizes: BANNER_SIZES,
+  };
+  const {
+    props: { srcSet: desktop },
+  } = getImageProps({ ...common, src: banner.imageDesktop });
+  const {
+    props: { srcSet: mobile, ...img },
+  } = getImageProps({
+    ...common,
+    src: banner.imageMobile,
+    loading: "eager",
+    fetchPriority: "high",
+  });
+
   const media = (
-    <>
-      <Image
-        src={banner.imageMobile}
-        alt={alt}
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover sm:hidden"
-      />
-      <Image
-        src={banner.imageDesktop}
-        alt={alt}
-        fill
-        priority
-        sizes="(max-width: 1280px) 100vw, 1140px"
-        className="hidden object-cover sm:block"
-      />
-    </>
+    <picture className="absolute inset-0">
+      <source media="(min-width: 640px)" srcSet={desktop} />
+      <img {...img} alt={alt} srcSet={mobile} className="object-cover" />
+    </picture>
   );
 
   const content =

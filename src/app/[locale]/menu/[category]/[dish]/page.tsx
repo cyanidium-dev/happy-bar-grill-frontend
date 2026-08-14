@@ -207,7 +207,7 @@ export default async function DishPage({ params }: DishProps) {
         <Container className="pb-12 pt-6 md:pb-16 xl:pb-20">
           <div className="flex flex-col sm:flex-row gap-8 lg:gap-14 ">
             <AnimatedWrapper
-              animation={{ y: 20 }}
+              animation={{ y: 20, opacity: 1 }}
               className="w-full sm:w-1/2 shrink-0"
             >
               <DishGallery

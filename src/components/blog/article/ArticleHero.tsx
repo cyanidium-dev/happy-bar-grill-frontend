@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import { getLocale } from "next-intl/server";
 import Container from "@/components/shared/container/Container";
 import type { Locale } from "@/i18n/routing";
@@ -14,32 +14,50 @@ export default async function ArticleHero({ post }: { post: BlogPost }) {
   const locale = (await getLocale()) as Locale;
   const desktopSrc = post.imageDesktop || post.imageMobile;
   const mobileSrc = post.imageMobile || post.imageDesktop;
+  const mobileAlt = post.imageMobileAlt || post.title;
+  const desktopAlt = post.imageDesktopAlt || post.title;
+
+  let cover = null;
+  if (mobileSrc && desktopSrc && mobileSrc !== desktopSrc) {
+    const common = { fill: true as const, sizes: "100vw" };
+    const {
+      props: { srcSet: desktop },
+    } = getImageProps({ ...common, alt: desktopAlt, src: desktopSrc });
+    const {
+      props: { srcSet: mobile, ...img },
+    } = getImageProps({
+      ...common,
+      alt: mobileAlt,
+      src: mobileSrc,
+      loading: "eager",
+      fetchPriority: "high",
+    });
+    cover = (
+      <picture className="absolute inset-0">
+        <source media="(min-width: 768px)" srcSet={desktop} />
+        <img {...img} alt={mobileAlt} srcSet={mobile} className="object-cover" />
+      </picture>
+    );
+  } else if (mobileSrc || desktopSrc) {
+    cover = (
+      <Image
+        src={(mobileSrc || desktopSrc)!}
+        alt={mobileAlt}
+        fill
+        loading="eager"
+        fetchPriority="high"
+        sizes="100vw"
+        className="object-cover"
+      />
+    );
+  }
 
   return (
     <header
       className="relative w-full overflow-hidden rounded-b-[24px] bg-black lg:rounded-b-[36px]"
       style={{ marginTop: "calc(var(--header-height) * -1)" }}
     >
-      {mobileSrc && (
-        <Image
-          src={mobileSrc}
-          alt={post.imageMobileAlt || post.title}
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover md:hidden"
-        />
-      )}
-      {desktopSrc && (
-        <Image
-          src={desktopSrc}
-          alt={post.imageDesktopAlt || post.title}
-          fill
-          priority
-          sizes="100vw"
-          className="hidden object-cover md:block"
-        />
-      )}
+      {cover}
 
       {/* Scrim so overlaid text stays readable over any photo. */}
       <div

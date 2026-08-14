@@ -92,7 +92,7 @@ export default function ContactForm({ formToken }: { formToken: string }) {
     >
       <h2 className="mb-5 text-20semi text-navy">{t("formTitle")}</h2>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6">
         <Input
           label={t("name")}
           required
@@ -108,7 +108,7 @@ export default function ContactForm({ formToken }: { formToken: string }) {
           onChange={(digits) => set("phone", digits)}
           error={errors.phone}
         />
-        <div className="flex flex-col gap-1.5">
+        <div className="relative flex flex-col gap-1.5">
           <label htmlFor="contact-message" className="text-14med text-graphite">
             {t("message")}
             <span className="ml-0.5 text-red" aria-hidden>
@@ -122,6 +122,9 @@ export default function ContactForm({ formToken }: { formToken: string }) {
             onChange={(e) => set("message", e.target.value)}
             placeholder={t("messagePlaceholder")}
             aria-invalid={errors.message ? true : undefined}
+            aria-describedby={
+              errors.message ? "contact-message-error" : undefined
+            }
             className={cn(
               "w-full resize-none rounded-sm border bg-white px-6 py-3 text-14reg text-graphite placeholder-grey outline-none transition duration-300 ease-out md:text-16reg",
               errors.message
@@ -130,7 +133,11 @@ export default function ContactForm({ formToken }: { formToken: string }) {
             )}
           />
           {errors.message && (
-            <p className="text-12med text-red" role="alert">
+            <p
+              id="contact-message-error"
+              className="absolute top-full left-0 right-0 mt-1 text-12med text-red"
+              role="alert"
+            >
               {errors.message}
             </p>
           )}

@@ -48,10 +48,7 @@ export default function TimeSlotSelect({
     if (!isOpen) return;
 
     const onPointerDown = (event: MouseEvent) => {
-      if (
-        rootRef.current &&
-        !rootRef.current.contains(event.target as Node)
-      ) {
+      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
         close();
       }
     };
@@ -154,7 +151,11 @@ export default function TimeSlotSelect({
       ) : null}
 
       {error ? (
-        <p id={errorId} className="text-12med text-red" role="alert">
+        <p
+          id={errorId}
+          className="absolute top-full left-0 right-0 mt-1 text-12med text-red"
+          role="alert"
+        >
           {error}
         </p>
       ) : null}

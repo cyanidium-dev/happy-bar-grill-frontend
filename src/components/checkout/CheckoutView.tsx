@@ -371,7 +371,7 @@ export default function CheckoutView({
               <h2 className="mb-5 mt-8 text-20semi text-navy">
                 {t("contactsTitle")}
               </h2>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-6">
                 <Input
                   label={t("name")}
                   required
@@ -434,6 +434,14 @@ export default function CheckoutView({
                   offer: (chunks) => (
                     <Link
                       href="/offer"
+                      className="text-navy underline hover:text-red"
+                    >
+                      {chunks}
+                    </Link>
+                  ),
+                  privacy: (chunks) => (
+                    <Link
+                      href="/privacy"
                       className="text-navy underline hover:text-red"
                     >
                       {chunks}

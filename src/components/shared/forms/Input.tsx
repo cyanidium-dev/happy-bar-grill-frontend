@@ -71,7 +71,7 @@ export default function Input({
         <p
           id={errorId}
           role="alert"
-          className="absolute top-full left-0 mt-1 text-12med text-red"
+          className="absolute top-full left-0 right-0 mt-1 text-12med text-red"
         >
           {error}
         </p>

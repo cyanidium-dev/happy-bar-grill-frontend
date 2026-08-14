@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
-import localFont from "next/font/local";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing, type Locale } from "@/i18n/routing";
+import { findSansPro } from "@/fonts/findSans";
 import Header from "@/components/shared/header/Header";
 import Footer from "@/components/shared/footer/Footer";
 import {
@@ -19,35 +19,6 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin", "cyrillic"],
   weight: ["300", "400", "500", "600", "700", "800"],
-  display: "swap",
-});
-
-// Display / headings / prices. Bound to --font-display.
-// Not on Google Fonts — self-hosted from src/fonts (SIL OFL, see LICENSE.txt there).
-const findSansPro = localFont({
-  src: [
-    {
-      path: "../../fonts/FindSansPro/FindSansPro-Light.ttf",
-      weight: "300",
-      style: "normal",
-    },
-    {
-      path: "../../fonts/FindSansPro/FindSansPro-Regular.ttf",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../../fonts/FindSansPro/FindSansPro-Medium.ttf",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../../fonts/FindSansPro/FindSansPro-Bold.ttf",
-      weight: "700",
-      style: "normal",
-    },
-  ],
-  variable: "--font-findsans",
   display: "swap",
 });
 

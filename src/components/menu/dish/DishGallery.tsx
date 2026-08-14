@@ -113,8 +113,9 @@ export default function DishGallery({
           src={current.url}
           alt={current.alt}
           fill
-          priority={priority}
-          sizes="(min-width: 1024px) 560px, 100vw"
+          loading={priority && index === 0 ? "eager" : "lazy"}
+          fetchPriority={priority && index === 0 ? "high" : "auto"}
+          sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 560px"
           className="object-cover"
         />
 

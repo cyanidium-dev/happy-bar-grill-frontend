@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
     // Keep this list small and stable — a corrupted/growing qualities array
     // floods the terminal and inflates memory during Turbopack HMR.
     qualities: [75, 90],
+    // Drop the default 3840 slot: with `sizes="100vw"` a 2x desktop still
+    // requests 4K, and a missing/loose `sizes` sends that even to phones.
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     remotePatterns: [
       {
         protocol: "https",

@@ -37,7 +37,8 @@ export default function CardMedia({
         alt={alt}
         fill
         sizes={sizes}
-        priority={priority}
+        loading={priority ? "eager" : "lazy"}
+        fetchPriority={priority ? "high" : "auto"}
         className="object-cover transition-transform duration-500 ease-out xl:group-hover:scale-105"
       />
     </div>

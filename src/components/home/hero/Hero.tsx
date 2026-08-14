@@ -32,6 +32,8 @@ export default async function Hero() {
           src="/images/home/hero/bg.webp"
           alt={t("bgImageAlt")}
           fill
+          loading="eager"
+          fetchPriority="high"
           sizes="100vw"
           className="object-cover object-[60%_50%]"
         />
@@ -64,7 +66,9 @@ export default async function Hero() {
             src="/images/home/hero/burger.webp"
             alt={t("burgerImageAlt")}
             fill
-            sizes="(max-width: 480px) 409px, (max-width: 1024px) 590px, (max-width: 1280px) 750px, 959px"
+            loading="eager"
+            fetchPriority="high"
+            sizes="(max-width: 519px) 409px, (max-width: 1023px) 590px, (max-width: 1279px) 750px, 959px"
             className="object-cover"
           />
         </div>

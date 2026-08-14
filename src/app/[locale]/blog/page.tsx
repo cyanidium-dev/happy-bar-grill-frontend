@@ -39,9 +39,10 @@ export default async function BlogPage({ params }: PageProps) {
             src="/images/home/hero/bg.webp"
             alt=""
             fill
+            loading="eager"
+            fetchPriority="high"
             sizes="100vw"
             className="object-cover object-[60%_50%]"
-            priority
           />
         </div>
         <Container className="relative">

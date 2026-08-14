@@ -35,18 +35,50 @@ interface CartState {
   repeatLastOrder: () => void;
 }
 
+/** Finite, non-negative catalog price; `null` for NaN, negatives, non-numbers. */
+function normalizeCartPrice(value: unknown): number | null {
+  if (typeof value !== "number" || !Number.isFinite(value) || value < 0) {
+    return null;
+  }
+  return value;
+}
+
+/**
+ * Keep only image sources `next/image` can render: an empty string, a
+ * root-relative path, or an `https:` URL. A tampered or stale snapshot with a
+ * `javascript:` / `data:` / `http:` value would otherwise throw at render.
+ */
+function sanitizeCartImage(value: unknown): string {
+  if (typeof value !== "string") return "";
+  const src = value.trim();
+  if (!src) return "";
+  if (src.startsWith("/")) return src;
+  return /^https:\/\//i.test(src) ? src : "";
+}
+
 function sanitizeCartItems(items: CartItem[]): CartItem[] {
   if (!Array.isArray(items)) return [];
   return items.flatMap((item) => {
     const quantity = normalizeCartQuantity(item?.quantity);
-    if (!item?.id || quantity === null) return [];
+    const price = normalizeCartPrice(item?.price);
+    if (!item?.id || quantity === null || price === null) return [];
 
     const parsed = parseCartLineId(item.id);
     const slug = item.slug || parsed.slug;
     const categorySlug = item.categorySlug || parsed.categorySlug || undefined;
     const id = categorySlug ? cartLineId(categorySlug, slug) : item.id;
 
-    return [{ ...item, id, slug, categorySlug, quantity }];
+    return [
+      {
+        ...item,
+        id,
+        slug,
+        categorySlug,
+        quantity,
+        price,
+        image: sanitizeCartImage(item.image),
+      },
+    ];
   });
 }
 

@@ -63,13 +63,16 @@ export default async function MenuSections({
   const lead = groups.find((group) => group.slug === entrySlug);
   if (lead && entry?.description) lead.description = entry.description;
 
-  const ordered = lead
-    ? [lead, ...groups.filter((group) => group !== lead)]
-    : groups;
-
+  /**
+   * Deliberately not reordered. Hoisting the entry category to the front made
+   * the section order differ from the chip strip, so the highlight jumped
+   * backwards and forwards across the strip as you scrolled. One order
+   * everywhere — the route decides where you *land*, not how the menu is
+   * arranged.
+   */
   return (
     <div className="flex flex-col gap-10 md:gap-14">
-      {ordered.map((group) => {
+      {groups.map((group) => {
         const isLead = group === lead;
         const Heading = isLead ? "h1" : "h2";
 

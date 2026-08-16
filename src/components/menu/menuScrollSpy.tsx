@@ -122,6 +122,32 @@ export default function MenuScrollSpyProvider({
       }),
     );
 
+    /**
+     * Landing on a category URL puts you at that category. The menu itself
+     * keeps one order everywhere — the route decides where you arrive, not how
+     * the list is arranged — so this is a jump, not a scroll: animating it
+     * would look like the page moving on its own the moment it opened.
+     */
+    if (entrySlug !== "all") {
+      const target = document.querySelector<HTMLElement>(
+        `[${MENU_SECTION_ATTR}="${entrySlug}"]`,
+      );
+      if (target) {
+        const header =
+          parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue(
+              "--header-height",
+            ),
+          ) || 0;
+        window.scrollTo({
+          top:
+            window.scrollY + target.getBoundingClientRect().top - header - 72,
+          behavior: "instant" as ScrollBehavior,
+        });
+        ScrollTrigger.update();
+      }
+    }
+
     return () => triggers.forEach((trigger) => trigger.kill());
   });
 

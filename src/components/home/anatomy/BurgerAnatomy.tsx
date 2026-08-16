@@ -3,11 +3,11 @@
 import { useRef, useState } from "react";
 import BurgerSvg, {
   BURGER_LAYERS,
-  COLLAPSED_SHIFT_X,
+  EXPLODE_SHIFT_X,
+  type BurgerLabel,
   type BurgerLayerId,
 } from "@/components/shared/burger/BurgerSvg";
 import {
-  DESKTOP_HOVER,
   FULL_MOTION,
   REDUCED_MOTION,
   ScrollTrigger,
@@ -16,28 +16,30 @@ import {
 } from "@/lib/gsap";
 
 type Props = {
-  labels: Record<BurgerLayerId, string>;
+  labels: Record<BurgerLayerId, BurgerLabel>;
   hint: string;
 };
 
 /**
- * Pulls the burger apart into its ingredients.
+ * Takes the burger apart into its ingredients as the section scrolls past.
  *
- * Desktop pointers drive it by hover; touch and narrow viewports get it on
- * scroll, since there is no hover to give. Both paths play the same timeline,
- * so the choreography only exists once.
+ * Arriving in view drives it on every device, pointer or not. Hover was the
+ * obvious choice on desktop but it hid the whole thing from anyone who never
+ * happened to move the mouse over it, and it gave touch and desktop two
+ * separate behaviours to keep in step.
  */
 export default function BurgerAnatomy({ labels, hint }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const [exploded, setExploded] = useState(false);
 
   useGSAP(
-    (_context, contextSafe) => {
-      const stack = root.current?.querySelector("[data-burger-stack]");
-      if (!stack || !contextSafe) return;
+    () => {
+      const node = root.current;
+      const stack = node?.querySelector("[data-burger-stack]");
+      if (!node || !stack) return;
 
       const layers = BURGER_LAYERS.map((layer) => ({
-        ...layer,
+        dy: layer.dy,
         node: stack.querySelector(`[data-burger-layer="${layer.id}"]`),
       })).filter((layer) => layer.node);
 
@@ -50,33 +52,17 @@ export default function BurgerAnatomy({ labels, hint }: Props) {
           defaults: { ease: "power3.inOut" },
         });
 
-        tl.to(stack, { x: -COLLAPSED_SHIFT_X, duration: 0.7 }, 0);
+        tl.to(stack, { x: -EXPLODE_SHIFT_X, duration: 0.7 }, 0);
 
         // Top layers lift first, bottom layers settle last — the burger reads
         // as opening upward rather than every slice sliding at once.
         layers.forEach((layer, index) => {
           tl.to(
             layer.node,
-            {
-              y: layer.dy,
-              rotate: index % 2 === 0 ? -1.5 : 1.5,
-              duration: 0.7,
-              ease: "back.out(1.4)",
-            },
+            { y: layer.dy, duration: 0.7, ease: "power2.out" },
             index * 0.045,
           );
         });
-
-        tl.to(
-          "[data-burger-shadow]",
-          {
-            scaleX: 0.82,
-            opacity: 0.1,
-            transformOrigin: "center",
-            duration: 0.7,
-          },
-          0,
-        );
 
         tl.to(lineNodes, { opacity: 0.45, duration: 0.3, stagger: 0.04 }, 0.35);
         tl.fromTo(
@@ -98,80 +84,52 @@ export default function BurgerAnatomy({ labels, hint }: Props) {
       const mm = gsap.matchMedia();
 
       mm.add(REDUCED_MOTION, () => {
-        // No travel — the ingredient labels still need to be reachable, so the
+        // No travel — the ingredient names still have to be readable, so the
         // exploded state is simply the resting state here.
-        const tl = build();
-        tl.progress(1).pause();
+        build().progress(1).pause();
         setExploded(true);
       });
 
-      mm.add(
-        { desktop: `${FULL_MOTION} and ${DESKTOP_HOVER}`, rest: FULL_MOTION },
-        (context) => {
-          const tl = build();
-          const { desktop } = context.conditions as { desktop: boolean };
+      mm.add(FULL_MOTION, () => {
+        const tl = build();
 
-          if (desktop) {
-            const open = contextSafe(() => {
-              setExploded(true);
-              tl.play();
-            });
-            const close = contextSafe(() => {
-              setExploded(false);
-              tl.reverse();
-            });
+        /**
+         * Play it, don't scrub it. Tying progress to scroll position made the
+         * burger's state a function of how fast you happened to be flicking,
+         * and it could sit half-open indefinitely. Here it simply runs once,
+         * at its own pace, when it comes into view — and runs back if you
+         * scroll above it again.
+         */
+        const trigger = ScrollTrigger.create({
+          trigger: node,
+          start: "top 75%",
+          onEnter: () => {
+            setExploded(true);
+            tl.play();
+          },
+          onLeaveBack: () => {
+            setExploded(false);
+            tl.reverse();
+          },
+        });
 
-            const node = root.current;
-            node?.addEventListener("pointerenter", open);
-            node?.addEventListener("pointerleave", close);
-            node?.addEventListener("focusin", open);
-            node?.addEventListener("focusout", close);
-
-            return () => {
-              node?.removeEventListener("pointerenter", open);
-              node?.removeEventListener("pointerleave", close);
-              node?.removeEventListener("focusin", open);
-              node?.removeEventListener("focusout", close);
-            };
-          }
-
-          const node = root.current;
-          if (!node) return;
-
-          const trigger = ScrollTrigger.create({
-            trigger: node,
-            start: "top 72%",
-            end: "bottom 28%",
-            onEnter: () => {
-              setExploded(true);
-              tl.play();
-            },
-            onLeaveBack: () => {
-              setExploded(false);
-              tl.reverse();
-            },
-          });
-
-          return () => trigger.kill();
-        },
-      );
+        return () => trigger.kill();
+      });
     },
     { scope: root },
   );
 
   return (
-    <div
-      ref={root}
-      tabIndex={0}
-      className="relative w-full max-w-[640px] rounded-lg outline-none focus-visible:shadow-focus"
-    >
-      {/* The drawing is decorative; the ingredient names are the real content,
-          so they are exposed as a plain list instead of SVG text nobody can
-          reach when the burger is stacked. */}
+    <div ref={root} className="relative w-full max-w-[720px]">
+      {/* The photo is decorative; the ingredient names are the real content,
+          so they are exposed as a plain list rather than as SVG text nobody
+          can reach while the burger is stacked. */}
       <BurgerSvg labels={labels} className="w-full text-navy" />
       <ul className="sr-only">
         {BURGER_LAYERS.map((layer) => (
-          <li key={layer.id}>{labels[layer.id]}</li>
+          <li key={layer.id}>
+            {labels[layer.id].name}. {labels[layer.id].text}
+          </li>
         ))}
       </ul>
       <p

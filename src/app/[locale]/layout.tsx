@@ -7,8 +7,8 @@ import { routing, type Locale } from "@/i18n/routing";
 import { findSansPro } from "@/fonts/findSans";
 import Header from "@/components/shared/header/Header";
 import Footer from "@/components/shared/footer/Footer";
-import Preloader from "@/components/shared/preloader/Preloader";
 import ScrollProgress from "@/components/shared/scroll/ScrollProgress";
+import ScrollRefresh from "@/components/shared/scroll/ScrollRefresh";
 import BackToTop from "@/components/shared/scroll/BackToTop";
 import {
   defaultSocialImageUrl,
@@ -94,8 +94,8 @@ export default async function RootLayout({ children, params }: LayoutProps) {
     >
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider>
-          <Preloader />
           <ScrollProgress />
+          <ScrollRefresh />
           <a
             href="#main-content"
             className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-sm focus:bg-white focus:px-4 focus:py-3 focus:text-14med focus:text-navy focus:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-sky"

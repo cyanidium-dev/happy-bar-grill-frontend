@@ -385,23 +385,6 @@
 }
 
 /**
- * Escape hatch for the intro overlay. It is server-rendered so the page never
- * flashes before the animation starts, which also means a visitor whose JS
- * fails would otherwise stare at a locked navy screen. GSAP normally unmounts
- * the overlay long before this fires.
- */
-@keyframes preloader-failsafe {
-  to {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
-.preloader-failsafe {
-  animation: preloader-failsafe 400ms ease-out 5s forwards;
-}
-
-/**
  * Same idea for the page-enter fade. The wrapper ships at `opacity: 0` so the
  * fade has somewhere to start without a flash of finished content, which
  * would otherwise leave the whole page invisible if JS never runs. GSAP sets

@@ -4,7 +4,10 @@ import BurgerAnatomy from "@/components/home/anatomy/BurgerAnatomy";
 import Button from "@/components/shared/buttons/Button";
 import Section from "@/components/shared/Section";
 import SectionTitle from "@/components/shared/titles/SectionTitle";
-import type { BurgerLayerId } from "@/components/shared/burger/BurgerSvg";
+import type {
+  BurgerLabel,
+  BurgerLayerId,
+} from "@/components/shared/burger/BurgerSvg";
 
 const LAYER_IDS: BurgerLayerId[] = [
   "topBun",
@@ -25,8 +28,11 @@ export default async function BurgerAnatomySection() {
   const t = await getTranslations("HomePage.anatomy");
 
   const labels = Object.fromEntries(
-    LAYER_IDS.map((id) => [id, t(`layers.${id}`)]),
-  ) as Record<BurgerLayerId, string>;
+    LAYER_IDS.map((id) => [
+      id,
+      { name: t(`layers.${id}.name`), text: t(`layers.${id}.text`) },
+    ]),
+  ) as Record<BurgerLayerId, BurgerLabel>;
 
   return (
     <Section background="white" accent={["warm", "cool"]}>

@@ -29,12 +29,18 @@ const MenuScrollSpyContext = createContext<Spy>({
 export const useMenuScrollSpy = () => useContext(MenuScrollSpyContext);
 
 /**
- * Point the address bar at the category being read, without a navigation.
+ * Point the address bar at a category, without a navigation.
  *
- * `replaceState` rather than `pushState`: scrolling through seven categories
- * should not bury the previous page under seven back-button presses. The
- * locale prefix is preserved by rebuilding from the current path, since
- * next-intl may or may not include it depending on the routing config.
+ * Called on a chip tap only — never from the scroll. Following the scroll
+ * would make the URL mean "you happened to pass this" rather than "you chose
+ * this": analytics that auto-track history changes would count one reader
+ * browsing the menu as eight page views, and anyone copying the address to
+ * share the menu would send whichever category they stopped on.
+ *
+ * `replaceState` rather than `pushState`, so choosing four categories does not
+ * bury the previous page under four back-button presses. The locale prefix is
+ * preserved by rebuilding from the current path, since next-intl may or may
+ * not include it depending on the routing config.
  */
 function syncUrl(slug: string) {
   const parts = window.location.pathname.split("/").filter(Boolean);
@@ -101,10 +107,10 @@ export default function MenuScrollSpyProvider({
         invalidateOnRefresh: true,
         onToggle: (self) => {
           if (seeking.current) return;
+          // Highlight only. The address bar deliberately does *not* follow the
+          // scroll — see `syncUrl`.
           if (!self.isActive) return;
-          const slug = section.getAttribute(MENU_SECTION_ATTR);
-          setActiveSlug(slug);
-          if (slug) syncUrl(slug);
+          setActiveSlug(section.getAttribute(MENU_SECTION_ATTR));
         },
         /**
          * How far through the current category the reader is, published as a

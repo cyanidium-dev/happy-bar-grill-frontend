@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -42,6 +43,15 @@ export default function MenuScrollSpyProvider({
 }) {
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
 
+  /**
+   * True while a chip-driven scroll is in flight. The spy is muted for its
+   * duration: the tween sweeps past every category in between, which would
+   * otherwise strobe the highlight through them, and the fill would inherit
+   * the old category's progress — reading as full for a moment before
+   * snapping back to empty.
+   */
+  const seeking = useRef(false);
+
   useGSAP(() => {
     const sections = gsap.utils.toArray<HTMLElement>(`[${MENU_SECTION_ATTR}]`);
     if (!sections.length) return;
@@ -66,6 +76,7 @@ export default function MenuScrollSpyProvider({
         end: () => `bottom ${line()}px`,
         invalidateOnRefresh: true,
         onToggle: (self) => {
+          if (seeking.current) return;
           if (self.isActive) {
             setActiveSlug(section.getAttribute(MENU_SECTION_ATTR));
           }
@@ -77,7 +88,7 @@ export default function MenuScrollSpyProvider({
          * far more than the one style write the fill actually needs.
          */
         onUpdate: (self) => {
-          if (!self.isActive) return;
+          if (seeking.current || !self.isActive) return;
           document.documentElement.style.setProperty(
             CATEGORY_PROGRESS_VAR,
             String(self.progress),
@@ -106,13 +117,21 @@ export default function MenuScrollSpyProvider({
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
+    // Land on the target before the spy speaks again, and start its fill from
+    // empty rather than wherever the previous category left it.
+    seeking.current = true;
+    setActiveSlug(slug);
+    document.documentElement.style.setProperty(CATEGORY_PROGRESS_VAR, "0");
+
     gsap.to(window, {
       duration: reduced ? 0 : 0.7,
       ease: "power2.inOut",
       scrollTo: { y: target, offsetY: header + 72 },
+      onComplete: () => {
+        seeking.current = false;
+        ScrollTrigger.update();
+      },
     });
-
-    setActiveSlug(slug);
     return true;
   }, []);
 

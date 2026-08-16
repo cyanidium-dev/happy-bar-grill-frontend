@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import CardMedia from "@/components/shared/cards/CardMedia";
 import QuoteIcon from "@/components/shared/icons/QuoteIcon";
+import ReviewStars from "@/components/home/reviews/ReviewStars";
 import type { Review } from "@/types/content";
 
 /** Single testimonial: avatar, rating, quote, author and a link to the source. */
@@ -46,21 +47,10 @@ export default async function ReviewCard({ review }: { review: Review }) {
             <span className="truncate text-16semi text-white">
               {review.author}
             </span>
-            <div
-              className="flex items-center gap-0.5 text-14med"
-              role="img"
-              aria-label={t("rating", { value: review.rating })}
-            >
-              {Array.from({ length: 5 }).map((_, index) => (
-                <span
-                  key={index}
-                  aria-hidden
-                  className={index < review.rating ? "text-sand" : "text-white/30"}
-                >
-                  ★
-                </span>
-              ))}
-            </div>
+            <ReviewStars
+              rating={review.rating}
+              label={t("rating", { value: review.rating })}
+            />
           </div>
         </div>
 

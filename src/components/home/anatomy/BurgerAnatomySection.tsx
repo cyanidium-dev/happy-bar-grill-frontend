@@ -35,7 +35,7 @@ export default async function BurgerAnatomySection() {
   ) as Record<BurgerLayerId, BurgerLabel>;
 
   return (
-    <Section background="white" accent={["warm", "cool"]} waveTop="navy">
+    <Section background="white" accent={["warm", "cool"]}>
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <AnimatedWrapper className="flex flex-col gap-3">
           <SectionTitle className="max-w-[540px]">{t("title")}</SectionTitle>

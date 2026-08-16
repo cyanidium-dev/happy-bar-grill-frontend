@@ -4,9 +4,6 @@ export const SPECIAL_OFFERS_SLUG = "special-offers";
 /** Anchor for the menu catalog (`MenuView`) — category nav scrolls here. */
 export const MENU_CATALOG_ID = "menu-catalog";
 
-/** sessionStorage flag set by category nav before soft-navigating. */
-export const MENU_SCROLL_FLAG = "scrollToMenuCatalog";
-
 /**
  * Marks a category block on the full catalog, so the chip strip can tell which
  * one is on screen and scroll to it.

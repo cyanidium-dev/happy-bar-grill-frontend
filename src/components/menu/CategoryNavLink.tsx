@@ -1,13 +1,9 @@
 "use client";
 
 import type { ComponentProps } from "react";
-import { Link, usePathname } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { useMenuScrollSpy } from "@/components/menu/menuScrollSpy";
-import {
-  CATEGORY_PROGRESS_VAR,
-  MENU_CATALOG_ID,
-  MENU_SCROLL_FLAG,
-} from "@/constants/menu";
+import { CATEGORY_PROGRESS_VAR } from "@/constants/menu";
 import { cn } from "@/utils/cn";
 
 type CategoryNavLinkProps = Omit<
@@ -44,16 +40,12 @@ export default function CategoryNavLink({
   children,
   ...props
 }: CategoryNavLinkProps) {
-  const pathname = usePathname();
   const spy = useMenuScrollSpy();
 
-  // While scroll-spying, "all" is the state before the first section is
-  // reached; otherwise the route decides.
-  const active = spy.enabled
-    ? slug === "all"
-      ? spy.activeSlug === null
-      : spy.activeSlug === slug
-    : routeActive;
+  // The catalog is one page now, so the current category comes from the scroll
+  // position. `routeActive` only seeds it for the first paint, before the spy
+  // has reported anything.
+  const active = spy.activeSlug ? spy.activeSlug === slug : routeActive;
 
   return (
     <Link
@@ -65,33 +57,10 @@ export default function CategoryNavLink({
         onClick?.(event);
         if (event.defaultPrevented) return;
 
-        if (spy.enabled) {
-          if (slug === "all") {
-            event.preventDefault();
-            document
-              .getElementById(MENU_CATALOG_ID)
-              ?.scrollIntoView({ block: "start", behavior: "smooth" });
-            return;
-          }
-          // Falls through to normal navigation for categories that have no
-          // section here — Special offers, which is a tag rather than a
-          // category and so never appears in the grouped list.
-          if (spy.scrollTo(slug)) {
-            event.preventDefault();
-            return;
-          }
-        }
-
-        // Same route — no pathname change, so scroll immediately.
-        if (pathname === href) {
-          document
-            .getElementById(MENU_CATALOG_ID)
-            ?.scrollIntoView({ block: "start" });
-          return;
-        }
-
-        // Soft nav — `MenuCatalogScroll` scrolls after the new page paints.
-        sessionStorage.setItem(MENU_SCROLL_FLAG, "1");
+        // Every chip has a section on the page, so nothing here navigates —
+        // the URL is rewritten by the scroll instead. The href stays real so
+        // the link is still shareable, openable in a new tab and crawlable.
+        if (spy.scrollTo(slug)) event.preventDefault();
       }}
       {...props}
     >
@@ -101,7 +70,7 @@ export default function CategoryNavLink({
         CSS variable the scroll-spy writes on every tick — React never sees it.
         Red over navy keeps the white label readable across both halves.
       */}
-      {active && spy.enabled ? (
+      {active ? (
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 origin-left rounded-full bg-red"

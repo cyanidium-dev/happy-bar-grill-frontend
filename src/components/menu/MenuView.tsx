@@ -1,68 +1,55 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { FOOTER_WAVE_HEIGHT_CLASS } from "@/config/footer";
 import { MENU_CATALOG_ID } from "@/constants/menu";
-import { getAllDishes, getDishesByCategory } from "@/data/menu";
+import { getAllDishes, getPromotions } from "@/data/menu";
+import type { Locale } from "@/i18n/routing";
 import CategoryNav from "./CategoryNav";
-import DishesGrid from "./DishesGrid";
 import MenuCatalog from "./MenuCatalog";
-import MenuCatalogScroll from "./MenuCatalogScroll";
 import MenuDecorations from "./MenuDecorations";
 import MenuScrollSpyProvider from "./menuScrollSpy";
 import MenuSections from "./MenuSections";
 
 /**
- * Shared menu body used by both `/menu` (activeSlug="all") and
- * `/menu/[category]`: category navigation + the dishes grid. Mobile chips
- * sit outside the container; from xl the sidebar sits in one row with the
- * dishes, top-aligned.
+ * The menu body, identical on `/menu` and on every `/menu/[category]`.
+ *
+ * There is one catalog and one behaviour. The route only decides which
+ * category leads — it is hoisted to the front and carries the `<h1>` — so a
+ * category URL still reads as a page about that category, while the visitor
+ * gets a list they can keep scrolling through. The chip strip follows along
+ * and rewrites the URL as they pass each one.
  */
 export default async function MenuView({ activeSlug }: { activeSlug: string }) {
   const t = await getTranslations("Menu");
-  const isFullCatalog = activeSlug === "all";
-  const dishes = isFullCatalog
-    ? await getAllDishes()
-    : await getDishesByCategory(activeSlug);
+  const locale = (await getLocale()) as Locale;
 
-  const catalog = (
-    <MenuCatalog
-      dishes={dishes}
-      mobileNav={<CategoryNav activeSlug={activeSlug} variant="mobile" />}
-      desktopNav={<CategoryNav activeSlug={activeSlug} variant="desktop" />}
-      decorations={<MenuDecorations />}
-    >
-      {/* The full catalog reads as one continuous list broken into category
-          headings, so the chips can follow the scroll. A single category is
-          already its own route — a flat grid is all it needs. */}
-      {isFullCatalog ? (
-        <MenuSections
-          dishes={dishes}
-          emptyLabel={t("emptyCategory")}
-          emptyFilterLabel={t("priceFilter.empty")}
-        />
-      ) : (
-        <DishesGrid
-          dishes={dishes}
-          emptyLabel={t("emptyCategory")}
-          emptyFilterLabel={t("priceFilter.empty")}
-        />
-      )}
-    </MenuCatalog>
-  );
+  const [dishes, promotions] = await Promise.all([
+    getAllDishes(locale),
+    getPromotions(locale),
+  ]);
 
   return (
     <section
       id={MENU_CATALOG_ID}
       className="relative overflow-x-clip bg-white scroll-mt-[var(--header-height)]"
     >
-      <MenuCatalogScroll />
-      {/* Only the full catalog has sections to spy on. Mounting the provider
-          on a category route would leave it with nothing to track, and the
-          chips would fall back to reporting "All dishes" as current. */}
-      {isFullCatalog ? (
-        <MenuScrollSpyProvider>{catalog}</MenuScrollSpyProvider>
-      ) : (
-        catalog
-      )}
+      <MenuScrollSpyProvider entrySlug={activeSlug}>
+        <MenuCatalog
+          dishes={dishes}
+          mobileNav={<CategoryNav activeSlug={activeSlug} variant="mobile" />}
+          desktopNav={<CategoryNav activeSlug={activeSlug} variant="desktop" />}
+          decorations={<MenuDecorations />}
+        >
+          <MenuSections
+            dishes={dishes}
+            promotions={promotions}
+            entrySlug={activeSlug}
+            specialOffersLabel={t("specialOffers")}
+            emptyLabel={t("emptyCategory")}
+            emptyFilterLabel={t("priceFilter.empty")}
+            locale={locale}
+          />
+        </MenuCatalog>
+      </MenuScrollSpyProvider>
       <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
     </section>
   );

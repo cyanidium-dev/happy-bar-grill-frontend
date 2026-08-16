@@ -29,6 +29,25 @@ const MenuScrollSpyContext = createContext<Spy>({
 export const useMenuScrollSpy = () => useContext(MenuScrollSpyContext);
 
 /**
+ * Point the address bar at the category being read, without a navigation.
+ *
+ * `replaceState` rather than `pushState`: scrolling through seven categories
+ * should not bury the previous page under seven back-button presses. The
+ * locale prefix is preserved by rebuilding from the current path, since
+ * next-intl may or may not include it depending on the routing config.
+ */
+function syncUrl(slug: string) {
+  const parts = window.location.pathname.split("/").filter(Boolean);
+  const menuIndex = parts.indexOf("menu");
+  if (menuIndex === -1) return;
+
+  const next = `/${[...parts.slice(0, menuIndex + 1), slug].join("/")}`;
+  if (next === window.location.pathname) return;
+
+  window.history.replaceState(window.history.state, "", next);
+}
+
+/**
  * Tracks which category the reader is currently inside on the full `/menu`
  * page, so the chip strip can follow along, and lets the chips scroll to a
  * category instead of navigating to its route.
@@ -37,11 +56,16 @@ export const useMenuScrollSpy = () => useContext(MenuScrollSpyContext);
  * the chips there stay ordinary links.
  */
 export default function MenuScrollSpyProvider({
+  entrySlug,
   children,
 }: {
+  /** Category the visitor landed on, or "all". Leads the catalog. */
+  entrySlug: string;
   children: ReactNode;
 }) {
-  const [activeSlug, setActiveSlug] = useState<string | null>(null);
+  const [activeSlug, setActiveSlug] = useState<string | null>(
+    entrySlug === "all" ? null : entrySlug,
+  );
 
   /**
    * True while a chip-driven scroll is in flight. The spy is muted for its
@@ -77,9 +101,10 @@ export default function MenuScrollSpyProvider({
         invalidateOnRefresh: true,
         onToggle: (self) => {
           if (seeking.current) return;
-          if (self.isActive) {
-            setActiveSlug(section.getAttribute(MENU_SECTION_ATTR));
-          }
+          if (!self.isActive) return;
+          const slug = section.getAttribute(MENU_SECTION_ATTR);
+          setActiveSlug(slug);
+          if (slug) syncUrl(slug);
         },
         /**
          * How far through the current category the reader is, published as a
@@ -121,6 +146,7 @@ export default function MenuScrollSpyProvider({
     // empty rather than wherever the previous category left it.
     seeking.current = true;
     setActiveSlug(slug);
+    syncUrl(slug);
     document.documentElement.style.setProperty(CATEGORY_PROGRESS_VAR, "0");
 
     gsap.to(window, {

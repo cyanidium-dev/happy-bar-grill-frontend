@@ -64,6 +64,7 @@ export default async function AboutValues() {
         className="pointer-events-none absolute hidden md:bottom-[-220px] md:right-[-150px] md:block md:h-[458px] md:w-[535px] lg:right-[-100px] lg:bottom-[-240px] xl:bottom-[-240px] xl:right-[-150px] lg:h-[458px] lg:w-[535px]"
         animation={decorFade}
         amount={0.01}
+        parallax={18}
       >
         <Image
           src="/images/home/promotions/pizza.webp"
@@ -78,6 +79,7 @@ export default async function AboutValues() {
         className="pointer-events-none absolute top-[10px] xs:top-[50px] left-[280px] xs:left-auto xs:right-[10px] h-[223px] w-[199px] md:top-[50px] md:right-[70px] md:left-auto lg:top-[40px] lg:right-[210px]"
         animation={decorFade}
         amount={0.01}
+        parallax={-12}
       >
         <Image
           src="/images/home/promotions/tomato-top.webp"
@@ -92,6 +94,7 @@ export default async function AboutValues() {
         className="pointer-events-none absolute bottom-[-40px] left-[-60px] h-[166px] w-[261px]"
         animation={decorFade}
         amount={0.01}
+        parallax={24}
       >
         <Image
           src="/images/home/promotions/tomato-bottom.webp"

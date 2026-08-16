@@ -21,6 +21,13 @@ type AnimatedWrapperProps = {
   once?: boolean;
   /** Roughly how much of the element must be in view before it reveals. */
   amount?: number;
+  /**
+   * Drift while the element crosses the viewport, as a percentage of its own
+   * height. Negative rises against the scroll, positive lags behind it.
+   * Uses `yPercent` so it composes with the reveal's `y` instead of fighting
+   * it for the same property.
+   */
+  parallax?: number;
   children?: ReactNode;
 } & Omit<HTMLAttributes<HTMLElement>, "children">;
 
@@ -30,6 +37,7 @@ export default function AnimatedWrapper({
   animation = {},
   once = true,
   amount = 0.2,
+  parallax,
   children,
   ...rest
 }: AnimatedWrapperProps) {
@@ -74,8 +82,12 @@ export default function AnimatedWrapper({
              * Drop the transform once the element lands. A lingering transform
              * makes the node a backdrop root, which kills `backdrop-filter` on
              * the frosted dish cards nested inside these wrappers.
+             *
+             * Spread rather than set to `undefined`: GSAP treats a present key
+             * differently from an absent one, and an explicit `undefined`
+             * throws inside the ticker when it tries to parse the list.
              */
-            clearProps: moves ? "transform" : undefined,
+            ...(moves && !parallax ? { clearProps: "transform" } : {}),
             scrollTrigger: {
               trigger: node,
               start: `top ${Math.round(100 - amount * 100)}%`,
@@ -86,6 +98,23 @@ export default function AnimatedWrapper({
             },
           },
         );
+
+        if (parallax) {
+          gsap.fromTo(
+            node,
+            { yPercent: -parallax / 2 },
+            {
+              yPercent: parallax / 2,
+              ease: "none",
+              scrollTrigger: {
+                trigger: node,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 0.5,
+              },
+            },
+          );
+        }
       });
     },
     { dependencies: [node] },

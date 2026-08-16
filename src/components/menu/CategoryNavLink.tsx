@@ -3,7 +3,11 @@
 import type { ComponentProps } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useMenuScrollSpy } from "@/components/menu/menuScrollSpy";
-import { MENU_CATALOG_ID, MENU_SCROLL_FLAG } from "@/constants/menu";
+import {
+  CATEGORY_PROGRESS_VAR,
+  MENU_CATALOG_ID,
+  MENU_SCROLL_FLAG,
+} from "@/constants/menu";
 import { cn } from "@/utils/cn";
 
 type CategoryNavLinkProps = Omit<
@@ -37,6 +41,7 @@ export default function CategoryNavLink({
   activeClassName,
   inactiveClassName,
   onClick,
+  children,
   ...props
 }: CategoryNavLinkProps) {
   const pathname = usePathname();
@@ -89,6 +94,23 @@ export default function CategoryNavLink({
         sessionStorage.setItem(MENU_SCROLL_FLAG, "1");
       }}
       {...props}
-    />
+    >
+      {/*
+        Fills left to right as the reader moves through this category, so the
+        highlight hands over to the next chip instead of snapping. Driven by a
+        CSS variable the scroll-spy writes on every tick — React never sees it.
+        Red over navy keeps the white label readable across both halves.
+      */}
+      {active && spy.enabled ? (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 origin-left rounded-full bg-red"
+          style={{
+            transform: `scaleX(var(${CATEGORY_PROGRESS_VAR}, 0))`,
+          }}
+        />
+      ) : null}
+      <span className="relative">{children}</span>
+    </Link>
   );
 }

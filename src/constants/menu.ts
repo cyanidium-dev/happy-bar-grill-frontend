@@ -17,6 +17,13 @@ export const MENU_SCROLL_FLAG = "scrollToMenuCatalog";
  */
 export const MENU_SECTION_ATTR = "data-menu-section";
 
+/**
+ * 0–1 progress through the category currently on screen. Written to the root
+ * element by the scroll-spy and read by the active chip's fill, so a
+ * per-scroll-tick value never has to travel through React.
+ */
+export const CATEGORY_PROGRESS_VAR = "--menu-category-progress";
+
 /** Price-filter slider (UAH). Max comes from the dishes in the catalog. */
 export const PRICE_FILTER_MIN = 0;
 export const PRICE_FILTER_STEP = 10;

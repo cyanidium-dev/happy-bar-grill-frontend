@@ -20,7 +20,8 @@ export type NavItem = {
   active: boolean;
 };
 
-const itemBase = "transition-colors duration-300 focus-visible:outline-none";
+const itemBase =
+  "relative overflow-hidden transition-colors duration-500 ease-out focus-visible:outline-none";
 const activeCls = "bg-navy text-white";
 const inactiveCls =
   "bg-white text-navy ring-1 ring-navy hover:text-red hover:ring-red transition duration-300 ease-in-out";
@@ -44,18 +45,25 @@ export default async function CategoryNav({
       slug: "all",
       active: activeSlug === "all",
     },
-    {
-      label: t("specialOffers"),
-      href: `/menu/${SPECIAL_OFFERS_SLUG}`,
-      slug: SPECIAL_OFFERS_SLUG,
-      active: activeSlug === SPECIAL_OFFERS_SLUG,
-    },
     ...categories.map((category) => ({
       label: category.name,
       href: `/menu/${category.slug}`,
       slug: category.slug,
       active: activeSlug === category.slug,
     })),
+    /**
+     * Last, after the real categories. This is a view over dishes tagged
+     * `discount` rather than a category of its own, so it has no section in the
+     * catalog and stays a route link — sitting second in the strip it read as a
+     * peer of the real categories and broke the run the scroll-spy walks
+     * through.
+     */
+    {
+      label: t("specialOffers"),
+      href: `/menu/${SPECIAL_OFFERS_SLUG}`,
+      slug: SPECIAL_OFFERS_SLUG,
+      active: activeSlug === SPECIAL_OFFERS_SLUG,
+    },
   ];
 
   if (variant === "mobile") {

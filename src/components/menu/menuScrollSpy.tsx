@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { MENU_SECTION_ATTR } from "@/constants/menu";
+import { CATEGORY_PROGRESS_VAR, MENU_SECTION_ATTR } from "@/constants/menu";
 import { ScrollTrigger, gsap, useGSAP } from "@/lib/gsap";
 
 type Spy = {
@@ -69,6 +69,19 @@ export default function MenuScrollSpyProvider({
           if (self.isActive) {
             setActiveSlug(section.getAttribute(MENU_SECTION_ATTR));
           }
+        },
+        /**
+         * How far through the current category the reader is, published as a
+         * CSS variable rather than React state: this fires on every scroll
+         * tick, and re-rendering the whole chip strip that often would cost
+         * far more than the one style write the fill actually needs.
+         */
+        onUpdate: (self) => {
+          if (!self.isActive) return;
+          document.documentElement.style.setProperty(
+            CATEGORY_PROGRESS_VAR,
+            String(self.progress),
+          );
         },
       }),
     );

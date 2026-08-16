@@ -4,7 +4,12 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 import CategoryNavLink from "@/components/menu/CategoryNavLink";
 import { cn } from "@/utils/cn";
 
-export type CategoryChip = { label: string; href: string; active: boolean };
+export type CategoryChip = {
+  label: string;
+  href: string;
+  slug: string;
+  active: boolean;
+};
 
 const itemBase = "transition-colors duration-300 focus-visible:outline-none";
 const activeCls = "bg-navy text-white";
@@ -140,12 +145,14 @@ export default function MobileCategoryChips({
             >
               <CategoryNavLink
                 href={item.href}
-                aria-current={item.active ? "page" : undefined}
+                slug={item.slug}
+                routeActive={item.active}
                 className={cn(
                   itemBase,
                   "inline-flex whitespace-nowrap rounded-full px-4 py-3 text-14med",
-                  item.active ? activeCls : inactiveCls,
                 )}
+                activeClassName={activeCls}
+                inactiveClassName={inactiveCls}
               >
                 {item.label}
               </CategoryNavLink>

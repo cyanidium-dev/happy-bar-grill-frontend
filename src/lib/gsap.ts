@@ -2,12 +2,13 @@
 
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 
 // Registering here — and importing gsap only through this module — keeps a
 // single registration point and keeps every plugin out of the server bundle.
-gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
+gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollToPlugin, SplitText);
 
 /**
  * The `prefers-reduced-motion` block in globals.css only neutralises CSS
@@ -20,4 +21,4 @@ export const FULL_MOTION = "(prefers-reduced-motion: no-preference)";
 /** Matches the `xl:` hover gate used across the components. */
 export const DESKTOP_HOVER = "(min-width: 1280px) and (hover: hover)";
 
-export { gsap, useGSAP, ScrollTrigger, SplitText };
+export { gsap, useGSAP, ScrollToPlugin, ScrollTrigger, SplitText };

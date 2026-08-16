@@ -93,9 +93,7 @@ export default function MenuCatalog({
     setSelection(null);
   };
 
-  const isFiltered = Boolean(
-    bounds && range && !isFullRange(range, bounds),
-  );
+  const isFiltered = Boolean(bounds && range && !isFullRange(range, bounds));
 
   const matchCount = useMemo(() => {
     if (!range || !isFiltered) return dishes.length;

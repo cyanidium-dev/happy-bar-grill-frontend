@@ -13,7 +13,12 @@ type CategoryNavProps = {
   variant: "mobile" | "desktop";
 };
 
-type NavItem = { label: string; href: string; active: boolean };
+export type NavItem = {
+  label: string;
+  href: string;
+  slug: string;
+  active: boolean;
+};
 
 const itemBase = "transition-colors duration-300 focus-visible:outline-none";
 const activeCls = "bg-navy text-white";
@@ -33,15 +38,22 @@ export default async function CategoryNav({
   const categories = await getCategories();
 
   const items: NavItem[] = [
-    { label: t("allDishes"), href: "/menu", active: activeSlug === "all" },
+    {
+      label: t("allDishes"),
+      href: "/menu",
+      slug: "all",
+      active: activeSlug === "all",
+    },
     {
       label: t("specialOffers"),
       href: `/menu/${SPECIAL_OFFERS_SLUG}`,
+      slug: SPECIAL_OFFERS_SLUG,
       active: activeSlug === SPECIAL_OFFERS_SLUG,
     },
     ...categories.map((category) => ({
       label: category.name,
       href: `/menu/${category.slug}`,
+      slug: category.slug,
       active: activeSlug === category.slug,
     })),
   ];
@@ -61,12 +73,14 @@ export default async function CategoryNav({
           <li key={item.href}>
             <CategoryNavLink
               href={item.href}
-              aria-current={item.active ? "page" : undefined}
+              slug={item.slug}
+              routeActive={item.active}
               className={cn(
                 itemBase,
                 "block rounded-full px-5 py-3 text-16med",
-                item.active ? activeCls : inactiveCls,
               )}
+              activeClassName={activeCls}
+              inactiveClassName={inactiveCls}
             >
               {item.label}
             </CategoryNavLink>

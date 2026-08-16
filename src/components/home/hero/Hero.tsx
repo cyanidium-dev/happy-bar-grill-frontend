@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import Button from "@/components/shared/buttons/Button";
 import Container from "@/components/shared/container/Container";
 import HeroDishCard from "@/components/home/hero/HeroDishCard";
+import HeroMotion from "@/components/home/hero/HeroMotion";
 import Image from "next/image";
 import PageTitle from "@/components/shared/titles/PageTitle";
 import { getHeroDishes } from "@/data/menu";
@@ -20,14 +21,14 @@ export default async function Hero() {
   const featuredDishes = await getHeroDishes();
 
   return (
-    <section
+    <HeroMotion
       className="relative overflow-hidden rounded-b-[24px] lg:rounded-b-[36px] pt-[123px] pb-[54px] md:pt-30 lg:pt-[150px] md:pb-[38px]"
       style={{
         marginTop: "calc(var(--header-height) * -1)",
       }}
     >
       <div className="absolute -z-30 inset-0 bg-navy-dark" />
-      <div className="absolute -z-20 top-0 left-0 inset-0">
+      <div data-hero-bg className="absolute -z-20 top-0 left-0 inset-0">
         <Image
           src="/images/home/hero/bg.webp"
           alt={t("bgImageAlt")}
@@ -40,13 +41,16 @@ export default async function Hero() {
       </div>
       <Container className="relative items-center gap-10">
         <div className="flex min-w-0 flex-col gap-7 mb-[140px] xs:mb-[91px]">
-          <div className="">
+          <div data-hero-title>
             <PageTitle className="max-w-[301px] sm:max-w-[540px]">
               {t("title")}
             </PageTitle>
           </div>
 
-          <div className="flex flex-col gap-10 lg:flex-row-reverse lg:justify-between lg:items-center lg:max-w-[500px]">
+          <div
+            data-hero-copy
+            className="flex flex-col gap-10 lg:flex-row-reverse lg:justify-between lg:items-center lg:max-w-[500px]"
+          >
             {" "}
             <p className="max-w-[220px] lg:max-w-[221px] mb-1 text-12light text-white">
               {t("description")}
@@ -61,7 +65,10 @@ export default async function Hero() {
           </div>
         </div>
 
-        <div className="absolute -z-10 left-[calc(50%-182px)] bottom-[-223px] xs:left-[69px] md:left-[200px] lg:left-[555px] xl:left-[585px] xs:bottom-[-204px] md:bottom-[-204px] lg:bottom-[-204px] xl:lg:bottom-[-294px] w-[409px] h-[353px] xs:w-[590px] xs:h-[508px] lg:w-[750px] lg:h-[647px] xl:w-[959px] xl:h-[827px]">
+        <div
+          data-hero-burger
+          className="absolute -z-10 left-[calc(50%-182px)] bottom-[-223px] xs:left-[69px] md:left-[200px] lg:left-[555px] xl:left-[585px] xs:bottom-[-204px] md:bottom-[-204px] lg:bottom-[-204px] xl:lg:bottom-[-294px] w-[409px] h-[353px] xs:w-[590px] xs:h-[508px] lg:w-[750px] lg:h-[647px] xl:w-[959px] xl:h-[827px]"
+        >
           <Image
             src="/images/home/hero/burger.webp"
             alt={t("burgerImageAlt")}
@@ -102,7 +109,10 @@ export default async function Hero() {
         </div>
       </Container>
       <div className="min-w-0 xs:max-w-full lg:max-w-[1024px] xl:max-w-[1280px] lg:px-20 sm:ml-[calc(50%-320px)] md:ml-[calc(50%-384px)] lg:ml-[calc(50%-512px)] xl:ml-[calc(50%-640px)] mx-auto">
-        <ul className="flex min-w-0 items-stretch gap-3 overflow-x-auto pl-6 lg:pl-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <ul
+          data-hero-rail
+          className="flex min-w-0 items-stretch gap-3 overflow-x-auto pl-6 lg:pl-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
           {featuredDishes.map((dish) => (
             <li key={dish.slug} className="flex shrink-0">
               <HeroDishCard dish={dish} />
@@ -110,6 +120,6 @@ export default async function Hero() {
           ))}
         </ul>
       </div>
-    </section>
+    </HeroMotion>
   );
 }

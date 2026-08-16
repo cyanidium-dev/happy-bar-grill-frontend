@@ -4,6 +4,7 @@ import Hero from "@/components/home/hero/Hero";
 import Categories from "@/components/home/categories/Categories";
 import Promotions from "@/components/home/promotions/Promotions";
 import PopularDishes from "@/components/home/popularDishes/PopularDishes";
+import BurgerAnatomySection from "@/components/home/anatomy/BurgerAnatomySection";
 import Reviews from "@/components/home/reviews/Reviews";
 import DeliveryInfo from "@/components/home/deliveryInfo/DeliveryInfo";
 import SeoText from "@/components/home/seoText/SeoText";
@@ -28,6 +29,7 @@ export default async function HomePage({ params }: PageProps) {
       <Categories />
       <Promotions />
       <PopularDishes />
+      <BurgerAnatomySection />
       <Reviews />
       <DeliveryInfo />
       <SeoText />

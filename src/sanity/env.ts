@@ -12,5 +12,10 @@ if (!dataset) {
 }
 
 if (!process.env.SANITY_API_READ_TOKEN) {
-  throw new Error("Missing SANITY_API_READ_TOKEN");
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("Missing SANITY_API_READ_TOKEN");
+  }
+  console.warn(
+    "[sanity] SANITY_API_READ_TOKEN is not set — menu documents will come back empty.",
+  );
 }

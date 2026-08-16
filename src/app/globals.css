@@ -401,6 +401,22 @@
   animation: preloader-failsafe 400ms ease-out 5s forwards;
 }
 
+/**
+ * Same idea for the page-enter fade. The wrapper ships at `opacity: 0` so the
+ * fade has somewhere to start without a flash of finished content, which
+ * would otherwise leave the whole page invisible if JS never runs. GSAP sets
+ * opacity to 1 long before this fires.
+ */
+@keyframes page-enter-failsafe {
+  to {
+    opacity: 1;
+  }
+}
+
+.page-enter-failsafe {
+  animation: page-enter-failsafe 300ms ease-out 800ms forwards;
+}
+
 @keyframes fade-up {
   from {
     opacity: 0;

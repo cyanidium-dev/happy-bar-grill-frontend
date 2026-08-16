@@ -129,9 +129,15 @@ export default function MenuCatalog({
         travel through.
       */}
       <div>
-        <div className="pt-14 xl:hidden">
+        {/* Sets the gap under the breadcrumbs on its own — the padding used to
+            cover the chip strip too, and once that moved out it read as an
+            empty band. Top padding stays on the wrapper so the spacing holds
+            with or without a filter; the bottom one rides the inner container
+            so it only appears when there is a filter to separate, and never
+            adds height to the sticky strip below. */}
+        <div className="pt-6 xl:hidden">
           {filterProps ? (
-            <Container className="pt-6 pb-0">
+            <Container className="pt-0 pb-3">
               <PriceFilterControl {...filterProps} />
             </Container>
           ) : null}

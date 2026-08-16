@@ -6,6 +6,7 @@ import Promotions from "@/components/home/promotions/Promotions";
 import PopularDishes from "@/components/home/popularDishes/PopularDishes";
 import BurgerAnatomySection from "@/components/home/anatomy/BurgerAnatomySection";
 import MarqueeStrip from "@/components/home/marquee/MarqueeStrip";
+import Process from "@/components/home/process/Process";
 import Reviews from "@/components/home/reviews/Reviews";
 import DeliveryInfo from "@/components/home/deliveryInfo/DeliveryInfo";
 import SeoText from "@/components/home/seoText/SeoText";
@@ -31,6 +32,7 @@ export default async function HomePage({ params }: PageProps) {
       <Promotions />
       <PopularDishes />
       <MarqueeStrip />
+      <Process />
       <BurgerAnatomySection />
       <Reviews />
       <DeliveryInfo />

@@ -28,23 +28,36 @@ export default async function DeliveryHero() {
       </div>
 
       <Container className="relative flex flex-col gap-4">
-        <h1 className="mb-10 font-findsans text-40bold uppercase text-white lg:text-40bold">
-          {t("title")}
-        </h1>
-        <p className="mb-10 max-w-[420px] text-16reg leading-relaxed text-white/80">
-          {t("text")}
-        </p>
-
-        <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <Button href="/menu" variant="primary" size="lg">
-            {t("ctaMenu")}
-          </Button>
-          <PhoneButton
-            size="lg"
-            shape="pill"
-            ariaLabel={t("ctaPhone")}
-            className="border-white bg-white text-navy xl:hover:border-white xl:hover:bg-navy/30 xl:hover:text-white transition-colors duration-300 ease-in-out"
+        <div className="absolute top-[-240px] left-[-200px] w-[761px] h-[770px]">
+          <Image
+            src="/images/delivery/hero/left-image.webp"
+            alt=""
+            fill
+            className="object-cover object-[60%_50%]"
+            priority
           />
+        </div>
+        <div className="relative flex flex-col gap-4 max-w-[463px] mx-auto">
+          {" "}
+          <div className="relative flex flex-col gap-4 max-w-[363px]">
+            <h1 className="mb-10 font-findsans text-40bold uppercase text-white lg:text-40bold">
+              {t("title")}
+            </h1>
+            <p className="mb-10 max-w-[420px] text-16reg leading-relaxed text-white/80">
+              {t("text")}
+            </p>
+          </div>
+          <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Button href="/menu" variant="primary" size="lg">
+              {t("ctaMenu")}
+            </Button>
+            <PhoneButton
+              size="lg"
+              shape="pill"
+              ariaLabel={t("ctaPhone")}
+              className="border-white bg-white text-navy xl:hover:border-white xl:hover:bg-navy/30 xl:hover:text-white transition-colors duration-300 ease-in-out"
+            />
+          </div>
         </div>
       </Container>
     </section>

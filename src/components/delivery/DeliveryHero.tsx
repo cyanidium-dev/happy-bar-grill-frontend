@@ -19,7 +19,7 @@ export default async function DeliveryHero() {
       <div className="absolute inset-0 -z-20 bg-navy-dark" />
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/images/home/hero/bg.webp"
+          src="/images/home/reviews/bg-image.webp"
           alt=""
           fill
           className="object-cover object-[60%_50%]"

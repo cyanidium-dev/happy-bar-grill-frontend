@@ -27,6 +27,19 @@ interface CartState {
   repeatLastOrder: () => void;
 }
 
+type PersistedCart = Pick<CartState, "items" | "lastOrder">;
+
+/** Bump when the persisted shape changes; keep `migrate` in sync. */
+const CART_STORAGE_VERSION = 1;
+
+function toPersistedCart(persistedState: unknown): PersistedCart {
+  const state = persistedState as Partial<PersistedCart> | undefined;
+  return {
+    items: Array.isArray(state?.items) ? state.items : [],
+    lastOrder: state?.lastOrder ?? null,
+  };
+}
+
 /**
  * Cart store (zustand + localStorage persistence). Holds the live cart and the
  * last placed order. UI reads counts/totals via the selectors below; guard
@@ -102,7 +115,13 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: "vtiha-cart",
-      partialize: (state) => ({
+      version: CART_STORAGE_VERSION,
+      migrate: (persistedState) => toPersistedCart(persistedState),
+      merge: (persisted, current) => ({
+        ...current,
+        ...toPersistedCart(persisted),
+      }),
+      partialize: (state): PersistedCart => ({
         items: state.items,
         lastOrder: state.lastOrder,
       }),

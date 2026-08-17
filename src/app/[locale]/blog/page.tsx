@@ -6,6 +6,7 @@ import Container from "@/components/shared/container/Container";
 import BlogList from "@/components/blog/BlogList";
 import { FOOTER_WAVE_HEIGHT_CLASS } from "@/config/footer";
 import { getAllBlogPosts } from "@/data/blog";
+import { SitePageSeo } from "@/components/seo/SitePageSeo";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
 
@@ -27,7 +28,7 @@ export default async function BlogPage({ params }: PageProps) {
   ]);
 
   return (
-    <>
+    <div className="flex-1">
       <section
         className="relative flex items-end overflow-hidden pt-[200px] pb-40 rounded-b-[24px] lg:rounded-b-[36px]"
         style={{ marginTop: "calc(var(--header-height) * -1)" }}
@@ -38,8 +39,10 @@ export default async function BlogPage({ params }: PageProps) {
             src="/images/home/hero/bg.webp"
             alt=""
             fill
+            loading="eager"
+            fetchPriority="high"
+            sizes="100vw"
             className="object-cover object-[60%_50%]"
-            priority
           />
         </div>
         <Container className="relative">
@@ -60,6 +63,7 @@ export default async function BlogPage({ params }: PageProps) {
           <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
         </Container>
       </section>
-    </>
+      <SitePageSeo pageId="blogPage" />
+    </div>
   );
 }

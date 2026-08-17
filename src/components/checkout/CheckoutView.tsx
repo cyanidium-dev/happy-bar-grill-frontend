@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import Container from "@/components/shared/container/Container";
@@ -10,21 +10,28 @@ import CartItemRow from "@/components/cart/CartItemRow";
 import SwiperWrapper from "@/components/shared/swiper/SwiperWrapper";
 import PhoneField from "./PhoneField";
 import TimeSlotSelect from "./TimeSlotSelect";
-import { ADDRESS } from "@/constants/contacts";
-import { sendTelegramMessage } from "@/lib/telegram/client";
-import { formatOrderTelegramMessage } from "@/lib/telegram/formatOrder";
+import { MIN_ORDER_AMOUNT, venueAddress } from "@/constants/contacts";
+import type { Locale } from "@/i18n/routing";
+import { OrderRequestError, submitOrder } from "@/lib/telegram/client";
 import {
   selectCartTotal,
   useCartHydrated,
   useCartStore,
 } from "@/store/cartStore";
-import type { DeliveryType, OrderTimeMode } from "@/types/cart";
-import { generateOrderNumber } from "@/utils/orderNumber";
+import type { DeliveryType, OrderTimeMode, PaymentMethod } from "@/types/cart";
+import { isDeliveryAddress } from "@/utils/address";
+import { isPersonName } from "@/utils/personName";
+import { isUaSubscriberDigits } from "@/utils/phone";
 import {
   getAvailableTimeSlots,
   isAvailableTimeSlot,
 } from "@/utils/orderTimeSlots";
+import { dishSlugOf } from "@/utils/cartLine";
 import { cn } from "@/utils/cn";
+import {
+  clearOrderIdempotencyKey,
+  ensureOrderIdempotencyKey,
+} from "@/utils/orderIdempotency";
 
 type Fields = "name" | "phone" | "address" | "scheduled";
 
@@ -33,8 +40,12 @@ export type UpsellCard = { slug: string; node: ReactNode };
 
 export default function CheckoutView({
   upsellCards,
+  formToken,
+  locale,
 }: {
   upsellCards: UpsellCard[];
+  formToken: string;
+  locale: Locale;
 }) {
   const t = useTranslations("Checkout");
   const tp = useTranslations("Product");
@@ -46,7 +57,10 @@ export default function CheckoutView({
   const total = useCartStore(selectCartTotal);
   const placeOrder = useCartStore((s) => s.placeOrder);
 
-  const payments = [t("paymentCash"), t("paymentCard")];
+  const payments: { value: PaymentMethod; label: string }[] = [
+    { value: "cash", label: t("paymentCash") },
+    { value: "card", label: t("paymentCard") },
+  ];
 
   const [values, setValues] = useState({
     name: "",
@@ -55,12 +69,15 @@ export default function CheckoutView({
     address: "",
     timeMode: "asap" as OrderTimeMode,
     scheduledTime: "",
-    payment: payments[0],
+    payment: "cash" as PaymentMethod,
     comment: "",
   });
   const [errors, setErrors] = useState<Partial<Record<Fields, string>>>({});
-  const [submitError, setSubmitError] = useState(false);
+  const [submitError, setSubmitError] = useState<
+    "submit" | "unavailable" | "minOrder" | null
+  >(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const submittingRef = useRef(false);
 
   const set = <K extends keyof typeof values>(
     field: K,
@@ -108,18 +125,15 @@ export default function CheckoutView({
 
   const validate = (): boolean => {
     const next: Partial<Record<Fields, string>> = {};
-    if (values.name.trim().length < 2) next.name = t("errors.name");
-    if (values.phone.length < 9) next.phone = t("errors.phone");
+    if (!isPersonName(values.name)) next.name = t("errors.name");
+    if (!isUaSubscriberDigits(values.phone)) next.phone = t("errors.phone");
     if (
       values.deliveryType === "delivery" &&
-      values.address.trim().length < 4
+      !isDeliveryAddress(values.address)
     ) {
       next.address = t("errors.address");
     }
-    if (
-      values.deliveryType === "pickup" &&
-      values.timeMode === "scheduled"
-    ) {
+    if (values.deliveryType === "pickup" && values.timeMode === "scheduled") {
       if (!values.scheduledTime) {
         next.scheduled = t("errors.scheduled");
       } else if (!isAvailableTimeSlot("pickup", values.scheduledTime)) {
@@ -132,9 +146,24 @@ export default function CheckoutView({
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (items.length === 0 || !validate() || isSubmitting) return;
+    if (submittingRef.current) return;
+    if (!validate()) return;
 
-    setSubmitError(false);
+    const snapshot = useCartStore.getState();
+    const lines = snapshot.items.map(({ id, quantity }) => ({ id, quantity }));
+    if (lines.length === 0) return;
+
+    if (
+      values.deliveryType === "delivery" &&
+      selectCartTotal(snapshot) < MIN_ORDER_AMOUNT
+    ) {
+      setSubmitError("minOrder");
+      return;
+    }
+
+    submittingRef.current = true;
+    useCartStore.getState().lockCart();
+    setSubmitError(null);
     setIsSubmitting(true);
 
     const customer = {
@@ -142,34 +171,34 @@ export default function CheckoutView({
       phone: `+380${values.phone}`,
       deliveryType: values.deliveryType,
       address:
-        values.deliveryType === "delivery"
-          ? values.address.trim()
-          : undefined,
+        values.deliveryType === "delivery" ? values.address.trim() : undefined,
       timeMode:
         values.deliveryType === "pickup" ? values.timeMode : ("asap" as const),
       scheduledAt:
-        values.deliveryType === "pickup" &&
-        values.timeMode === "scheduled"
+        values.deliveryType === "pickup" && values.timeMode === "scheduled"
           ? values.scheduledTime
           : undefined,
       payment: values.payment,
       comment: values.comment.trim() || undefined,
     };
-    const orderNumber = generateOrderNumber();
 
     try {
-      await sendTelegramMessage(
-        formatOrderTelegramMessage({
-          orderNumber,
-          customer,
-          items,
-          total,
-        }),
+      const verified = await submitOrder(
+        formToken,
+        locale,
+        customer,
+        lines,
+        ensureOrderIdempotencyKey(JSON.stringify({ customer, items: lines })),
       );
-      placeOrder(customer, orderNumber);
+      clearOrderIdempotencyKey();
+      placeOrder(customer, verified);
       router.push("/confirmation");
-    } catch {
-      setSubmitError(true);
+    } catch (error) {
+      useCartStore.getState().unlockCart();
+      submittingRef.current = false;
+      setSubmitError(
+        error instanceof OrderRequestError ? error.code : "submit",
+      );
       setIsSubmitting(false);
     }
   };
@@ -181,13 +210,15 @@ export default function CheckoutView({
 
   const isEmpty = items.length === 0;
   const visibleUpsell = upsellCards.filter(
-    (card) => !items.some((it) => it.id === card.slug),
+    (card) => !items.some((it) => dishSlugOf(it) === card.slug),
   );
 
   const isDelivery = values.deliveryType === "delivery";
   const isPickup = values.deliveryType === "pickup";
   const isScheduled = isPickup && values.timeMode === "scheduled";
   const timeSlots = getAvailableTimeSlots("pickup");
+  const remainingToMin = Math.max(0, MIN_ORDER_AMOUNT - total);
+  const belowMinDelivery = isDelivery && remainingToMin > 0;
 
   const deliveryOptions: { value: DeliveryType; label: string }[] = [
     { value: "delivery", label: t("deliveryOption") },
@@ -227,7 +258,7 @@ export default function CheckoutView({
           <div className="order-2 flex min-w-0 flex-1 flex-col gap-8 lg:order-1">
             {visibleUpsell.length > 0 && (
               <section className="relative">
-                <h2 className="mb-6 pr-24 font-findsans text-24bold uppercase text-navy sm:pr-28">
+                <h2 className="max-w-[360px] mb-8 font-findsans text-24bold uppercase text-navy">
                   {t("upsellTitle")}
                 </h2>
                 <SwiperWrapper
@@ -239,7 +270,7 @@ export default function CheckoutView({
                     1024: { slidesPerView: 1, spaceBetween: 24 },
                     1280: { slidesPerView: 2, spaceBetween: 24 },
                   }}
-                  buttonsClassName="absolute right-0 top-0"
+                  buttonsClassName="absolute right-0 top-11 sm:top-9"
                   prevLabel={tSlider("prev")}
                   nextLabel={tSlider("next")}
                   slides={visibleUpsell.map((card) => (
@@ -254,6 +285,7 @@ export default function CheckoutView({
             <form
               onSubmit={onSubmit}
               noValidate
+              aria-busy={isSubmitting || undefined}
               className="rounded-tl-2xl rounded-br-2xl border border-navy/12 bg-white p-6 md:p-8"
             >
               <h2 className="mb-5 text-20semi text-navy">
@@ -291,7 +323,7 @@ export default function CheckoutView({
                 </div>
               ) : (
                 <p className="mt-4 text-14reg text-grey-dark">
-                  {t("pickupHint")}: {ADDRESS}
+                  {t("pickupHint")}: {venueAddress(locale)}
                 </p>
               )}
 
@@ -339,7 +371,7 @@ export default function CheckoutView({
               <h2 className="mb-5 mt-8 text-20semi text-navy">
                 {t("contactsTitle")}
               </h2>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-6">
                 <Input
                   label={t("name")}
                   required
@@ -361,19 +393,19 @@ export default function CheckoutView({
                 {t("paymentTitle")}
               </h2>
               <div className="flex flex-col gap-3">
-                {payments.map((option) => {
-                  const active = values.payment === option;
+                {payments.map(({ value, label }) => {
+                  const active = values.payment === value;
                   return (
-                    <label key={option} className={radioClass(active)}>
+                    <label key={value} className={radioClass(active)}>
                       <input
                         type="radio"
                         name="payment"
-                        value={option}
+                        value={value}
                         checked={active}
-                        onChange={() => set("payment", option)}
+                        onChange={() => set("payment", value)}
                         className="size-4 accent-navy"
                       />
-                      {option}
+                      {label}
                     </label>
                   );
                 })}
@@ -392,6 +424,7 @@ export default function CheckoutView({
                   value={values.comment}
                   onChange={(e) => set("comment", e.target.value)}
                   placeholder={t("commentPlaceholder")}
+                  maxLength={500}
                   className="w-full resize-none rounded-sm border border-grey-dark bg-white px-6 py-3 text-14reg text-graphite placeholder-grey outline-none transition duration-300 ease-out focus:border-navy md:text-16reg"
                 />
               </div>
@@ -406,12 +439,29 @@ export default function CheckoutView({
                       {chunks}
                     </Link>
                   ),
+                  privacy: (chunks) => (
+                    <Link
+                      href="/privacy"
+                      className="text-navy underline hover:text-red"
+                    >
+                      {chunks}
+                    </Link>
+                  ),
                 })}
               </p>
 
-              {submitError && (
+              {belowMinDelivery && (
                 <p className="mt-4 text-14reg text-red" role="alert">
-                  {t("errors.submit")}
+                  {t("errors.minOrder", {
+                    amount: MIN_ORDER_AMOUNT,
+                    remaining: remainingToMin,
+                  })}
+                </p>
+              )}
+
+              {submitError && submitError !== "minOrder" && (
+                <p className="mt-4 text-14reg text-red" role="alert">
+                  {t(`errors.${submitError}`)}
                 </p>
               )}
 
@@ -422,6 +472,7 @@ export default function CheckoutView({
                 fullWidth
                 className="mt-4"
                 isLoading={isSubmitting}
+                disabled={belowMinDelivery}
               >
                 {t("placeOrder")}
               </Button>
@@ -443,6 +494,14 @@ export default function CheckoutView({
                   {total} {tp("currency")}
                 </span>
               </div>
+              {belowMinDelivery && (
+                <p className="mt-3 text-14reg text-red" role="status">
+                  {t("errors.minOrder", {
+                    amount: MIN_ORDER_AMOUNT,
+                    remaining: remainingToMin,
+                  })}
+                </p>
+              )}
             </div>
           </aside>
         </div>

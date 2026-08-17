@@ -5,6 +5,7 @@ import CartIcon from "@/components/shared/icons/CartIcon";
 import QuickAddButton from "@/components/shared/cards/QuickAddButton";
 import type { Dish } from "@/types/content";
 import { cn } from "@/utils/cn";
+import { cartLineFromDish } from "@/utils/cartLine";
 
 /**
  * Compact promo card for the Hero's "featured dishes" row — a red/navy
@@ -63,14 +64,7 @@ export default async function HeroDishCard({
           </Link>
 
           <QuickAddButton
-            line={{
-              id: dish.slug,
-              name: dish.name,
-              price: dish.price,
-              image: dish.image,
-              imageAlt: dish.name,
-              weight: dish.weight,
-            }}
+            line={cartLineFromDish(dish)}
             label={t("addToCart")}
             variant="secondary"
             shape="pill"

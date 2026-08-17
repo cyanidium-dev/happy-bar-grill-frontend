@@ -40,15 +40,15 @@ export default function TimeSlotSelect({
   const [open, setOpen] = useState(false);
 
   const close = useCallback(() => setOpen(false), []);
+  const isDisabled = disabled || options.length === 0;
+  // Derived: close visually when disabled without syncing via an effect.
+  const isOpen = open && !isDisabled;
 
   useEffect(() => {
-    if (!open) return;
+    if (!isOpen) return;
 
     const onPointerDown = (event: MouseEvent) => {
-      if (
-        rootRef.current &&
-        !rootRef.current.contains(event.target as Node)
-      ) {
+      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
         close();
       }
     };
@@ -62,13 +62,7 @@ export default function TimeSlotSelect({
       document.removeEventListener("mousedown", onPointerDown);
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [open, close]);
-
-  useEffect(() => {
-    if (disabled) close();
-  }, [disabled, close]);
-
-  const isDisabled = disabled || options.length === 0;
+  }, [isOpen, close]);
 
   return (
     <div
@@ -89,16 +83,15 @@ export default function TimeSlotSelect({
         type="button"
         disabled={isDisabled}
         aria-haspopup="listbox"
-        aria-expanded={open}
+        aria-expanded={isOpen}
         aria-controls={listId}
-        aria-invalid={error ? true : undefined}
         aria-describedby={error ? errorId : undefined}
         onClick={() => setOpen((v) => !v)}
         className={cn(
           "flex w-full items-center justify-between gap-3 rounded-sm border bg-white py-3 pl-6 pr-4 text-left text-14reg outline-none transition duration-300 ease-out md:text-16reg",
           error
             ? "border-red focus-visible:border-red"
-            : open
+            : isOpen
               ? "border-navy"
               : "border-grey-dark hover:border-navy/60 focus-visible:border-navy",
           isDisabled && "cursor-not-allowed opacity-60",
@@ -111,7 +104,7 @@ export default function TimeSlotSelect({
         <LocaleSwitcherArrowIcon
           className={cn(
             "size-4 shrink-0 text-navy transition duration-300 ease-out",
-            open && "rotate-180",
+            isOpen && "rotate-180",
           )}
         />
       </button>
@@ -119,10 +112,10 @@ export default function TimeSlotSelect({
       <div
         id={listId}
         role="listbox"
-        aria-hidden={!open}
+        aria-hidden={!isOpen}
         className={cn(
           "absolute top-full left-0 z-20 mt-1 max-h-56 w-full overflow-y-auto border border-navy/10 bg-white shadow-md scrollbar-brand transition duration-300 ease-out",
-          open
+          isOpen
             ? "translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-2 opacity-0",
         )}
@@ -135,7 +128,7 @@ export default function TimeSlotSelect({
               type="button"
               role="option"
               aria-selected={selected}
-              tabIndex={open ? 0 : -1}
+              tabIndex={isOpen ? 0 : -1}
               onClick={() => {
                 onChange(slot);
                 close();
@@ -158,7 +151,11 @@ export default function TimeSlotSelect({
       ) : null}
 
       {error ? (
-        <p id={errorId} className="text-12med text-red" role="alert">
+        <p
+          id={errorId}
+          className="absolute top-full left-0 right-0 mt-1 text-12med text-red"
+          role="alert"
+        >
           {error}
         </p>
       ) : null}

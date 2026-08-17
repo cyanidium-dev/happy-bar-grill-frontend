@@ -6,6 +6,8 @@ import MenuBanner from "@/components/menu/MenuBanner";
 import MenuView from "@/components/menu/MenuView";
 import { SPECIAL_OFFERS_SLUG } from "@/constants/menu";
 import { getCategories, getCategoryBySlug } from "@/data/menu";
+import { buildMetadataFromSeo } from "@/lib/seo/pageSeo";
+import { SchemaJsonFromSeo } from "@/components/seo/SchemaJsonFromSeo";
 import type { PageProps } from "@/types/page";
 
 type MenuCategoryProps = PageProps<{ category: string }>;
@@ -29,7 +31,13 @@ export async function generateMetadata({
   const found = await getCategoryBySlug(category, locale);
   if (!found) return {};
 
-  return { title: found.name };
+  return buildMetadataFromSeo({
+    seo: found.seo,
+    locale,
+    path: `/menu/${category}`,
+    defaultTitle: found.name,
+    defaultDescription: found.description || found.name,
+  });
 }
 
 export default async function MenuCategoryPage({ params }: MenuCategoryProps) {
@@ -42,7 +50,7 @@ export default async function MenuCategoryPage({ params }: MenuCategoryProps) {
   const tMenu = await getTranslations("Metadata");
 
   return (
-    <>
+    <div className="flex-1">
       <MenuBanner />
       <BreadCrumbs
         items={[
@@ -51,6 +59,7 @@ export default async function MenuCategoryPage({ params }: MenuCategoryProps) {
         ]}
       />
       <MenuView activeSlug={category} />
-    </>
+      <SchemaJsonFromSeo seo={found.seo} />
+    </div>
   );
 }

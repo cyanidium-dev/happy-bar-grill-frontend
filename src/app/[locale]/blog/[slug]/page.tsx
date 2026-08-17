@@ -13,6 +13,8 @@ import {
   getBlogPostSlugs,
   getOtherBlogPosts,
 } from "@/data/blog";
+import { buildMetadataFromSeo, fallbackSeoDescription } from "@/lib/seo/pageSeo";
+import { SchemaJsonFromSeo } from "@/components/seo/SchemaJsonFromSeo";
 import type { PageProps } from "@/types/page";
 
 type BlogArticleProps = PageProps<{ slug: string }>;
@@ -32,21 +34,17 @@ export async function generateMetadata({
   const post = await getBlogPostBySlug(slug, locale);
   if (!post) return {};
 
-  const seo = post.seo;
-  const title = seo?.metaTitle || post.title;
-  const description = seo?.metaDescription || post.description || undefined;
-  const ogImage = seo?.ogImage || post.imageDesktop || post.imageMobile;
-
-  return {
-    title,
-    description,
-    openGraph: {
-      type: "article",
-      title: seo?.ogTitle || title,
-      description: seo?.ogDescription || description,
-      images: ogImage ? [ogImage] : undefined,
-    },
-  };
+  return buildMetadataFromSeo({
+    seo: post.seo,
+    locale,
+    path: `/blog/${slug}`,
+    defaultTitle: post.title,
+    defaultDescription: fallbackSeoDescription(post.title, post.description),
+    absoluteTitle: Boolean(post.seo?.metaTitle?.trim()),
+    openGraphType: "article",
+    publishedTime: post.createdAt,
+    fallbackImageUrl: post.imageDesktop || post.imageMobile,
+  });
 }
 
 export default async function BlogArticlePage({ params }: BlogArticleProps) {
@@ -77,11 +75,12 @@ export default async function BlogArticlePage({ params }: BlogArticleProps) {
   };
 
   return (
-    <>
+    <div className="flex-1">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
+      <SchemaJsonFromSeo seo={post.seo} />
 
       <ArticleHero post={post} />
 
@@ -107,6 +106,6 @@ export default async function BlogArticlePage({ params }: BlogArticleProps) {
           <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
         </Container>
       </section>
-    </>
+    </div>
   );
 }

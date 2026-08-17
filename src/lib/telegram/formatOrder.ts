@@ -1,6 +1,12 @@
 import { ADDRESS } from "@/constants/contacts";
-import type { CartItem, OrderCustomer } from "@/types/cart";
+import type { CartItem, OrderCustomer, PaymentMethod } from "@/types/cart";
+import { escapeHtml } from "./escapeHtml";
 import { TG } from "./icons";
+
+const PAYMENT_LABELS: Record<PaymentMethod, string> = {
+  cash: "Готівкою при отриманні",
+  card: "Карткою при отриманні",
+};
 
 function formatFulfillmentTypeLine(customer: OrderCustomer): string {
   if (customer.deliveryType === "pickup") {
@@ -11,16 +17,16 @@ function formatFulfillmentTypeLine(customer: OrderCustomer): string {
 
 function formatAddressLine(customer: OrderCustomer): string {
   if (customer.deliveryType === "pickup") {
-    return `${TG.location} <b>Адреса самовивозу:</b> ${ADDRESS}\n`;
+    return `${TG.location} <b>Адреса самовивозу:</b> ${escapeHtml(ADDRESS)}\n`;
   }
-  return `${TG.location} <b>Адреса доставки:</b> ${customer.address}\n`;
+  return `${TG.location} <b>Адреса доставки:</b> ${escapeHtml(customer.address ?? "")}\n`;
 }
 
 function formatTimeLine(customer: OrderCustomer): string {
   if (customer.timeMode === "asap") {
     return `${TG.time} <b>Час:</b> Якнайшвидше\n`;
   }
-  return `${TG.time} <b>Час:</b> ${customer.scheduledAt ?? ""}\n`;
+  return `${TG.time} <b>Час:</b> ${escapeHtml(customer.scheduledAt ?? "")}\n`;
 }
 
 function formatCartItems(items: CartItem[]): string {
@@ -28,7 +34,7 @@ function formatCartItems(items: CartItem[]): string {
     .map((item, index) => {
       const lineTotal = item.price * item.quantity;
       const lines = [
-        `${index + 1}. <b>${item.name}</b> × ${item.quantity} — ${lineTotal} грн`,
+        `${index + 1}. <b>${escapeHtml(item.name)}</b> × ${item.quantity} — ${lineTotal} грн`,
       ];
       if (item.weight) {
         lines.push(`   ${item.weight} г`);
@@ -52,15 +58,15 @@ export function formatOrderTelegramMessage({
 }): string {
   return (
     `${TG.form} <b>Нове замовлення</b>\n` +
-    `${TG.number} <b>Номер:</b> ${orderNumber}\n\n` +
-    `${TG.name} <b>Ім'я:</b> ${customer.name}\n` +
-    `${TG.phone} <b>Телефон:</b> ${customer.phone}\n` +
+    `${TG.number} <b>Номер:</b> ${escapeHtml(orderNumber)}\n\n` +
+    `${TG.name} <b>Ім'я:</b> ${escapeHtml(customer.name)}\n` +
+    `${TG.phone} <b>Телефон:</b> ${escapeHtml(customer.phone)}\n` +
     formatFulfillmentTypeLine(customer) +
     formatAddressLine(customer) +
     formatTimeLine(customer) +
-    `${TG.payment} <b>Оплата:</b> ${customer.payment}\n` +
+    `${TG.payment} <b>Оплата:</b> ${PAYMENT_LABELS[customer.payment]}\n` +
     (customer.comment
-      ? `${TG.message} <b>Коментар:</b> ${customer.comment}\n`
+      ? `${TG.message} <b>Коментар:</b> ${escapeHtml(customer.comment)}\n`
       : "") +
     `\n${TG.cart} <b>Страви:</b>\n` +
     formatCartItems(items) +

@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { useCartStore } from "@/store/cartStore";
 import CartCounter from "./CartCounter";
 import TrashIcon from "@/components/shared/icons/TrashIcon";
 import type { CartItem } from "@/types/cart";
 import { cn } from "@/utils/cn";
+import { dishHref } from "@/utils/dishHref";
 
 const SLIDE_MS = 320;
 const COLLAPSE_MS = 280;
@@ -15,11 +17,19 @@ const COLLAPSE_MS = 280;
 type ExitPhase = "idle" | "slide" | "collapse";
 
 /** A single cart line: photo, name, price/weight, quantity stepper, remove. */
-export default function CartItemRow({ item }: { item: CartItem }) {
+export default function CartItemRow({
+  item,
+  onNavigate,
+}: {
+  item: CartItem;
+  /** Called when the dish photo/name link is followed (e.g. close the cart). */
+  onNavigate?: () => void;
+}) {
   const t = useTranslations("Product");
   const tc = useTranslations("Cart");
   const removeItem = useCartStore((s) => s.removeItem);
   const decrease = useCartStore((s) => s.decrease);
+  const isLocked = useCartStore((s) => s.isLocked);
   const [phase, setPhase] = useState<ExitPhase>("idle");
 
   useEffect(() => {
@@ -34,7 +44,7 @@ export default function CartItemRow({ item }: { item: CartItem }) {
   }, [phase, item.id, removeItem]);
 
   const requestRemove = () => {
-    if (phase !== "idle") return;
+    if (phase !== "idle" || isLocked) return;
     // globals.css zeros out transitions under prefers-reduced-motion —
     // skip the staged exit so we don't leave a blank gap for ~500ms.
     if (
@@ -48,6 +58,7 @@ export default function CartItemRow({ item }: { item: CartItem }) {
   };
 
   const isExiting = phase !== "idle";
+  const href = dishHref(item);
 
   return (
     <li
@@ -74,22 +85,31 @@ export default function CartItemRow({ item }: { item: CartItem }) {
           )}
         >
           <div className="flex gap-3 rounded-tl-xl rounded-br-xl border border-navy/12 bg-white p-3">
-            <div className="relative aspect-square w-20 shrink-0 overflow-hidden rounded-tl-lg rounded-br-lg">
-              {item.image && (
+            <Link
+              href={href}
+              onClick={onNavigate}
+              aria-label={item.name}
+              className="relative aspect-square w-20 shrink-0 overflow-hidden rounded-tl-lg rounded-br-lg"
+            >
+              {item.image ? (
                 <Image
                   src={item.image}
-                  alt={item.imageAlt || item.name}
+                  alt=""
                   fill
                   sizes="80px"
                   className="object-cover"
                 />
-              )}
-            </div>
+              ) : null}
+            </Link>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <p className="mb-1 font-findsans line-clamp-2 text-14semi text-navy">
+              <Link
+                href={href}
+                onClick={onNavigate}
+                className="mb-1 font-findsans line-clamp-2 text-14semi text-navy transition-colors duration-300 hover:text-red"
+              >
                 {item.name}
-              </p>
+              </Link>
               <p className="mt-0.5 font-findsans text-12semi text-navy">
                 {item.price} {t("currency")}
                 {item.weight ? (
@@ -116,7 +136,7 @@ export default function CartItemRow({ item }: { item: CartItem }) {
             <button
               type="button"
               onClick={requestRemove}
-              disabled={isExiting}
+              disabled={isExiting || isLocked}
               aria-label={tc("remove")}
               className="size-8 shrink-0 cursor-pointer text-grey-dark transition-colors duration-300 hover:text-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy/40 disabled:pointer-events-none"
             >

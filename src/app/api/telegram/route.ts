@@ -1,68 +1,81 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getClientIp } from "@/lib/http/clientIp";
+import { rateLimit } from "@/lib/http/rateLimit";
+import { isSameOriginRequest } from "@/lib/http/sameOrigin";
+import { formatContactTelegramMessage } from "@/lib/telegram/formatContact";
+import { verifyFormToken } from "@/lib/telegram/formToken";
+import {
+  sendTelegramHtml,
+  TelegramConfigError,
+} from "@/lib/telegram/sendMessage";
+import { isPersonName } from "@/utils/personName";
+import { isUaPhoneE164 } from "@/utils/phone";
 
-const BOT_ID = process.env.TELEGRAM_BOT_ID ?? "";
-const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+const MAX_MESSAGE = 1000;
+/** Soft brake: contact form is rarely submitted more than a few times a minute. */
+const RATE = { limit: 5, windowMs: 60_000 };
 
-function stripHtml(input: string): string {
-  return input.replace(/<[^>]*>/g, "");
+function parseContact(body: unknown): {
+  name: string;
+  phone: string;
+  message: string;
+} | null {
+  if (typeof body !== "object" || body === null) return null;
+  const data = body as Record<string, unknown>;
+
+  const name = typeof data.name === "string" ? data.name.trim() : "";
+  const phone = typeof data.phone === "string" ? data.phone.trim() : "";
+  const message = typeof data.message === "string" ? data.message.trim() : "";
+
+  if (!isPersonName(name)) return null;
+  if (!isUaPhoneE164(phone)) return null;
+  if (message.length < 5 || message.length > MAX_MESSAGE) return null;
+
+  return { name, phone, message };
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json();
+    if (!isSameOriginRequest(request)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
-    if (typeof data !== "string" || !data.trim()) {
+    const limited = rateLimit(`telegram:${getClientIp(request)}`, RATE);
+    if (!limited.ok) {
+      return NextResponse.json(
+        { error: "Too many requests" },
+        {
+          status: 429,
+          headers: { "Retry-After": String(limited.retryAfterSec) },
+        },
+      );
+    }
+
+    const body = await request.json();
+    const token =
+      typeof body === "object" && body !== null
+        ? (body as Record<string, unknown>).token
+        : undefined;
+
+    if (!verifyFormToken(token)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const contact = parseContact(body);
+    if (!contact) {
       return NextResponse.json({ error: "Invalid message" }, { status: 400 });
     }
 
-    if (!BOT_ID || !CHAT_ID) {
+    await sendTelegramHtml(formatContactTelegramMessage(contact));
+
+    return NextResponse.json({ message: "Data sent successfully" });
+  } catch (error) {
+    if (error instanceof TelegramConfigError) {
       return NextResponse.json(
         { error: "Telegram not configured" },
         { status: 500 },
       );
     }
-
-    const res = await fetch(
-      `https://api.telegram.org/bot${BOT_ID}/sendMessage`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          parse_mode: "HTML",
-          text: data,
-        }),
-      },
-    );
-
-    if (!res.ok) {
-      const firstError = await res.text();
-      console.error("[telegram] sendMessage failed:", firstError);
-
-      const fallback = await fetch(
-        `https://api.telegram.org/bot${BOT_ID}/sendMessage`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: CHAT_ID,
-            text: stripHtml(data),
-          }),
-        },
-      );
-
-      if (!fallback.ok) {
-        const fallbackError = await fallback.text();
-        console.error("[telegram] fallback failed:", fallbackError);
-        return NextResponse.json(
-          { error: "Failed to send message", details: fallbackError },
-          { status: 500 },
-        );
-      }
-    }
-
-    return NextResponse.json({ message: "Data sent successfully" });
-  } catch (error) {
     console.error("[telegram] unexpected error:", error);
     return NextResponse.json(
       { error: "Failed to send message" },

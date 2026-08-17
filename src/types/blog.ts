@@ -1,4 +1,5 @@
 import type { PortableTextBlock } from "@portabletext/react";
+import type { PageSeo } from "@/types/seo";
 
 /**
  * Blog content types, shaped to match the `blogPost` / `blogAuthor` GROQ
@@ -30,13 +31,7 @@ export type BlogFaqItem = {
   answer: PortableTextBlock[];
 };
 
-export type BlogPostSeo = {
-  metaTitle?: string | null;
-  metaDescription?: string | null;
-  ogTitle?: string | null;
-  ogDescription?: string | null;
-  ogImage?: string | null;
-};
+export type BlogPostSeo = PageSeo;
 
 export type BlogPost = {
   slug: string;

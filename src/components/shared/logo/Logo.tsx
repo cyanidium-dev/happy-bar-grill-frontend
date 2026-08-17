@@ -33,7 +33,7 @@ export default function Logo({
         width={169}
         height={100}
         className="h-full w-auto"
-        priority
+        loading="eager"
       />
     </Link>
   );

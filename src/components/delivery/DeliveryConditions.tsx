@@ -32,6 +32,7 @@ export default async function DeliveryConditions() {
           src="/images/home/popular/grill-plate.webp"
           alt={t("alts.grillPlate")}
           fill
+          sizes="(min-width: 1024px) 412px, 318px"
           className="object-cover"
         />
       </div>

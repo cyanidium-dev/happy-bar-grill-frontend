@@ -4,6 +4,7 @@ import SeoText from "@/components/home/seoText/SeoText";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import MenuBanner from "@/components/menu/MenuBanner";
 import MenuView from "@/components/menu/MenuView";
+import { SitePageSeo } from "@/components/seo/SitePageSeo";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
 
@@ -21,7 +22,7 @@ export default async function MenuPage({ params }: PageProps) {
   const t = await getTranslations("Metadata");
 
   return (
-    <>
+    <div className="flex-1">
       <MenuBanner />
       <BreadCrumbs items={[{ label: t("menu.title") }]} />
       <MenuView activeSlug="all" />
@@ -30,6 +31,7 @@ export default async function MenuPage({ params }: PageProps) {
         className="rounded-t-[24px] lg:rounded-t-[36px] overflow-hidden relative top-0 lg:-top-6"
         titleClassName="max-w-[200px] xs:max-w-none md:max-w-[220px]"
       />
-    </>
+      <SitePageSeo pageId="seoMenuPage" />
+    </div>
   );
 }

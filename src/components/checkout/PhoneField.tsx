@@ -71,7 +71,8 @@ export default function PhoneField({
       {error && (
         <p
           id={errorId}
-          className="absolute top-full left-0 mt-1 text-12med text-red"
+          role="alert"
+          className="absolute top-full left-0 right-0 mt-1 text-12med text-red"
         >
           {error}
         </p>

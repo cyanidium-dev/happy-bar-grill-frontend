@@ -9,6 +9,7 @@ import {
   CATEGORIES_QUERY,
   CATEGORY_BY_SLUG_QUERY,
   DISH_BY_SLUG_QUERY,
+  DISH_PATH_BY_SLUG_QUERY,
   DISHES_BY_CATEGORY_QUERY,
   HERO_DISHES_QUERY,
   MENU_PAGE_BANNER_QUERY,
@@ -128,6 +129,20 @@ export const getDishBySlug = cache(
       query: DISH_BY_SLUG_QUERY,
       params: await localeParams({ category, slug }, locale),
       tags: ["menuDish", `menuDish:${slug}`, `menuCategory:${category}`],
+    });
+  },
+);
+
+/** Canonical `/menu/[category]/[dish]` segments when only the dish slug is known. */
+export const getDishPathBySlug = cache(
+  async (
+    slug: string,
+    locale?: Locale,
+  ): Promise<{ slug: string; categorySlug: string } | null> => {
+    return sanityFetch<{ slug: string; categorySlug: string } | null>({
+      query: DISH_PATH_BY_SLUG_QUERY,
+      params: await localeParams({ slug }, locale),
+      tags: ["menuDish", `menuDish:${slug}`],
     });
   },
 );

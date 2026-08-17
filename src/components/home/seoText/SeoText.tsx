@@ -48,36 +48,39 @@ export default async function SeoText({
         <Image
           src="/images/home/seo-text/onion-small.webp"
           alt={t("alts.onionSmall")}
-          fill
-          className="object-cover"
-        />
-      </div>
+            fill
+            sizes="110px"
+            className="object-cover"
+          />
+        </div>
 
-      <div
-        aria-hidden
-        className="pointer-events-none absolute z-1 -top-12 right-10 md:-top-4 xl:top-10 md:left-50 lg:left-80 xl:left-110 z-10 h-[229px] w-[213px]"
+        <div
+          aria-hidden
+          className="pointer-events-none absolute z-1 -top-12 right-10 md:-top-4 xl:top-10 md:left-50 lg:left-80 xl:left-110 z-10 h-[229px] w-[213px]"
       >
         <Image
           src="/images/home/seo-text/onion-large.webp"
           alt={t("alts.onionLarge")}
-          fill
-          className="object-cover"
-        />
-      </div>
+            fill
+            sizes="213px"
+            className="object-cover"
+          />
+        </div>
 
-      <div
-        aria-hidden
-        className="pointer-events-none absolute z-1 -bottom-80 md:-bottom-65 left-8 xs:left-20 md:left-60 xl:left-100 z-10 w-[800px] h-[301px]"
+        <div
+          aria-hidden
+          className="pointer-events-none absolute z-1 -bottom-80 md:-bottom-65 left-8 xs:left-20 md:left-60 xl:left-100 z-10 w-[800px] h-[301px]"
       >
         <Image
           src="/images/home/seo-text/grill-plate.webp"
           alt={t("alts.grillPlate")}
-          fill
-          className="object-cover"
-        />
-      </div>
+            fill
+            sizes="800px"
+            className="object-cover"
+          />
+        </div>
 
-      <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8">
         <AnimatedWrapper className="flex flex-col gap-4 text-14reg text-grey-dark xl:text-16reg text-white">
           <div className="flex flex-col gap-6 md:flex-row lg:gap-[100px] xl:gap-[260px] md:justify-between">
             {" "}

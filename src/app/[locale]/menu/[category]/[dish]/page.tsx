@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { Link } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
 import BreadCrumbs from "@/components/shared/BreadCrumbs";
 import Container from "@/components/shared/container/Container";
 import Section from "@/components/shared/Section";
@@ -18,10 +18,14 @@ import {
   getAllDishes,
   getCategoryBySlug,
   getDishBySlug,
+  getDishPathBySlug,
   getSimilarDishes,
   getUpsellDishes,
 } from "@/data/menu";
+import { buildMetadataFromSeo, fallbackSeoDescription } from "@/lib/seo/pageSeo";
+import { SchemaJsonFromSeo } from "@/components/seo/SchemaJsonFromSeo";
 import { ALLERGENS, type GalleryImage, type Dish } from "@/types/content";
+import type { Locale } from "@/i18n/routing";
 import type { PageProps } from "@/types/page";
 
 type DishProps = PageProps<{ category: string; dish: string }>;
@@ -30,6 +34,29 @@ type DishProps = PageProps<{ category: string; dish: string }>;
 function galleryImages(dish: Dish): GalleryImage[] {
   const extra = (dish.gallery ?? []).filter((img) => img.url !== dish.image);
   return [{ url: dish.image, alt: dish.name }, ...extra];
+}
+
+/** Load the dish, or send wrong-category URLs to the canonical permalink. */
+async function requireDish(category: string, dish: string, locale: Locale) {
+  const [categoryDoc, dishDoc] = await Promise.all([
+    getCategoryBySlug(category, locale),
+    getDishBySlug(category, dish, locale),
+  ]);
+  if (categoryDoc && dishDoc) return { categoryDoc, dishDoc };
+
+  const canonical = await getDishPathBySlug(dish, locale);
+  if (
+    canonical?.categorySlug &&
+    canonical.slug &&
+    canonical.categorySlug !== category
+  ) {
+    redirect({
+      href: `/menu/${canonical.categorySlug}/${canonical.slug}`,
+      locale,
+    });
+  }
+
+  notFound();
 }
 
 // Pre-render every dish (unknown slugs still 404 via notFound below).
@@ -47,29 +74,30 @@ export async function generateMetadata({
   const { locale, category, dish } = await params;
   setRequestLocale(locale);
 
-  const found = await getDishBySlug(category, dish, locale);
-  if (!found) return {};
+  const found = await requireDish(category, dish, locale);
 
-  const images = galleryImages(found).map((img) => img.url);
-  return {
-    title: found.name,
-    description: found.description || undefined,
-    openGraph: { title: found.name, images },
-  };
+  return buildMetadataFromSeo({
+    seo: found.dishDoc.seo,
+    locale,
+    path: `/menu/${category}/${dish}`,
+    defaultTitle: found.dishDoc.name,
+    defaultDescription: fallbackSeoDescription(
+      found.dishDoc.name,
+      found.dishDoc.description,
+    ),
+    fallbackImageUrl: found.dishDoc.image,
+  });
 }
 
 export default async function DishPage({ params }: DishProps) {
   const { locale, category, dish } = await params;
   setRequestLocale(locale);
 
-  const [t, tMeta, categoryDoc, dishDoc] = await Promise.all([
+  const [t, tMeta, { categoryDoc, dishDoc }] = await Promise.all([
     getTranslations("DishPage"),
     getTranslations("Metadata"),
-    getCategoryBySlug(category, locale),
-    getDishBySlug(category, dish, locale),
+    requireDish(category, dish, locale),
   ]);
-
-  if (!categoryDoc || !dishDoc) notFound();
 
   const [similar, upsell] = await Promise.all([
     getSimilarDishes(category, dish, locale),
@@ -161,7 +189,7 @@ export default async function DishPage({ params }: DishProps) {
   };
 
   return (
-    <>
+    <div className="flex-1">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
@@ -179,7 +207,7 @@ export default async function DishPage({ params }: DishProps) {
         <Container className="pb-12 pt-6 md:pb-16 xl:pb-20">
           <div className="flex flex-col sm:flex-row gap-8 lg:gap-14 ">
             <AnimatedWrapper
-              animation={{ y: 20 }}
+              animation={{ y: 20, opacity: 1 }}
               className="w-full sm:w-1/2 shrink-0"
             >
               <DishGallery
@@ -210,6 +238,7 @@ export default async function DishPage({ params }: DishProps) {
 
       <UpsellDishes dishes={upsellDishes} />
       <SimilarDishes dishes={similar} />
+      <SchemaJsonFromSeo seo={dishDoc.seo} />
 
       <Section
         background="white"
@@ -220,6 +249,7 @@ export default async function DishPage({ params }: DishProps) {
               src="/images/home/seo-text/bg-image.webp"
               alt={t("alts.bgImage")}
               fill
+              sizes="100vw"
               className="object-cover -scale-x-100"
             />
           </div>
@@ -233,6 +263,7 @@ export default async function DishPage({ params }: DishProps) {
             src="/images/home/seo-text/onion-small.webp"
             alt={t("alts.onionSmall")}
             fill
+            sizes="110px"
             className="object-cover"
           />
         </div>
@@ -245,6 +276,7 @@ export default async function DishPage({ params }: DishProps) {
             src="/images/home/seo-text/onion-large.webp"
             alt={t("alts.onionLarge")}
             fill
+            sizes="213px"
             className="object-cover"
           />
         </div>
@@ -266,6 +298,6 @@ export default async function DishPage({ params }: DishProps) {
           </div>
         </AnimatedWrapper>
       </Section>
-    </>
+    </div>
   );
 }

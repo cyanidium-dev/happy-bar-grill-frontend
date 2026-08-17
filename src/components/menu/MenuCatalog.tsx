@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import Container from "@/components/shared/container/Container";
 import type { PriceBounds } from "@/components/menu/PriceFilter";
 import PriceFilterControl from "@/components/menu/PriceFilterControl";
 import { PriceFilterProvider } from "@/components/menu/priceFilterContext";
-import { PRICE_FILTER_MAX, PRICE_FILTER_MIN } from "@/constants/menu";
+import { PRICE_FILTER_MIN, PRICE_FILTER_STEP } from "@/constants/menu";
 import type { Dish } from "@/types/content";
 
 type MenuCatalogProps = {
@@ -19,14 +19,30 @@ type MenuCatalogProps = {
 /** Survives remounts when switching `/menu` ↔ `/menu/[category]`. */
 let persistedRange: PriceBounds | null = null;
 
-const PRICE_FILTER_BOUNDS: PriceBounds = {
-  min: PRICE_FILTER_MIN,
-  max: PRICE_FILTER_MAX,
-};
-
 function getBounds(dishes: Dish[]): PriceBounds | null {
-  if (dishes.length === 0) return null;
-  return PRICE_FILTER_BOUNDS;
+  let maxPrice = 0;
+  let hasPrice = false;
+  for (const dish of dishes) {
+    if (
+      typeof dish.price !== "number" ||
+      !Number.isFinite(dish.price) ||
+      dish.price < 0
+    ) {
+      continue;
+    }
+    hasPrice = true;
+    if (dish.price > maxPrice) maxPrice = dish.price;
+  }
+  if (!hasPrice) return null;
+  const max = Math.max(
+    PRICE_FILTER_STEP,
+    Math.ceil(maxPrice / PRICE_FILTER_STEP) * PRICE_FILTER_STEP,
+  );
+  return { min: PRICE_FILTER_MIN, max };
+}
+
+function isFullRange(range: PriceBounds, bounds: PriceBounds) {
+  return range.min === bounds.min && range.max === bounds.max;
 }
 
 function clampRange(range: PriceBounds, bounds: PriceBounds): PriceBounds {
@@ -36,8 +52,8 @@ function clampRange(range: PriceBounds, bounds: PriceBounds): PriceBounds {
   return { min, max };
 }
 
-function initialRange(bounds: PriceBounds): PriceBounds {
-  return persistedRange ? clampRange(persistedRange, bounds) : bounds;
+function persistRange(range: PriceBounds, bounds: PriceBounds) {
+  persistedRange = isFullRange(range, bounds) ? null : range;
 }
 
 /**
@@ -53,42 +69,40 @@ export default function MenuCatalog({
   children,
 }: MenuCatalogProps) {
   const bounds = useMemo(() => getBounds(dishes), [dishes]);
-  const boundsMin = bounds?.min;
-  const boundsMax = bounds?.max;
-  const [range, setRange] = useState<PriceBounds | null>(() =>
-    bounds ? initialRange(bounds) : null,
+  // User selection only; null = full range. Displayed range is derived/clamped.
+  const [selection, setSelection] = useState<PriceBounds | null>(
+    () => persistedRange,
   );
   const [filterOpen, setFilterOpen] = useState(false);
 
-  useEffect(() => {
-    if (boundsMin == null || boundsMax == null) {
-      setRange(null);
-      return;
-    }
-    const next = initialRange({ min: boundsMin, max: boundsMax });
-    persistedRange = next;
-    setRange((prev) =>
-      prev && prev.min === next.min && prev.max === next.max ? prev : next,
-    );
-  }, [boundsMin, boundsMax]);
+  const range = useMemo(() => {
+    if (!bounds) return null;
+    if (!selection) return bounds;
+    return clampRange(selection, bounds);
+  }, [bounds, selection]);
 
   const commit = (next: PriceBounds) => {
-    persistedRange = next;
-    setRange(next);
+    if (!bounds) return;
+    const clamped = clampRange(next, bounds);
+    persistRange(clamped, bounds);
+    setSelection(isFullRange(clamped, bounds) ? null : clamped);
   };
 
   const reset = () => {
-    if (!bounds) return;
     persistedRange = null;
-    setRange(bounds);
+    setSelection(null);
   };
 
+  const isFiltered = Boolean(
+    bounds && range && !isFullRange(range, bounds),
+  );
+
   const matchCount = useMemo(() => {
-    if (!range) return dishes.length;
+    if (!range || !isFiltered) return dishes.length;
     return dishes.filter(
       (dish) => dish.price >= range.min && dish.price <= range.max,
     ).length;
-  }, [dishes, range]);
+  }, [dishes, range, isFiltered]);
 
   const filterProps =
     bounds && range
@@ -105,7 +119,7 @@ export default function MenuCatalog({
 
   return (
     <PriceFilterProvider
-      range={range}
+      range={isFiltered ? range : null}
       matchCount={matchCount}
       total={dishes.length}
     >

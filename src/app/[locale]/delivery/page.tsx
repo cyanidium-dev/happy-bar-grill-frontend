@@ -5,6 +5,7 @@ import DeliveryHero from "@/components/delivery/DeliveryHero";
 import DeliverySteps from "@/components/delivery/DeliverySteps";
 import PaymentMethods from "@/components/delivery/PaymentMethods";
 import DeliveryConditions from "@/components/delivery/DeliveryConditions";
+import { SitePageSeo } from "@/components/seo/SitePageSeo";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { PageProps } from "@/types/page";
 
@@ -22,12 +23,13 @@ export default async function DeliveryPage({ params }: PageProps) {
   const t = await getTranslations("Metadata");
 
   return (
-    <>
+    <div className="flex-1">
       <DeliveryHero />
       <BreadCrumbs items={[{ label: t("delivery.title") }]} />
       <DeliverySteps />
       <DeliveryConditions />
       <PaymentMethods />
-    </>
+      <SitePageSeo pageId="seoDeliveryPage" />
+    </div>
   );
 }

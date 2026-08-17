@@ -5,6 +5,7 @@ import {
   OPENING_MINUTE,
   ORDER_PREP_MINUTES,
   ORDER_SLOT_INTERVAL_MINUTES,
+  VENUE_TIMEZONE,
 } from "@/constants/contacts";
 import type { DeliveryType } from "@/types/cart";
 
@@ -22,8 +23,22 @@ function formatSlot(totalMinutes: number): string {
   return `${pad2(hours)}:${pad2(minutes)}`;
 }
 
+/** Clock minutes since midnight in the venue timezone (not the runtime locale). */
+function getVenueNowMinutes(now: Date): number {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: VENUE_TIMEZONE,
+    hour: "numeric",
+    minute: "numeric",
+    hourCycle: "h23",
+  }).formatToParts(now);
+
+  const hours = Number(parts.find((p) => p.type === "hour")?.value ?? "0");
+  const minutes = Number(parts.find((p) => p.type === "minute")?.value ?? "0");
+  return toMinutes(hours, minutes);
+}
+
 /**
- * Half-hour slots within opening hours for today.
+ * Half-hour slots within opening hours for today (venue local day).
  * First slot is at least `ORDER_PREP_MINUTES` after opening and after now
  * (kitchen needs ~1 hour). Last slot is strictly before closing.
  */
@@ -35,7 +50,7 @@ export function getAvailableTimeSlots(
   const close = toMinutes(CLOSING_HOUR, CLOSING_MINUTE);
   if (close <= open) return [];
 
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const nowMinutes = getVenueNowMinutes(now);
   const earliest = Math.max(open + ORDER_PREP_MINUTES, nowMinutes + ORDER_PREP_MINUTES);
 
   const slots: string[] = [];

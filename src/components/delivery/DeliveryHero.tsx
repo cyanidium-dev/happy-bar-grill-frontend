@@ -22,8 +22,10 @@ export default async function DeliveryHero() {
           src="/images/home/reviews/bg-image.webp"
           alt=""
           fill
+          loading="eager"
+          fetchPriority="high"
+          sizes="100vw"
           className="object-cover object-[60%_50%]"
-          priority
         />
       </div>
 

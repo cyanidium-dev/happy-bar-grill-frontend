@@ -67,6 +67,7 @@ export default async function DeliverySteps() {
           src="/images/home/promotions/pizza.webp"
           alt={t("alts.pizza")}
           fill
+          sizes="535px"
           className="object-cover"
         />
       </AnimatedWrapper>
@@ -80,6 +81,7 @@ export default async function DeliverySteps() {
           src="/images/home/promotions/tomato-top.webp"
           alt={t("alts.tomatoTop")}
           fill
+          sizes="199px"
           className="object-cover"
         />
       </AnimatedWrapper>
@@ -93,6 +95,7 @@ export default async function DeliverySteps() {
           src="/images/home/promotions/tomato-bottom.webp"
           alt={t("alts.tomatoBottom")}
           fill
+          sizes="261px"
           className="object-cover"
         />
       </AnimatedWrapper>

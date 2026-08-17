@@ -21,12 +21,12 @@ export default async function PrivacyPolicyPage({ params }: PageProps) {
   const t = await getTranslations("Metadata");
 
   return (
-    <>
+    <div className="flex-1">
       <BreadCrumbs items={[{ label: t("privacy.title") }]} />
       <LegalPage
         title={t("privacy.title")}
         doc={privacyDoc[locale as Locale]}
       />
-    </>
+    </div>
   );
 }

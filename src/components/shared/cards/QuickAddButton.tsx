@@ -34,6 +34,7 @@ export default function QuickAddButton({
   children?: ReactNode;
 }) {
   const addItem = useCartStore((s) => s.addItem);
+  const isLocked = useCartStore((s) => s.isLocked);
 
   return (
     <Button
@@ -42,8 +43,10 @@ export default function QuickAddButton({
       size="icon"
       shape={shape}
       aria-label={label}
+      disabled={isLocked}
       className={cn("pointer-events-auto", className)}
       onClick={(event) => {
+        if (isLocked) return;
         const card = event.currentTarget.closest("article");
         const photo = card?.querySelector("img");
         flyToCart(photo ?? event.currentTarget, line.image, () => {

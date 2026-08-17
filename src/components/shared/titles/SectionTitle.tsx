@@ -43,24 +43,32 @@ export default function SectionTitle({
       mm.add(REDUCED_MOTION, () => {});
 
       mm.add(FULL_MOTION, () => {
-        // `autoSplit` re-splits after FindSans swaps in, otherwise the lines
-        // are measured against the fallback font and the mask cuts wrongly.
-        const split = SplitText.create(node, {
-          type: "lines,words",
-          mask: "lines",
-          autoSplit: true,
-          onSplit(self) {
-            return gsap.from(self.words, {
-              yPercent: 110,
-              duration: 0.7,
-              stagger: 0.035,
-              ease: "power3.out",
-              scrollTrigger: { trigger: node, start: "top 88%", once: true },
-            });
-          },
+        /**
+         * Split once, after the font has settled. `autoSplit` re-splits when
+         * FindSans swaps in and re-runs `onSplit`, which replayed the reveal a
+         * second time. Waiting for `fonts.ready` gets the same correct line
+         * boxes from one split, and the markup goes back after the words land
+         * so a later resize has nothing stale to reflow.
+         */
+        let split: SplitText | null = null;
+
+        document.fonts.ready.then(() => {
+          split = SplitText.create(node, {
+            type: "lines,words",
+            mask: "lines",
+          });
+
+          gsap.from(split.words, {
+            yPercent: 110,
+            duration: 0.7,
+            stagger: 0.035,
+            ease: "power3.out",
+            scrollTrigger: { trigger: node, start: "top 88%", once: true },
+            onComplete: () => split?.revert(),
+          });
         });
 
-        return () => split.revert();
+        return () => split?.revert();
       });
     },
     { dependencies: [node] },

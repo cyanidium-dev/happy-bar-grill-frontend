@@ -13,7 +13,7 @@ export default async function DeliveryHero() {
 
   return (
     <section
-      className="relative flex items-end overflow-hidden rounded-b-[24px] pt-[200px] pb-40 lg:rounded-b-[36px]"
+      className="relative flex items-end overflow-hidden rounded-b-[24px] pt-[200px] pb-16 md:pb-24 lg:pb-40 lg:rounded-b-[36px]"
       style={{ marginTop: "calc(var(--header-height) * -1)" }}
     >
       <div className="absolute inset-0 -z-20 bg-navy-dark" />
@@ -30,18 +30,42 @@ export default async function DeliveryHero() {
       </div>
 
       <Container className="relative flex flex-col gap-4">
-        <div className="absolute top-[-240px] left-[-200px] w-[761px] h-[770px]">
+        <div className="hidden lg:block absolute top-[-240px] md:left-[-340px] lg:left-[-210px] w-[761px] h-[770px]">
           <Image
             src="/images/delivery/hero/left-image.webp"
             alt=""
             fill
-            className="object-cover object-[60%_50%]"
-            priority
+            className="object-cover"
+            loading="eager"
+            fetchPriority="high"
+          />
+          {/* <div className="absolute top-[385px] left-[-300px] w-[502px] h-[508px] rounded-full bg-[#00152E] blur-[30px]" /> */}
+        </div>
+
+        <div className="absolute top-[-340px] md:top-[-280px] right-[-450px] md:right-[-320px] lg:right-[-200px] w-[731px] h-[600px]">
+          <Image
+            src="/images/delivery/hero/right-image.webp"
+            alt=""
+            fill
+            className="object-cover"
+            loading="eager"
+            fetchPriority="high"
           />
         </div>
+
         <div className="relative flex flex-col gap-4 max-w-[463px] mx-auto">
           {" "}
           <div className="relative flex flex-col gap-4 max-w-[363px]">
+            <div className="absolute top-[-85px] left-[-20px] xs:left-[-80px] w-[102px] h-[108px]">
+              <Image
+                src="/images/delivery/hero/decor.webp"
+                alt=""
+                fill
+                className="object-cover"
+                loading="eager"
+                fetchPriority="high"
+              />
+            </div>
             <h1 className="mb-10 font-findsans text-40bold uppercase text-white lg:text-40bold">
               {t("title")}
             </h1>

@@ -93,9 +93,7 @@ export default function MenuCatalog({
     setSelection(null);
   };
 
-  const isFiltered = Boolean(
-    bounds && range && !isFullRange(range, bounds),
-  );
+  const isFiltered = Boolean(bounds && range && !isFullRange(range, bounds));
 
   const matchCount = useMemo(() => {
     if (!range || !isFiltered) return dishes.length;
@@ -123,30 +121,46 @@ export default function MenuCatalog({
       matchCount={matchCount}
       total={dishes.length}
     >
-      <div className="pt-14 xl:hidden">
-        {filterProps ? (
-          <Container className="pt-6 pb-0">
-            <PriceFilterControl {...filterProps} />
-          </Container>
-        ) : null}
-        {mobileNav}
-      </div>
-
-      <Container className="relative flex flex-col gap-8 pb-12 pt-6 md:pb-16 xl:flex-row xl:items-start xl:gap-10 xl:pb-24 xl:pt-14">
-        {decorations}
-
-        <aside
-          className="relative z-10 hidden w-72 shrink-0 self-start xl:sticky xl:block"
-          style={{ top: "calc(var(--header-height) + 1.5rem)" }}
-        >
+      {/*
+        One wrapper around the chip strip *and* the dishes. `position: sticky`
+        is bounded by its parent's box, so while the strip lived in a short div
+        of its own alongside the filter it unstuck the moment that div scrolled
+        by — a few pixels in. It needs the height of the whole catalog to
+        travel through.
+      */}
+      <div>
+        {/* Sets the gap under the breadcrumbs on its own — the padding used to
+            cover the chip strip too, and once that moved out it read as an
+            empty band. Top padding stays on the wrapper so the spacing holds
+            with or without a filter; the bottom one rides the inner container
+            so it only appears when there is a filter to separate, and never
+            adds height to the sticky strip below. */}
+        <div className="pt-6 xl:hidden">
           {filterProps ? (
-            <PriceFilterControl {...filterProps} className="mb-2" />
+            <Container className="pt-0 pb-3">
+              <PriceFilterControl {...filterProps} />
+            </Container>
           ) : null}
-          {desktopNav}
-        </aside>
+        </div>
 
-        <div className="relative z-10 min-w-0 flex-1">{children}</div>
-      </Container>
+        {mobileNav}
+
+        <Container className="relative flex flex-col gap-8 pb-12 pt-6 md:pb-16 xl:flex-row xl:items-start xl:gap-10 xl:pb-24 xl:pt-14">
+          {decorations}
+
+          <aside
+            className="relative z-10 hidden w-72 shrink-0 self-start xl:sticky xl:block"
+            style={{ top: "calc(var(--header-height) + 1.5rem)" }}
+          >
+            {filterProps ? (
+              <PriceFilterControl {...filterProps} className="mb-2" />
+            ) : null}
+            {desktopNav}
+          </aside>
+
+          <div className="relative z-10 min-w-0 flex-1">{children}</div>
+        </Container>
+      </div>
     </PriceFilterProvider>
   );
 }

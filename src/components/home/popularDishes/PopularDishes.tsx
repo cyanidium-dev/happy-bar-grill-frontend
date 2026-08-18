@@ -29,30 +29,32 @@ export default async function PopularDishes() {
         className="block absolute rotate-15 sm:rotate-0 z-5 -bottom-12 -right-26 sm:-right-10 md:-bottom-4 md:-right-10 lg:-bottom-4 lg:-right-6 w-[257px] h-[259px] lg:w-[317px] lg:h-[320px]"
         animation={decorFade}
         amount={0.01}
+        parallax={18}
       >
         <Image
           src="/images/home/popular/sushi-chopsticks.webp"
           alt={t("alts.sushiChopsticks")}
-            fill
-            sizes="(min-width: 1024px) 317px, 257px"
-            className="object-cover"
-          />
-          <div className="absolute top-[100px] right-[-140px] w-[204px] h-[160px] rounded-full bg-white blur-[10px]" />
+          fill
+          sizes="(min-width: 1024px) 317px, 257px"
+          className="object-cover"
+        />
+        <div className="absolute top-[100px] right-[-140px] w-[204px] h-[160px] rounded-full bg-white blur-[10px]" />
       </AnimatedWrapper>
       <AnimatedWrapper
         className="absolute -bottom-8 left-[-140px] lg:bottom-21 lg:-left-62 w-[318px] h-[159px] lg:w-[412px] lg:h-[205px]"
         animation={decorFade}
         amount={0.01}
+        parallax={-12}
       >
         <Image
           src="/images/home/popular/grill-plate.webp"
           alt={t("alts.grillPlate")}
-            fill
-            sizes="(min-width: 1024px) 412px, 318px"
-            className="object-cover"
-          />
-        </AnimatedWrapper>
-        <div className="relative flex flex-col gap-3">
+          fill
+          sizes="(min-width: 1024px) 412px, 318px"
+          className="object-cover"
+        />
+      </AnimatedWrapper>
+      <div className="relative flex flex-col gap-3">
         <AnimatedWrapper className="flex flex-col gap-3 pr-24 sm:pr-28">
           <div className="relative w-fit">
             <SectionTitle className="max-w-[420px] sm:max-w-full w-fit">
@@ -85,10 +87,7 @@ export default async function PopularDishes() {
             prevLabel={tSlider("prev")}
             nextLabel={tSlider("next")}
             slides={popularDishes.map((dish) => (
-              <DishCard
-                key={`${dish.categorySlug}-${dish.slug}`}
-                dish={dish}
-              />
+              <DishCard key={`${dish.categorySlug}-${dish.slug}`} dish={dish} />
             ))}
           />
         </AnimatedWrapper>

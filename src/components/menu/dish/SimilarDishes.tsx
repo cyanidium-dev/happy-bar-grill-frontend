@@ -37,6 +37,7 @@ export default async function SimilarDishes({ dishes }: { dishes: Dish[] }) {
         className="pointer-events-none absolute hidden md:bottom-[-240px] md:right-[-150px] md:block md:h-[458px] md:w-[535px] lg:right-[-100px] lg:bottom-[-300px] lg:h-[558px] lg:w-[635px] xl:bottom-[-180px] xl:right-[-150px] xl:h-[458px] xl:w-[535px]"
         animation={decorFade}
         amount={0.01}
+        parallax={18}
       >
         <Image
           src="/images/home/promotions/pizza.webp"
@@ -51,6 +52,7 @@ export default async function SimilarDishes({ dishes }: { dishes: Dish[] }) {
         className="pointer-events-none absolute left-[280px] top-[0px] h-[223px] w-[199px] xs:top-[10px] xs:left-auto xs:right-[10px] sm:right-[90px] md:top-[30px] md:left-auto md:right-[200px] lg:top-[80px] lg:right-[320px]"
         animation={decorFade}
         amount={0.01}
+        parallax={-12}
       >
         <Image
           src="/images/home/promotions/tomato-top.webp"
@@ -65,6 +67,7 @@ export default async function SimilarDishes({ dishes }: { dishes: Dish[] }) {
         className="pointer-events-none absolute bottom-[-40px] left-[-60px] h-[166px] w-[261px]"
         animation={decorFade}
         amount={0.01}
+        parallax={24}
       >
         <Image
           src="/images/home/promotions/tomato-bottom.webp"

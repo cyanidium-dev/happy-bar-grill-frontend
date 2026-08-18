@@ -31,6 +31,7 @@ export default async function Promotions() {
         className="hidden md:block absolute md:bottom-[-90px] xl:bottom-[-180px] md:right-[-150px] lg:right-[-100px] xl:right-[-150px] md:w-[535px] md:h-[458px] lg:w-[635px] lg:h-[558px] xl:w-[535px] xl:h-[458px]"
         animation={decorFade}
         amount={0.01}
+        parallax={18}
       >
         <Image
           src="/images/home/promotions/pizza.webp"
@@ -45,6 +46,7 @@ export default async function Promotions() {
         className="absolute left-[280px] md:left-auto md:right-[140px] lg:right-[320px] top-[190px] md:top-[0px] lg:top-[80px] w-[199px] h-[223px]"
         animation={decorFade}
         amount={0.01}
+        parallax={-12}
       >
         <Image
           src="/images/home/promotions/tomato-top.webp"
@@ -59,6 +61,7 @@ export default async function Promotions() {
         className="absolute left-[-60px] bottom-[-40px] w-[261px] h-[166px]"
         animation={decorFade}
         amount={0.01}
+        parallax={24}
       >
         <Image
           src="/images/home/promotions/tomato-bottom.webp"

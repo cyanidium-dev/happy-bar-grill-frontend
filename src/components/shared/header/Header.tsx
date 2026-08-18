@@ -50,7 +50,15 @@ export default function Header({ className }: { className?: string }) {
   const onDark = isHeroPage || solid;
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
+    /**
+     * Two thresholds, not one. iOS reports scroll positions that wobble by a
+     * few pixels as its toolbar moves, and a single boundary at 60 had the bar
+     * flicking between transparent and solid while the page sat still. It has
+     * to travel past 72 to go solid, and back under 48 to come clear again.
+     */
+    const onScroll = () =>
+      setScrolled((was) => (was ? window.scrollY > 48 : window.scrollY > 72));
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -60,11 +68,24 @@ export default function Header({ className }: { className?: string }) {
     const el = headerRef.current;
     if (!el) return;
 
-    const setHeight = () =>
+    /**
+     * Only write when the number actually changes.
+     *
+     * Mobile Safari fires the observer as its own toolbar collapses, and
+     * rewriting the variable with the value it already had still invalidates
+     * everything that depends on it — including `Hero`'s negative top margin,
+     * which flashed a white strip where the header sits.
+     */
+    let written = -1;
+    const setHeight = () => {
+      const height = el.offsetHeight;
+      if (height === written) return;
+      written = height;
       document.documentElement.style.setProperty(
         "--header-height",
-        `${el.offsetHeight}px`,
+        `${height}px`,
       );
+    };
 
     setHeight();
     const observer = new ResizeObserver(setHeight);

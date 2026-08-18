@@ -34,8 +34,7 @@ const BUMP_OPTIONS: KeyframeAnimationOptions = {
 };
 
 function bump(target: HTMLElement) {
-  const root =
-    target.closest<HTMLElement>("[data-cart-bump-root]") ?? target;
+  const root = target.closest<HTMLElement>("[data-cart-bump-root]") ?? target;
   const parts = root.querySelectorAll<HTMLElement>("[data-cart-bump]");
 
   if (parts.length > 0) {
@@ -86,10 +85,28 @@ export function flyToCart(
   const dx = targetRect.left + targetRect.width / 2 - originCX;
   const dy = targetRect.top + targetRect.height / 2 - originCY;
 
-  // Sanity CDN supports transform params — request a small square thumbnail.
-  const thumb = imageUrl.includes("cdn.sanity.io")
-    ? `${imageUrl}?w=120&h=120&fit=crop&auto=format`
-    : imageUrl;
+  /**
+   * Reuse the pixels the card already has.
+   *
+   * Asking Sanity for a fresh 120px thumbnail means a new network request at
+   * the exact moment the flight starts, so the clone has nothing to paint for
+   * its first frames — and on a slow response, for all of them. That is why
+   * the image "sometimes" appeared: it was a race against a 900ms animation.
+   *
+   * `currentSrc` is the variant the browser actually decoded for the card, so
+   * it is already in memory and draws immediately. Scaling it down into a 56px
+   * box costs nothing. The CDN URL stays as a fallback for callers that hand
+   * us something other than an image.
+   */
+  const source =
+    origin instanceof HTMLImageElement ? origin : origin.querySelector("img");
+  const decoded = source?.currentSrc || source?.src;
+
+  const thumb =
+    decoded ||
+    (imageUrl.includes("cdn.sanity.io")
+      ? `${imageUrl}?w=120&h=120&fit=crop&auto=format`
+      : imageUrl);
 
   const fly = document.createElement("div");
   fly.setAttribute("aria-hidden", "true");

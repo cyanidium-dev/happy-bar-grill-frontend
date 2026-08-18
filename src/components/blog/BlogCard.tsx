@@ -17,7 +17,7 @@ export default async function BlogCard({ post }: { post: BlogPostPreview }) {
     <article className="group h-full">
       <Link
         href={`/blog/${post.slug}`}
-        className="flex h-full flex-col overflow-hidden rounded-tl-2xl rounded-br-2xl bg-white shadow-card transition-shadow duration-300 xl:hover:shadow-card-hover"
+        className="flex h-full flex-col overflow-hidden rounded-tl-2xl rounded-br-2xl bg-white shadow-card transition-[box-shadow,transform] duration-300 ease-out xl:hover:-translate-y-1 xl:hover:shadow-card-hover"
       >
         <div className="relative aspect-[16/10] w-full overflow-hidden">
           {post.image && (
@@ -43,7 +43,12 @@ export default async function BlogCard({ post }: { post: BlogPostPreview }) {
           </p>
           <span className="mt-auto inline-flex items-center gap-1.5 pt-1 text-16med text-navy transition-colors duration-300 xl:group-hover:text-red">
             {t("readMore")}
-            <span aria-hidden>→</span>
+            <span
+              aria-hidden
+              className="transition-transform duration-300 ease-out xl:group-hover:translate-x-1"
+            >
+              →
+            </span>
           </span>
         </div>
       </Link>

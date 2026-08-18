@@ -39,10 +39,10 @@ export default async function DeliveryHero() {
             loading="eager"
             fetchPriority="high"
           />
-          {/* <div className="absolute top-[385px] left-[-300px] w-[502px] h-[508px] rounded-full bg-[#00152E] blur-[30px]" /> */}
+          <div className="absolute bottom-[-174px] left-[-170px] w-[413px] h-[657px] rounded-full bg-[#02060B] blur-[62px]" />
         </div>
 
-        <div className="absolute top-[-340px] md:top-[-280px] right-[-450px] md:right-[-320px] lg:right-[-200px] w-[731px] h-[600px]">
+        <div className="absolute top-[-350px] md:top-[-414px] right-[-400px] xs:right-[-340px] sm:right-[-300px] md:right-[-260px] lg:right-[-200px] xl:right-[-140px] w-[731px] h-[533px]">
           <Image
             src="/images/delivery/hero/right-image.webp"
             alt=""
@@ -51,6 +51,7 @@ export default async function DeliveryHero() {
             loading="eager"
             fetchPriority="high"
           />
+          <div className="absolute rotate-3 top-[-114px] left-[-30px] w-[657px] h-[413px] rounded-full bg-[#02060B] blur-[62px]" />
         </div>
 
         <div className="relative flex flex-col gap-4 max-w-[463px] mx-auto">

@@ -9,7 +9,7 @@ type ButtonSize = "sm" | "md" | "lg" | "icon";
 type ButtonShape = "pill" | "leaf";
 
 const base =
-  "group relative inline-flex cursor-pointer items-center justify-center gap-2 overflow-hidden text-center transition duration-300 ease-out focus-visible:outline-none enabled:active:scale-95 disabled:cursor-not-allowed";
+  "group relative inline-flex cursor-pointer items-center justify-center gap-2 overflow-hidden text-center transition duration-300 ease-out focus-visible:outline-none enabled:active:scale-95 disabled:cursor-not-allowed disabled:pointer-events-none";
 
 const shapes: Record<ButtonShape, string> = {
   pill: "rounded-full",
@@ -22,10 +22,10 @@ const variantStyles: Record<ButtonVariant, string> = {
   // Red is the attention/CTA colour. White label stays AA only at this bold
   // 16px+ size (see design concept — verify contrast if you shrink it).
   primary:
-    "bg-red text-16semi text-white xl:enabled:hover:bg-red-dark disabled:bg-grey disabled:text-white/60",
+    "bg-red text-16semi text-white xl:hover:bg-red-dark disabled:bg-grey disabled:text-white/60",
   secondary:
-    "border border-navy bg-navy text-14semi text-white xl:enabled:hover:bg-navy-dark xl:enabled:hover:border-navy-dark",
-  ghost: "text-16med text-navy xl:enabled:hover:text-red",
+    "border border-navy bg-navy text-14semi text-white xl:hover:bg-navy-dark xl:hover:border-navy-dark",
+  ghost: "text-16med text-navy xl:hover:text-red",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -83,7 +83,7 @@ export function Sheen() {
   return (
     <span
       aria-hidden
-      className="pointer-events-none absolute inset-y-0 left-[-150%] w-full skew-x-[-40deg] bg-gradient-to-r from-white/10 via-white/40 to-white/10 opacity-70 transition-all duration-[800ms] ease-in-out xl:group-enabled:group-hover:left-[120%]"
+      className="pointer-events-none absolute inset-y-0 left-[-150%] w-full skew-x-[-40deg] bg-gradient-to-r from-white/10 via-white/40 to-white/10 opacity-70 transition-all duration-[800ms] ease-in-out xl:group-hover:left-[120%]"
     />
   );
 }

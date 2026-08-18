@@ -20,7 +20,7 @@ export default async function DeliveryHero() {
       <div className="absolute inset-0 -z-10">
         <Image
           src="/images/home/reviews/bg-image.webp"
-          alt=""
+          alt={t("alts.bgImage")}
           fill
           loading="eager"
           fetchPriority="high"
@@ -33,7 +33,7 @@ export default async function DeliveryHero() {
         <div className="hidden lg:block absolute top-[-240px] md:left-[-340px] lg:left-[-210px] w-[761px] h-[770px]">
           <Image
             src="/images/delivery/hero/left-image.webp"
-            alt=""
+            alt={t("alts.leftImage")}
             fill
             className="object-cover"
             loading="eager"
@@ -45,7 +45,7 @@ export default async function DeliveryHero() {
         <div className="absolute top-[-350px] md:top-[-414px] right-[-400px] xs:right-[-340px] sm:right-[-300px] md:right-[-260px] lg:right-[-200px] xl:right-[-140px] w-[731px] h-[533px]">
           <Image
             src="/images/delivery/hero/right-image.webp"
-            alt=""
+            alt={t("alts.rightImage")}
             fill
             className="object-cover"
             loading="eager"
@@ -60,7 +60,7 @@ export default async function DeliveryHero() {
             <div className="absolute top-[-85px] left-[-20px] xs:left-[-80px] w-[102px] h-[108px]">
               <Image
                 src="/images/delivery/hero/decor.webp"
-                alt=""
+                alt={t("alts.decor")}
                 fill
                 className="object-cover"
                 loading="eager"

@@ -13,9 +13,15 @@ type CategoryNavProps = {
   variant: "mobile" | "desktop";
 };
 
-type NavItem = { label: string; href: string; active: boolean };
+export type NavItem = {
+  label: string;
+  href: string;
+  slug: string;
+  active: boolean;
+};
 
-const itemBase = "transition-colors duration-300 focus-visible:outline-none";
+const itemBase =
+  "relative overflow-hidden transition-colors duration-500 ease-out focus-visible:outline-none";
 const activeCls = "bg-navy text-white";
 const inactiveCls =
   "bg-white text-navy ring-1 ring-navy hover:text-red hover:ring-red transition duration-300 ease-in-out";
@@ -33,17 +39,25 @@ export default async function CategoryNav({
   const categories = await getCategories();
 
   const items: NavItem[] = [
-    { label: t("allDishes"), href: "/menu", active: activeSlug === "all" },
-    {
-      label: t("specialOffers"),
-      href: `/menu/${SPECIAL_OFFERS_SLUG}`,
-      active: activeSlug === SPECIAL_OFFERS_SLUG,
-    },
     ...categories.map((category) => ({
       label: category.name,
       href: `/menu/${category.slug}`,
+      slug: category.slug,
       active: activeSlug === category.slug,
     })),
+    /**
+     * Last, after the real categories. This is a view over dishes tagged
+     * `discount` rather than a category of its own, so it has no section in the
+     * catalog and stays a route link — sitting second in the strip it read as a
+     * peer of the real categories and broke the run the scroll-spy walks
+     * through.
+     */
+    {
+      label: t("specialOffers"),
+      href: `/menu/${SPECIAL_OFFERS_SLUG}`,
+      slug: SPECIAL_OFFERS_SLUG,
+      active: activeSlug === SPECIAL_OFFERS_SLUG,
+    },
   ];
 
   if (variant === "mobile") {
@@ -61,12 +75,14 @@ export default async function CategoryNav({
           <li key={item.href}>
             <CategoryNavLink
               href={item.href}
-              aria-current={item.active ? "page" : undefined}
+              slug={item.slug}
+              routeActive={item.active}
               className={cn(
                 itemBase,
                 "block rounded-full px-5 py-3 text-16med",
-                item.active ? activeCls : inactiveCls,
               )}
+              activeClassName={activeCls}
+              inactiveClassName={inactiveCls}
             >
               {item.label}
             </CategoryNavLink>

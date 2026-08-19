@@ -86,9 +86,7 @@ export default function PriceFilterControl({
             onClose={() => onOpenChange(false)}
             className={cn(
               "mt-3 mb-4 origin-top transition duration-300 ease-out",
-              open
-                ? "translate-y-0 opacity-100"
-                : "-translate-y-2 opacity-0",
+              open ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0",
             )}
           />
         </div>

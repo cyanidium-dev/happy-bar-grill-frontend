@@ -1,44 +1,55 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { FOOTER_WAVE_HEIGHT_CLASS } from "@/config/footer";
 import { MENU_CATALOG_ID } from "@/constants/menu";
-import { getAllDishes, getDishesByCategory } from "@/data/menu";
+import { getAllDishes, getPromotions } from "@/data/menu";
+import type { Locale } from "@/i18n/routing";
 import CategoryNav from "./CategoryNav";
-import DishesGrid from "./DishesGrid";
 import MenuCatalog from "./MenuCatalog";
-import MenuCatalogScroll from "./MenuCatalogScroll";
 import MenuDecorations from "./MenuDecorations";
+import MenuScrollSpyProvider from "./menuScrollSpy";
+import MenuSections from "./MenuSections";
 
 /**
- * Shared menu body used by both `/menu` (activeSlug="all") and
- * `/menu/[category]`: category navigation + the dishes grid. Mobile chips
- * sit outside the container; from xl the sidebar sits in one row with the
- * dishes, top-aligned.
+ * The menu body, identical on `/menu` and on every `/menu/[category]`.
+ *
+ * There is one catalog and one behaviour. The route only decides which
+ * category leads — it is hoisted to the front and carries the `<h1>` — so a
+ * category URL still reads as a page about that category, while the visitor
+ * gets a list they can keep scrolling through. The chip strip follows along
+ * and rewrites the URL as they pass each one.
  */
 export default async function MenuView({ activeSlug }: { activeSlug: string }) {
   const t = await getTranslations("Menu");
-  const dishes =
-    activeSlug === "all"
-      ? await getAllDishes()
-      : await getDishesByCategory(activeSlug);
+  const locale = (await getLocale()) as Locale;
+
+  const [dishes, promotions] = await Promise.all([
+    getAllDishes(locale),
+    getPromotions(locale),
+  ]);
 
   return (
     <section
       id={MENU_CATALOG_ID}
-      className="relative overflow-x-clip bg-white scroll-mt-[var(--header-height)]"
+      className="relative bg-white scroll-mt-[var(--header-height)]"
     >
-      <MenuCatalogScroll />
-      <MenuCatalog
-        dishes={dishes}
-        mobileNav={<CategoryNav activeSlug={activeSlug} variant="mobile" />}
-        desktopNav={<CategoryNav activeSlug={activeSlug} variant="desktop" />}
-        decorations={<MenuDecorations />}
-      >
-        <DishesGrid
+      <MenuScrollSpyProvider entrySlug={activeSlug}>
+        <MenuCatalog
           dishes={dishes}
-          emptyLabel={t("emptyCategory")}
-          emptyFilterLabel={t("priceFilter.empty")}
-        />
-      </MenuCatalog>
+          mobileNav={<CategoryNav activeSlug={activeSlug} variant="mobile" />}
+          desktopNav={<CategoryNav activeSlug={activeSlug} variant="desktop" />}
+          decorations={<MenuDecorations />}
+        >
+          <MenuSections
+            dishes={dishes}
+            promotions={promotions}
+            entrySlug={activeSlug}
+            specialOffersLabel={t("specialOffers")}
+            emptyLabel={t("emptyCategory")}
+            emptyFilterLabel={t("priceFilter.empty")}
+            locale={locale}
+          />
+        </MenuCatalog>
+      </MenuScrollSpyProvider>
       <div aria-hidden className={FOOTER_WAVE_HEIGHT_CLASS} />
     </section>
   );

@@ -2,11 +2,18 @@
 
 import { useEffect, useLayoutEffect, useRef } from "react";
 import CategoryNavLink from "@/components/menu/CategoryNavLink";
+import { useMenuScrollSpy } from "@/components/menu/menuScrollSpy";
 import { cn } from "@/utils/cn";
 
-export type CategoryChip = { label: string; href: string; active: boolean };
+export type CategoryChip = {
+  label: string;
+  href: string;
+  slug: string;
+  active: boolean;
+};
 
-const itemBase = "transition-colors duration-300 focus-visible:outline-none";
+const itemBase =
+  "relative overflow-hidden transition-colors duration-500 ease-out focus-visible:outline-none";
 const activeCls = "bg-navy text-white";
 const inactiveCls =
   "bg-white text-navy ring-1 ring-navy hover:text-red hover:ring-red transition duration-300 ease-in-out";
@@ -24,6 +31,19 @@ let persistedScrollLeft = 0;
 function clampScroll(scroller: HTMLElement, value: number) {
   const max = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
   return Math.max(0, Math.min(max, value));
+}
+
+/**
+ * Bring `active` to the left edge. While scrolling the catalog the current
+ * category should sit where the eye starts, with the ones still to come
+ * visible after it — parking it at the right edge hides everything ahead.
+ */
+function leftAlignDelta(scroller: HTMLElement, active: HTMLElement) {
+  return (
+    active.getBoundingClientRect().left -
+    scroller.getBoundingClientRect().left -
+    EDGE_PAD
+  );
 }
 
 /** Minimal delta so `active` sits fully inside the scroller (nearest, not center). */
@@ -50,14 +70,24 @@ export default function MobileCategoryChips({
   ariaLabel: string;
 }) {
   const scrollerRef = useRef<HTMLUListElement>(null);
-  const activeHref = items.find((item) => item.active)?.href;
+  const spy = useMenuScrollSpy();
+
+  /**
+   * On the full catalog the current category comes from how far the reader has
+   * scrolled, not from the route — otherwise the strip sits still while the
+   * highlight walks off past the right-hand edge. `null` there means "above
+   * the first category", which is the All dishes chip.
+   */
+  const activeSlug = spy.enabled
+    ? (spy.activeSlug ?? "all")
+    : items.find((item) => item.active)?.slug;
 
   // Restore before paint so the strip never flashes at scrollLeft = 0.
   useLayoutEffect(() => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
     scroller.scrollLeft = clampScroll(scroller, persistedScrollLeft);
-  }, [activeHref]);
+  }, [activeSlug, spy.enabled]);
 
   useEffect(() => {
     const scroller = scrollerRef.current;
@@ -79,7 +109,10 @@ export default function MobileCategoryChips({
 
     const target = clampScroll(
       scroller,
-      scroller.scrollLeft + nearestDelta(scroller, active),
+      scroller.scrollLeft +
+        (spy.enabled
+          ? leftAlignDelta(scroller, active)
+          : nearestDelta(scroller, active)),
     );
     const start = scroller.scrollLeft;
     const distance = target - start;
@@ -91,15 +124,19 @@ export default function MobileCategoryChips({
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const coldEntry = restoredFrom < 1;
+    // Only a genuine remount starts cold. While scroll-spying the strip is the
+    // same element throughout, so every move should be eased.
+    const coldEntry = !spy.enabled && restoredFrom < 1;
     if (prefersReducedMotion || coldEntry || Math.abs(distance) < 1) {
       scroller.scrollLeft = target;
       persistedScrollLeft = target;
       return () => scroller.removeEventListener("scroll", persist);
     }
 
-    const duration = Math.min(320, Math.max(140, Math.abs(distance) * 0.55));
-    const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
+    // Longer and gentler than the route-change nudge: this one plays while the
+    // reader is scrolling, so it should glide rather than snap.
+    const duration = Math.min(620, Math.max(260, Math.abs(distance) * 0.9));
+    const easeOutCubic = (t: number) => 1 - (1 - t) ** 4;
     let startTime: number | null = null;
     let frame = 0;
 
@@ -117,13 +154,13 @@ export default function MobileCategoryChips({
       persistedScrollLeft = scroller.scrollLeft;
       scroller.removeEventListener("scroll", persist);
     };
-  }, [activeHref]);
+  }, [activeSlug, spy.enabled]);
 
   return (
     <nav
       aria-label={ariaLabel}
       className="sticky z-30 bg-white pt-1 pb-3 xl:hidden"
-      style={{ top: "var(--header-height)" }}
+      style={{ top: "var(--header-height)", transform: "translateZ(0)" }}
     >
       {/* Same left-edge alignment as Hero’s horizontal dish strip — outside
           `.container` so chips can scroll to the viewport edge on mobile. */}
@@ -135,17 +172,19 @@ export default function MobileCategoryChips({
           {items.map((item) => (
             <li
               key={item.href}
-              data-active={item.active || undefined}
+              data-active={item.slug === activeSlug || undefined}
               className="shrink-0 px-0.5 py-0.5"
             >
               <CategoryNavLink
                 href={item.href}
-                aria-current={item.active ? "page" : undefined}
+                slug={item.slug}
+                routeActive={item.active}
                 className={cn(
                   itemBase,
                   "inline-flex whitespace-nowrap rounded-full px-4 py-3 text-14med",
-                  item.active ? activeCls : inactiveCls,
                 )}
+                activeClassName={activeCls}
+                inactiveClassName={inactiveCls}
               >
                 {item.label}
               </CategoryNavLink>

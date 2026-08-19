@@ -35,6 +35,7 @@ export default async function UpsellDishes({ dishes }: { dishes: Dish[] }) {
         className="absolute -bottom-12 left-[-140px] lg:-bottom-11 lg:-left-52 w-[318px] h-[159px] lg:w-[412px] lg:h-[205px]"
         animation={decorFade}
         amount={0.01}
+        parallax={18}
       >
         <Image
           src="/images/home/popular/grill-plate.webp"
@@ -48,6 +49,7 @@ export default async function UpsellDishes({ dishes }: { dishes: Dish[] }) {
         className="hidden lg:block absolute rotate-15 sm:rotate-0 z-5 -bottom-12 -right-26 sm:-right-10 md:-bottom-4 md:-right-10 lg:-bottom-28 lg:-right-6 w-[257px] h-[259px] lg:w-[317px] lg:h-[320px]"
         animation={decorFade}
         amount={0.01}
+        parallax={-12}
       >
         <Image
           src="/images/home/popular/sushi-chopsticks.webp"

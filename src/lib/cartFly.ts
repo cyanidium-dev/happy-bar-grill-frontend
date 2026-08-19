@@ -20,7 +20,7 @@ export const cartBumpRootProps = { "data-cart-bump-root": "" } as const;
 /** Spread onto the cart icon node that should pulse after a successful add. */
 export const cartBumpProps = { "data-cart-bump": "" } as const;
 
-const FLY_SIZE = 56;
+const FLY_SIZE = 80;
 
 const BUMP_KEYFRAMES: Keyframe[] = [
   { transform: "scale(1)" },

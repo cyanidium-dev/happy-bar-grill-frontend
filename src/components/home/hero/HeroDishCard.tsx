@@ -33,45 +33,48 @@ export default async function HeroDishCard({
     >
       <Link
         href={href}
-        className="relative w-[104px] h-[107px] shrink-0 self-center overflow-hidden rounded-[7px] bg-white"
-      >
-        <CardMedia
-          src={dish.image}
-          alt={dish.name}
-          className="h-full w-full rounded-[7px]"
-          sizes="104px"
-        />
-      </Link>
+        className="absolute inset-0 z-[1] rounded-[14px]"
+        aria-label={dish.name}
+      />
 
-      <div className="flex min-w-0 flex-1 flex-col justify-between gap-1.5 py-1">
-        <div className="flex flex-col gap-2.5">
-          <Link href={href}>
+      <div className="pointer-events-none relative z-[2] flex w-full gap-3">
+        <div className="relative w-[104px] h-[107px] shrink-0 self-center overflow-hidden rounded-[7px] bg-white">
+          <CardMedia
+            src={dish.image}
+            alt={dish.name}
+            className="h-full w-full rounded-[7px]"
+            sizes="104px"
+          />
+        </div>
+
+        <div className="flex min-w-0 flex-1 flex-col justify-between gap-1.5 py-1">
+          <div className="flex flex-col gap-2.5">
             <h3 className="line-clamp-2 font-findsans text-12bold uppercase text-white">
               {dish.name}
             </h3>
-          </Link>
-          <p className="line-clamp-4 text-8light text-white">
-            {dish.description}
-          </p>
-        </div>
+            <p className="line-clamp-4 text-8light text-white">
+              {dish.description}
+            </p>
+          </div>
 
-        <div className="mt-auto flex items-center gap-1.5 pt-1.5">
-          <Link
-            href={href}
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-white w-full text-center px-3.5 h-[27px] sm:h-[27px] text-8bold uppercase tracking-wide text-navy transition-colors duration-300 xl:hover:bg-beige"
-          >
-            {t("details")}
-          </Link>
+          <div className="mt-auto flex items-center gap-1.5 pt-1.5">
+            <Link
+              href={href}
+              className="pointer-events-auto relative z-[3] inline-flex items-center justify-center whitespace-nowrap rounded-full bg-white w-full text-center px-3.5 h-[27px] sm:h-[27px] text-8bold uppercase tracking-wide text-navy transition-colors duration-300 xl:hover:bg-beige"
+            >
+              {t("details")}
+            </Link>
 
-          <QuickAddButton
-            line={cartLineFromDish(dish)}
-            label={t("addToCart")}
-            variant="secondary"
-            shape="pill"
-            className="size-[27px] sm:size-[27px] shrink-0"
-          >
-            <CartIcon className="size-4" />
-          </QuickAddButton>
+            <QuickAddButton
+              line={cartLineFromDish(dish)}
+              label={t("addToCart")}
+              variant="secondary"
+              shape="pill"
+              className="pointer-events-auto size-[27px] sm:size-[27px] shrink-0"
+            >
+              <CartIcon className="size-4" />
+            </QuickAddButton>
+          </div>
         </div>
       </div>
     </article>

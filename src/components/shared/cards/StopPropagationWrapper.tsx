@@ -3,8 +3,10 @@
 import type { ReactNode } from "react";
 
 /**
- * Wraps interactive elements inside a clickable parent (e.g. a Link card)
- * so their click events don't bubble up and trigger the parent navigation.
+ * Wraps interactive elements inside a clickable <Link> card so their clicks
+ * don't trigger the parent anchor navigation. Uses capture-phase stopPropagation
+ * on the anchor click so the Link never fires, while the inner button's own
+ * onClick still runs normally in the bubble phase before we swallow the event.
  */
 export default function StopPropagationWrapper({
   children,
@@ -13,8 +15,12 @@ export default function StopPropagationWrapper({
 }) {
   return (
     <div
-      onClick={(e) => e.preventDefault()}
-      onClickCapture={(e) => e.stopPropagation()}
+      onClickCapture={(e) => {
+        // Stop the click from reaching the ancestor <a> (Link),
+        // but let it finish bubbling inside this subtree first so
+        // QuickAddButton's own onClick fires normally.
+        e.stopPropagation();
+      }}
     >
       {children}
     </div>

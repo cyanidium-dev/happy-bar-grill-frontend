@@ -30,7 +30,7 @@ export default async function MenuView({ activeSlug }: { activeSlug: string }) {
   return (
     <section
       id={MENU_CATALOG_ID}
-      className="relative overflow-x-clip bg-white scroll-mt-[var(--header-height)]"
+      className="relative bg-white scroll-mt-[var(--header-height)]"
     >
       <MenuScrollSpyProvider entrySlug={activeSlug}>
         <MenuCatalog

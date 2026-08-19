@@ -160,7 +160,7 @@ export default function MobileCategoryChips({
     <nav
       aria-label={ariaLabel}
       className="sticky z-30 bg-white pt-1 pb-3 xl:hidden"
-      style={{ top: "var(--header-height)" }}
+      style={{ top: "var(--header-height)", transform: "translateZ(0)" }}
     >
       {/* Same left-edge alignment as Hero’s horizontal dish strip — outside
           `.container` so chips can scroll to the viewport edge on mobile. */}

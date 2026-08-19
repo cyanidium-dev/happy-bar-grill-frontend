@@ -146,7 +146,12 @@ export default function MenuCatalog({
         {mobileNav}
 
         <Container className="relative flex flex-col gap-8 pb-12 pt-6 md:pb-16 xl:flex-row xl:items-start xl:gap-10 xl:pb-24 xl:pt-14">
-          {decorations}
+          {/* Isolated overflow clip so decorations don't escape the container
+              without making this node a scroll-containing block that would
+              break `position: sticky` children (the chip strip and sidebar). */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            {decorations}
+          </div>
 
           <aside
             className="relative z-10 hidden w-72 shrink-0 self-start xl:sticky xl:block"

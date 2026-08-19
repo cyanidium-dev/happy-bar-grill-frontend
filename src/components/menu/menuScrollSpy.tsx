@@ -129,6 +129,19 @@ export default function MenuScrollSpyProvider({
     );
 
     /**
+     * On first load with no active category (full catalog, page top) highlight
+     * the first section immediately so the chip strip isn't blank on arrival.
+     */
+    // On the full catalog, highlight the first category right away so the
+    // chip strip is never blank on arrival. ScrollTrigger.update() will then
+    // correct it to whatever section is actually on screen.
+    setActiveSlug((current) => {
+      if (current !== null) return current;
+      return sections[0]?.getAttribute(MENU_SECTION_ATTR) ?? null;
+    });
+    ScrollTrigger.update();
+
+    /**
      * Landing on a category URL puts you at that category. The menu itself
      * keeps one order everywhere — the route decides where you arrive, not how
      * the list is arranged — so this is a jump, not a scroll: animating it

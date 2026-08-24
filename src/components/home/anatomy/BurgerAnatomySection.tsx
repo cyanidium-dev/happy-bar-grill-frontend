@@ -37,7 +37,7 @@ export default async function BurgerAnatomySection() {
   return (
     <Section
       background="beige"
-      className="rounded-t-[24px] lg:rounded-t-[36px]"
+      className="rounded-t-[24px] lg:rounded-t-[36px] z-5"
     >
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <AnimatedWrapper className="flex flex-col gap-3">

@@ -34,8 +34,7 @@ const BUMP_OPTIONS: KeyframeAnimationOptions = {
 };
 
 function bump(target: HTMLElement) {
-  const root =
-    target.closest<HTMLElement>("[data-cart-bump-root]") ?? target;
+  const root = target.closest<HTMLElement>("[data-cart-bump-root]") ?? target;
   const parts = root.querySelectorAll<HTMLElement>("[data-cart-bump]");
 
   if (parts.length > 0) {
@@ -86,10 +85,22 @@ export function flyToCart(
   const dx = targetRect.left + targetRect.width / 2 - originCX;
   const dy = targetRect.top + targetRect.height / 2 - originCY;
 
-  // Sanity CDN supports transform params — request a small square thumbnail.
-  const thumb = imageUrl.includes("cdn.sanity.io")
-    ? `${imageUrl}?w=120&h=120&fit=crop&auto=format`
-    : imageUrl;
+  // Prefer the already-painted card photo (cache hit). A fresh Sanity thumb URL
+  // is a cold request in production — animating before decode leaves a blank /
+  // near-transparent flyer on the first add.
+  const originImg =
+    origin instanceof HTMLImageElement ? origin : origin.querySelector("img");
+  const cachedSrc =
+    originImg instanceof HTMLImageElement &&
+    originImg.complete &&
+    originImg.naturalWidth > 0
+      ? originImg.currentSrc || originImg.src
+      : null;
+  const thumb =
+    cachedSrc ||
+    (imageUrl.includes("cdn.sanity.io")
+      ? `${imageUrl}?w=120&h=120&fit=crop&auto=format`
+      : imageUrl);
 
   const fly = document.createElement("div");
   fly.setAttribute("aria-hidden", "true");
@@ -104,12 +115,14 @@ export function flyToCart(
     pointerEvents: "none",
     zIndex: "100",
     boxShadow: "0 10px 24px rgba(0, 0, 0, 0.25)",
+    // Hide until the bitmap is ready so the fade keyframes never run on an empty img.
+    opacity: "0",
     willChange: "transform, opacity",
   } satisfies Partial<CSSStyleDeclaration>);
 
   const img = document.createElement("img");
-  img.src = thumb;
   img.alt = "";
+  img.decoding = "async";
   Object.assign(img.style, {
     width: "100%",
     height: "100%",
@@ -119,24 +132,9 @@ export function flyToCart(
   document.body.appendChild(fly);
 
   const duration = 900;
-  const animation = fly.animate(
-    [
-      { transform: "translate(0px, 0px) scale(1)", opacity: 1, offset: 0 },
-      {
-        transform: `translate(-54px, ${dy * 0.35}px) scale(0.7)`,
-        opacity: 0.95,
-        offset: 0.4,
-      },
-      {
-        transform: `translate(${dx}px, ${dy}px) scale(0.25)`,
-        opacity: 0,
-        offset: 1,
-      },
-    ],
-    { duration, easing: "cubic-bezier(0.4, 0, 0.2, 1)", fill: "forwards" },
-  );
-
   let settled = false;
+  let started = false;
+
   const settle = () => {
     if (settled) return;
     settled = true;
@@ -144,9 +142,50 @@ export function flyToCart(
     land();
   };
 
-  animation.onfinish = settle;
-  animation.oncancel = settle;
-  // Safety net: WAAPI finish/cancel events don't fire while the tab is hidden,
-  // so guarantee the clone is removed and the cart still updates.
-  window.setTimeout(settle, duration + 400);
+  const startFlight = () => {
+    if (started || settled) return;
+    started = true;
+    fly.style.opacity = "1";
+
+    const animation = fly.animate(
+      [
+        { transform: "translate(0px, 0px) scale(1)", opacity: 1, offset: 0 },
+        {
+          transform: `translate(-54px, ${dy * 0.35}px) scale(0.7)`,
+          opacity: 0.95,
+          offset: 0.4,
+        },
+        {
+          transform: `translate(${dx}px, ${dy}px) scale(0.18)`,
+          opacity: 0.4,
+          offset: 1,
+        },
+      ],
+      { duration, easing: "cubic-bezier(0.4, 0, 0.2, 1)", fill: "forwards" },
+    );
+
+    animation.onfinish = settle;
+    animation.oncancel = settle;
+    // Safety net: WAAPI finish/cancel events don't fire while the tab is hidden,
+    // so guarantee the clone is removed and the cart still updates.
+    window.setTimeout(settle, duration + 400);
+  };
+
+  img.src = thumb;
+
+  const ready =
+    img.complete && img.naturalWidth > 0
+      ? Promise.resolve()
+      : img.decode().catch(() => undefined);
+
+  void ready.then(startFlight);
+  // If decode stalls, skip the flight rather than animating an empty clone.
+  window.setTimeout(() => {
+    if (started || settled) return;
+    if (img.complete && img.naturalWidth > 0) {
+      startFlight();
+      return;
+    }
+    settle();
+  }, 400);
 }

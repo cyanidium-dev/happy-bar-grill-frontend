@@ -33,18 +33,18 @@ export const VIEWBOX_HEIGHT = 760;
  * shift that put it there.
  */
 export const COLLAPSED_SHIFT_X = 156;
-export const EXPLODE_SHIFT_X = 186;
+export const EXPLODE_SHIFT_X = 209;
 
 /** Source photo pixels → viewBox units. */
 const SCALE = 0.4451;
 const OFFSET_Y = 110;
 
-const LABEL_X = 462;
+const LABEL_X = 508;
 const LABEL_SIZE = 22;
 const TEXT_SIZE = 13;
 const TEXT_LEADING = 16;
-const LINE_START_X = 440;
-const LINE_END_X = 454;
+const LINE_START_X = 462;
+const LINE_END_X = 476;
 
 /** Roughly how many characters of the smaller copy fit on one line. */
 const WRAP_AT = 36;

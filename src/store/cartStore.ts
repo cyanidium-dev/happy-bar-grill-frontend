@@ -44,9 +44,9 @@ function normalizeCartPrice(value: unknown): number | null {
 }
 
 /**
- * Keep only image sources `next/image` can render: an empty string, a
+ * Keep only safe image sources for cart persistence: an empty string, a
  * root-relative path, or an `https:` URL. A tampered or stale snapshot with a
- * `javascript:` / `data:` / `http:` value would otherwise throw at render.
+ * `javascript:` / `data:` / `http:` value would otherwise break render.
  */
 function sanitizeCartImage(value: unknown): string {
   if (typeof value !== "string") return "";

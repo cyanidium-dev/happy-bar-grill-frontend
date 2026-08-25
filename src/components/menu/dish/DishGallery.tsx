@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ChevronIcon from "@/components/shared/icons/ChevronIcon";
+import SanityImage from "@/components/shared/media/SanityImage";
 import type { GalleryImage } from "@/types/content";
 import { cn } from "@/utils/cn";
 
@@ -26,8 +26,8 @@ export type DishGalleryLabels = {
 /**
  * Dish photo gallery: a main stage with thumbnails, arrows, a counter and a
  * full-screen lightbox. Adapted from the kondor product gallery, restyled to
- * this project (leaf corners, `next/image`, no video slides). A single image
- * still opens the lightbox but shows no arrows/thumbnails.
+ * this project (leaf corners, Sanity CDN images, no video slides). A single
+ * image still opens the lightbox but shows no arrows/thumbnails.
  */
 export default function DishGallery({
   images,
@@ -108,13 +108,12 @@ export default function DishGallery({
         ref={stageRef}
         className="relative aspect-[4/3] w-full overflow-hidden rounded-tl-2xl rounded-br-2xl shadow-card"
       >
-        <Image
+        <SanityImage
           key={current.url}
           src={current.url}
           alt={current.alt}
           fill
-          loading={priority && index === 0 ? "eager" : "lazy"}
-          fetchPriority={priority && index === 0 ? "high" : "auto"}
+          priority={priority && index === 0}
           sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 560px"
           className="object-cover"
         />
@@ -181,7 +180,7 @@ export default function DishGallery({
                     : "opacity-70 ring-1 ring-navy/15 hover:opacity-100",
                 )}
               >
-                <Image
+                <SanityImage
                   src={image.url}
                   alt=""
                   fill

@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useCartHydrated, useCartStore } from "@/store/cartStore";
 import ReceiptIcon from "@/components/shared/icons/ReceiptIcon";
 import CloseIcon from "@/components/shared/icons/CloseIcon";
 import Container from "@/components/shared/container/Container";
+import SanityImage from "@/components/shared/media/SanityImage";
 import { buttonStyles, Sheen } from "@/components/shared/buttons/Button";
 import { lockBodyScroll } from "@/lib/lockBodyScroll";
 import { cn } from "@/utils/cn";
@@ -114,7 +114,7 @@ export default function LastOrderModal({
                       className="relative size-12 shrink-0 overflow-hidden rounded-tl-lg rounded-br-lg"
                     >
                       {item.image ? (
-                        <Image
+                        <SanityImage
                           src={item.image}
                           alt=""
                           fill

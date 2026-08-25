@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import SanityImage from "@/components/shared/media/SanityImage";
 import type { Locale } from "@/i18n/routing";
 import type { BlogPostPreview } from "@/types/blog";
 import { formatBlogDate } from "@/utils/formatDate";
@@ -21,7 +21,7 @@ export default async function BlogCard({ post }: { post: BlogPostPreview }) {
       >
         <div className="relative aspect-[16/10] w-full overflow-hidden">
           {post.image && (
-            <Image
+            <SanityImage
               src={post.image}
               alt={post.imageAlt || post.title}
               fill

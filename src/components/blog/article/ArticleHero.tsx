@@ -1,6 +1,6 @@
-import Image, { getImageProps } from "next/image";
 import { getLocale } from "next-intl/server";
 import Container from "@/components/shared/container/Container";
+import SanityImage from "@/components/shared/media/SanityImage";
 import type { Locale } from "@/i18n/routing";
 import type { BlogPost } from "@/types/blog";
 import { formatBlogDate } from "@/utils/formatDate";
@@ -8,7 +8,8 @@ import { formatBlogDate } from "@/utils/formatDate";
 /**
  * Full-bleed article header: the cover image is a full-width background, with
  * the title, lead paragraph and author/date overlaid on a dark scrim for
- * legibility. Responsive mobile/desktop image variants come from the CMS.
+ * legibility. Responsive mobile/desktop image variants come from the CMS via
+ * Sanity's CDN (`SanityImage`), not Vercel Image Optimization.
  */
 export default async function ArticleHero({ post }: { post: BlogPost }) {
   const locale = (await getLocale()) as Locale;
@@ -17,47 +18,37 @@ export default async function ArticleHero({ post }: { post: BlogPost }) {
   const mobileAlt = post.imageMobileAlt || post.title;
   const desktopAlt = post.imageDesktopAlt || post.title;
 
-  let cover = null;
-  if (mobileSrc && desktopSrc && mobileSrc !== desktopSrc) {
-    const common = { fill: true as const, sizes: "100vw" };
-    const {
-      props: { srcSet: desktop },
-    } = getImageProps({ ...common, alt: desktopAlt, src: desktopSrc });
-    const {
-      props: { srcSet: mobile, ...img },
-    } = getImageProps({
-      ...common,
-      alt: mobileAlt,
-      src: mobileSrc,
-      loading: "eager",
-      fetchPriority: "high",
-    });
-    cover = (
-      <picture className="absolute inset-0">
-        <source media="(min-width: 768px)" srcSet={desktop} />
-        <img {...img} alt={mobileAlt} srcSet={mobile} className="object-cover" />
-      </picture>
-    );
-  } else if (mobileSrc || desktopSrc) {
-    cover = (
-      <Image
-        src={(mobileSrc || desktopSrc)!}
-        alt={mobileAlt}
-        fill
-        loading="eager"
-        fetchPriority="high"
-        sizes="100vw"
-        className="object-cover"
-      />
-    );
-  }
+  const showDedicatedDesktop =
+    Boolean(mobileSrc) && Boolean(desktopSrc) && mobileSrc !== desktopSrc;
 
   return (
     <header
       className="relative w-full overflow-hidden rounded-b-[24px] bg-black lg:rounded-b-[36px]"
       style={{ marginTop: "calc(var(--header-height) * -1)" }}
     >
-      {cover}
+      {mobileSrc && (
+        <SanityImage
+          src={mobileSrc}
+          alt={mobileAlt}
+          fill
+          sizes="100vw"
+          priority
+          className={
+            showDedicatedDesktop
+              ? "object-cover md:hidden"
+              : "object-cover"
+          }
+        />
+      )}
+      {desktopSrc && showDedicatedDesktop && (
+        <SanityImage
+          src={desktopSrc}
+          alt={desktopAlt}
+          fill
+          sizes="100vw"
+          className="hidden object-cover md:block"
+        />
+      )}
 
       {/* Scrim so overlaid text stays readable over any photo. */}
       <div
@@ -78,7 +69,7 @@ export default async function ArticleHero({ post }: { post: BlogPost }) {
         <div className="flex items-center gap-3">
           {post.author?.photo && (
             <span className="relative size-11 shrink-0 overflow-hidden rounded-full ring-2 ring-white/40">
-              <Image
+              <SanityImage
                 src={post.author.photo}
                 alt={post.author.photoAlt || post.author.name}
                 fill

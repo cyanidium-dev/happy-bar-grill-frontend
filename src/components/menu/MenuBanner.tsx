@@ -1,7 +1,7 @@
-import { getImageProps } from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import Container from "@/components/shared/container/Container";
+import SanityImage from "@/components/shared/media/SanityImage";
 import { getMenuBanner } from "@/data/menu";
 
 /** Matches `Container` content width (padding + max-width at each breakpoint). */
@@ -17,6 +17,8 @@ function isExternalHref(href: string) {
  * `/menu/[category]`) but NOT on a dish detail page — so it's rendered by those
  * pages directly rather than a parent layout (which would also wrap the dish
  * route). Content comes from the Sanity `menuPageBanner` singleton.
+ *
+ * Images go through Sanity's CDN (`SanityImage`), not Vercel Image Optimization.
  */
 export default async function MenuBanner() {
   const banner = await getMenuBanner();
@@ -24,29 +26,32 @@ export default async function MenuBanner() {
 
   const t = await getTranslations("Menu");
   const alt = banner.alt || t("bannerAlt");
-
-  const common = {
-    alt,
-    fill: true as const,
-    sizes: BANNER_SIZES,
-  };
-  const {
-    props: { srcSet: desktop },
-  } = getImageProps({ ...common, src: banner.imageDesktop });
-  const {
-    props: { srcSet: mobile, ...img },
-  } = getImageProps({
-    ...common,
-    src: banner.imageMobile,
-    loading: "eager",
-    fetchPriority: "high",
-  });
+  const showDedicatedDesktop = banner.imageMobile !== banner.imageDesktop;
 
   const media = (
-    <picture className="absolute inset-0">
-      <source media="(min-width: 640px)" srcSet={desktop} />
-      <img {...img} alt={alt} srcSet={mobile} className="object-cover" />
-    </picture>
+    <>
+      <SanityImage
+        src={banner.imageMobile}
+        alt={alt}
+        fill
+        sizes={BANNER_SIZES}
+        priority
+        className={
+          showDedicatedDesktop
+            ? "object-cover sm:hidden"
+            : "object-cover"
+        }
+      />
+      {showDedicatedDesktop && (
+        <SanityImage
+          src={banner.imageDesktop}
+          alt={alt}
+          fill
+          sizes={BANNER_SIZES}
+          className="hidden object-cover sm:block"
+        />
+      )}
+    </>
   );
 
   const content =

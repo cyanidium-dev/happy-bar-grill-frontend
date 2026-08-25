@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SanityImage from "@/components/shared/media/SanityImage";
 import { cn } from "@/utils/cn";
 
 type CardMediaProps = {
@@ -9,7 +9,7 @@ type CardMediaProps = {
    * `cn` doesn't dedupe Tailwind classes, so don't rely on a built-in default.
    */
   className: string;
-  /** Responsive `sizes` hint for the optimizer; tune per grid. */
+  /** Responsive `sizes` hint for the CDN srcset; tune per grid. */
   sizes?: string;
   priority?: boolean;
 };
@@ -20,8 +20,8 @@ type CardMediaProps = {
  * (`className`) must define the box: an aspect ratio or `h-full`/`w-full`
  * inside an already-sized parent.
  *
- * Note: remote CMS image hosts must be whitelisted in `next.config.ts`
- * (`images.remotePatterns`) before using absolute URLs here.
+ * Sanity/Unsplash URLs go through `SanityImage` (their CDN resize APIs).
+ * Local/static paths fall through to `next/image` + Vercel optimization.
  */
 export default function CardMedia({
   src,
@@ -32,13 +32,12 @@ export default function CardMedia({
 }: CardMediaProps) {
   return (
     <div className={cn("relative overflow-hidden", className)}>
-      <Image
+      <SanityImage
         src={src}
         alt={alt}
         fill
         sizes={sizes}
-        loading={priority ? "eager" : "lazy"}
-        fetchPriority={priority ? "high" : "auto"}
+        priority={priority}
         className="object-cover transition-transform duration-500 ease-out xl:group-hover:scale-105"
       />
     </div>

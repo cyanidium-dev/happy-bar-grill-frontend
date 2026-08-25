@@ -1,8 +1,8 @@
-import Image from "next/image";
 import type { PortableTextComponents } from "@portabletext/react";
 import type { SanityImageSource } from "@sanity/image-url";
 import { Link } from "@/i18n/navigation";
 import Button from "@/components/shared/buttons/Button";
+import SanityImage from "@/components/shared/media/SanityImage";
 import { urlForImage } from "@/sanity/lib/image";
 import { cn } from "@/utils/cn";
 
@@ -120,7 +120,7 @@ export const blogPortableTextComponents: PortableTextComponents = {
         // capped by height with the width following, so the figure hugs the
         // photo and no letterbox background shows on the sides.
         <figure className="my-8 flex justify-center">
-          <Image
+          <SanityImage
             src={src}
             alt={value?.alt ?? ""}
             width={width}
@@ -152,7 +152,7 @@ export const blogPortableTextComponents: PortableTextComponents = {
                 key={item._key ?? index}
                 className="relative aspect-[4/3] overflow-hidden rounded-tl-xl rounded-br-xl border border-navy/12"
               >
-                <Image
+                <SanityImage
                   src={src}
                   alt={item.image?.alt ?? ""}
                   fill

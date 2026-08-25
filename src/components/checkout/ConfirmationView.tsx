@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import Container from "@/components/shared/container/Container";
 import Button from "@/components/shared/buttons/Button";
 import CheckIcon from "@/components/shared/icons/CheckIcon";
+import SanityImage from "@/components/shared/media/SanityImage";
 import { useCartHydrated, useCartStore } from "@/store/cartStore";
 
 /**
@@ -61,7 +61,7 @@ export default function ConfirmationView() {
             <li key={item.id} className="flex items-center gap-3">
               <div className="relative size-14 shrink-0 overflow-hidden rounded-tl-lg rounded-br-lg">
                 {item.image && (
-                  <Image
+                  <SanityImage
                     src={item.image}
                     alt={item.imageAlt || item.name}
                     fill

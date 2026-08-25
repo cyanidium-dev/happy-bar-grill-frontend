@@ -12,20 +12,11 @@ const nextConfig: NextConfig = {
     // Drop the default 3840 slot: with `sizes="100vw"` a 2x desktop still
     // requests 4K, and a missing/loose `sizes` sends that even to phones.
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "cdn.sanity.io",
-        port: "",
-        pathname: "/images/**",
-      },
-    ],
+    // No Sanity/Unsplash in remotePatterns: CMS photography renders through
+    // `SanityImage` (plain `<img>` + those CDNs' own resize APIs), never
+    // through `/_next/image`. Remaining `next/image` usage is local/static
+    // assets in `public/`, which keep Vercel's optimization pipeline.
+    remotePatterns: [],
   },
   // Avoid app/sitemap.xml and app/robots.txt folders — they collide with
   // Next.js metadata conventions and break Turbopack (handler is not a function).
@@ -33,6 +24,19 @@ const nextConfig: NextConfig = {
     return [
       { source: "/sitemap.xml", destination: "/api/sitemap" },
       { source: "/robots.txt", destination: "/api/robots" },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Link",
+            value: "<https://cdn.sanity.io>; rel=preconnect; crossorigin",
+          },
+        ],
+      },
     ];
   },
 };

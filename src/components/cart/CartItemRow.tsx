@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useCartStore } from "@/store/cartStore";
 import CartCounter from "./CartCounter";
 import TrashIcon from "@/components/shared/icons/TrashIcon";
+import SanityImage from "@/components/shared/media/SanityImage";
 import type { CartItem } from "@/types/cart";
 import { cn } from "@/utils/cn";
 import { dishHref } from "@/utils/dishHref";
@@ -92,7 +92,7 @@ export default function CartItemRow({
               className="relative aspect-square w-20 shrink-0 overflow-hidden rounded-tl-lg rounded-br-lg"
             >
               {item.image ? (
-                <Image
+                <SanityImage
                   src={item.image}
                   alt=""
                   fill

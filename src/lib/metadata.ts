@@ -20,6 +20,7 @@ const NOINDEX_METADATA_KEYS = new Set<MetadataKey>([
   "favorites",
   "orders",
   "offline",
+  "settings",
   "privacy",
   "offer",
 ]);
@@ -80,6 +81,8 @@ function pathForMetadataKey(key: MetadataKey): string {
       return "/orders";
     case "offline":
       return "/offline";
+    case "settings":
+      return "/settings";
     case "privacy":
       return "/privacy";
     case "offer":

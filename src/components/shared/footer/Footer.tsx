@@ -10,7 +10,7 @@ import TagIcon from "@/components/shared/icons/TagIcon";
 import TelegramIcon from "@/components/shared/icons/TelegramIcon";
 import TiktokIcon from "@/components/shared/icons/TiktokIcon";
 import Image from "next/image";
-import { navLinks } from "@/config/navigation";
+import { accountLinks, navLinks } from "@/config/navigation";
 import {
   getFooterVariant,
   getFooterWaveColor,
@@ -142,6 +142,25 @@ export default function Footer({ className }: { className?: string }) {
               <ul className="flex flex-col gap-3 text-16med">
                 {navLinks.map(({ href, key }) => (
                   <li key={key}>
+                    <Link
+                      href={href}
+                      className={cn("group relative inline-block", styles.nav)}
+                    >
+                      {t(key)}
+                      <span
+                        aria-hidden
+                        className="absolute left-0 -bottom-1 h-0.5 w-8 origin-left scale-x-0 rounded-full bg-red transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                      />
+                    </Link>
+                  </li>
+                ))}
+
+                {/* Desktop-only: below `lg` these three are the bottom
+                    navigation, so repeating them here would just be noise.
+                    Appended to this list rather than given their own column
+                    so the footer's grid is untouched. */}
+                {accountLinks.map(({ href, key }) => (
+                  <li key={key} className="hidden lg:list-item">
                     <Link
                       href={href}
                       className={cn("group relative inline-block", styles.nav)}

@@ -162,12 +162,28 @@ export function flyToCart(
   fly.appendChild(img);
   document.body.appendChild(fly);
 
+  /**
+   * Mid-flight control point.
+   *
+   * The destination is not fixed: on phones the cart lives in the bottom
+   * navigation (the clone flies *down*), on desktop it is in the header (it
+   * flies *up*). A single hardcoded arc looked right in one direction and
+   * wrong in the other, so the bow follows the direction of travel.
+   *
+   * Downward, the clone drops most of the way early and settles — it reads as
+   * weight falling into the basket. Upward, it swings out sideways first,
+   * which is the original header behaviour.
+   */
+  const goingDown = dy > 0;
+  const midX = goingDown ? dx * 0.5 : dx * 0.15 - 54;
+  const midY = goingDown ? dy * 0.72 : dy * 0.35;
+
   const duration = 900;
   const animation = fly.animate(
     [
       { transform: "translate(0px, 0px) scale(1)", opacity: 1, offset: 0 },
       {
-        transform: `translate(-54px, ${dy * 0.35}px) scale(0.7)`,
+        transform: `translate(${midX}px, ${midY}px) scale(0.7)`,
         opacity: 0.95,
         offset: 0.4,
       },

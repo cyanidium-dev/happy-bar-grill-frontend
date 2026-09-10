@@ -77,6 +77,13 @@ export const MIN_ORDER_AMOUNT = 300;
 export const MIN_ORDER = `${MIN_ORDER_AMOUNT} грн`;
 export const DELIVERY_COST = "від 0 грн у межах міста";
 
+/**
+ * Default centre for the delivery map (Mykolaiv). Replace with the venue's
+ * exact position once it is known — it only decides where the picker opens
+ * before the customer has dropped a pin.
+ */
+export const VENUE_COORDS = { lat: 46.975, lng: 31.9946 };
+
 /** Used to build the Google Maps embed query. */
 export const MAP_QUERY = "Миколаїв";
 

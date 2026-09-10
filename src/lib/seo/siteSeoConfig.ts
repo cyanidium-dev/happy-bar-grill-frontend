@@ -26,6 +26,7 @@ export type MetadataKey =
   | "favorites"
   | "orders"
   | "offline"
+  | "settings"
   | "privacy"
   | "offer"
   | "notFound";

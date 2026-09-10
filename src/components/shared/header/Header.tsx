@@ -175,12 +175,21 @@ export default function Header({ className }: { className?: string }) {
               </a>
             </div>
 
-            <HeaderCartActions
-              cartLabel={th("cart")}
-              lastOrderLabel={th("lastOrder")}
-              onOpenCart={() => openOverlay("cart")}
-              onOpenLastOrder={() => openOverlay("lastOrder")}
-            />
+            {/*
+              Desktop only. On phones the bottom navigation already carries the
+              cart and a full order history, and duplicating both up here gave
+              the app two carts and two ways to repeat an order — one at each
+              end of the screen. Above `lg` there is no bottom bar, so this is
+              the only cart entry point and stays exactly as it was.
+            */}
+            <div className="hidden lg:block">
+              <HeaderCartActions
+                cartLabel={th("cart")}
+                lastOrderLabel={th("lastOrder")}
+                onOpenCart={() => openOverlay("cart")}
+                onOpenLastOrder={() => openOverlay("lastOrder")}
+              />
+            </div>
 
             <button
               type="button"

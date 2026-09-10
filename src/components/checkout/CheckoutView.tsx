@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import Container from "@/components/shared/container/Container";
@@ -10,6 +10,7 @@ import CartItemRow from "@/components/cart/CartItemRow";
 import SwiperWrapper from "@/components/shared/swiper/SwiperWrapper";
 import PhoneField from "./PhoneField";
 import PromoCodeField from "./PromoCodeField";
+import AddressMapPicker from "@/components/map/AddressMapPicker";
 import TimeSlotSelect from "./TimeSlotSelect";
 import { MIN_ORDER_AMOUNT, venueAddress } from "@/constants/contacts";
 import type { Locale } from "@/i18n/routing";
@@ -23,6 +24,7 @@ import {
   useCartHydrated,
   useCartStore,
 } from "@/store/cartStore";
+import { useProfileHydrated, useProfileStore } from "@/store/profileStore";
 import type {
   AppliedPromo,
   DeliveryType,
@@ -48,24 +50,56 @@ type Fields = "name" | "phone" | "address" | "scheduled";
 /** Recommended (upsell) dishes as server-rendered DishCards, paired with slug. */
 export type UpsellCard = { slug: string; node: ReactNode };
 
-export default function CheckoutView({
-  upsellCards,
-  formToken,
-  locale,
-}: {
+type CheckoutViewProps = {
   upsellCards: UpsellCard[];
   formToken: string;
   locale: Locale;
-}) {
+};
+
+/**
+ * Waits for both persisted stores before mounting the form.
+ *
+ * The cart guard was always here (the server renders an empty cart). The
+ * profile guard is what lets the form below seed its fields straight from
+ * `useState` initialisers — a returning customer's name, phone and address are
+ * already filled in on the first paint they see, rather than appearing a beat
+ * later and fighting anything they had started typing.
+ */
+export default function CheckoutView(props: CheckoutViewProps) {
+  const cartHydrated = useCartHydrated();
+  const profileHydrated = useProfileHydrated();
+
+  if (!cartHydrated || !profileHydrated) {
+    return <Container className="min-h-[40vh] pb-16 pt-10 md:pb-20 md:pt-14" />;
+  }
+
+  return <CheckoutForm {...props} />;
+}
+
+function CheckoutForm({ upsellCards, formToken, locale }: CheckoutViewProps) {
   const t = useTranslations("Checkout");
   const tp = useTranslations("Product");
   const tSlider = useTranslations("Common.slider");
   const router = useRouter();
 
-  const hydrated = useCartHydrated();
   const items = useCartStore((s) => s.items);
   const total = useCartStore(selectCartTotal);
   const placeOrder = useCartStore((s) => s.placeOrder);
+  const profile = useProfileStore();
+  const updateProfile = useProfileStore((s) => s.update);
+
+  /**
+   * Warm `/confirmation` while the form is being filled.
+   *
+   * It is a static page, but its payload is only fetched when the router
+   * navigates — which here happens *after* the order request has already made
+   * the customer wait. Prefetching moves that fetch into the dead time when
+   * they are typing, so the thank-you screen is instant instead of adding a
+   * second wait on top of the first.
+   */
+  useEffect(() => {
+    router.prefetch("/confirmation");
+  }, [router]);
 
   /** Ids + quantities, the only basket representation the server accepts. */
   const basketLines = useMemo(
@@ -79,15 +113,17 @@ export default function CheckoutView({
   ];
 
   const [values, setValues] = useState({
-    name: "",
-    phone: "", // 9 subscriber digits; full number is `+380${phone}`
-    deliveryType: "delivery" as DeliveryType,
-    address: "",
+    name: profile.name,
+    phone: profile.phone, // 9 subscriber digits; full number is `+380${phone}`
+    deliveryType: profile.deliveryType,
+    address: profile.address,
     timeMode: "asap" as OrderTimeMode,
     scheduledTime: "",
-    payment: "cash" as PaymentMethod,
+    payment: profile.payment,
     comment: "",
   });
+  /** Pin for the address, carried through so the map reopens where it was. */
+  const [addressCoords, setAddressCoords] = useState(profile.coords);
   const [errors, setErrors] = useState<Partial<Record<Fields, string>>>({});
   const [promo, setPromo] = useState<AppliedPromo | null>(null);
   const [submitError, setSubmitError] = useState<OrderErrorCode | null>(null);
@@ -212,6 +248,27 @@ export default function CheckoutView({
       );
       clearOrderIdempotencyKey();
       placeOrder(customer, verified);
+      /**
+       * Save the details only after the server accepted the order, so the
+       * remembered profile always reflects an address something was really
+       * delivered to rather than a half-typed attempt.
+       */
+      updateProfile({
+        name: customer.name,
+        phone: values.phone,
+        deliveryType: customer.deliveryType,
+        payment: customer.payment,
+        ...(customer.address
+          ? { address: customer.address, coords: addressCoords }
+          : {}),
+      });
+      /**
+       * Scroll first, then navigate. The checkout page is long and the
+       * thank-you page is short, so the browser's retained scroll position
+       * landed people in the footer of a page they had not seen yet. Resetting
+       * before the push means the new page paints from the top.
+       */
+      window.scrollTo({ top: 0, behavior: "instant" });
       router.push("/confirmation");
     } catch (error) {
       useCartStore.getState().unlockCart();
@@ -225,11 +282,6 @@ export default function CheckoutView({
       setIsSubmitting(false);
     }
   };
-
-  // Avoid an SSR/client mismatch: the store is empty on the server.
-  if (!hydrated) {
-    return <Container className="min-h-[40vh] pb-16 pt-10 md:pb-20 md:pt-14" />;
-  }
 
   const isEmpty = items.length === 0;
   const visibleUpsell = upsellCards.filter(
@@ -347,6 +399,14 @@ export default function CheckoutView({
                     onChange={(e) => set("address", e.target.value)}
                     error={errors.address}
                     autoComplete="street-address"
+                  />
+                  <AddressMapPicker
+                    className="mt-3"
+                    coords={addressCoords}
+                    onPick={({ address, coords }) => {
+                      set("address", address);
+                      setAddressCoords(coords);
+                    }}
                   />
                 </div>
               ) : (

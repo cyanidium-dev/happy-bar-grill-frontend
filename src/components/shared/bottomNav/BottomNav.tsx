@@ -5,9 +5,9 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import CartIcon from "@/components/shared/icons/CartIcon";
 import HeartIcon from "@/components/shared/icons/HeartIcon";
-import HomeIcon from "@/components/shared/icons/HomeIcon";
 import MenuGridIcon from "@/components/shared/icons/MenuGridIcon";
 import ReceiptIcon from "@/components/shared/icons/ReceiptIcon";
+import SettingsIcon from "@/components/shared/icons/SettingsIcon";
 import {
   selectCartCount,
   useCartHydrated,
@@ -26,7 +26,7 @@ import {
 } from "@/lib/cartFly";
 import { cn } from "@/utils/cn";
 
-type TabKey = "home" | "menu" | "favorites" | "orders";
+type TabKey = "menu" | "favorites" | "orders" | "settings";
 
 type Tab = {
   key: TabKey;
@@ -36,24 +36,36 @@ type Tab = {
   match?: (pathname: string) => boolean;
 };
 
-/** Rendered left-to-right with the cart button inserted in the middle. */
+/**
+ * Rendered left-to-right with the cart button inserted in the middle.
+ *
+ * There is deliberately no "home" tab. A marketing home page is a website
+ * idea; an installed app opens onto the thing it is for, and the five slots
+ * are worth more as the five places a returning customer actually goes. The
+ * header logo still leads home for anyone who wants the story pages.
+ */
 const LEFT_TABS: Tab[] = [
-  { key: "home", href: "/", icon: <HomeIcon className="size-5" /> },
   {
     key: "menu",
     href: "/menu",
     icon: <MenuGridIcon className="size-5" />,
-    match: (path) => path.startsWith("/menu") || path.startsWith("/dish/"),
+    match: (path) =>
+      path === "/" || path.startsWith("/menu") || path.startsWith("/dish/"),
   },
-];
-
-const RIGHT_TABS: Tab[] = [
   {
     key: "favorites",
     href: "/favorites",
     icon: <HeartIcon className="size-5" />,
   },
+];
+
+const RIGHT_TABS: Tab[] = [
   { key: "orders", href: "/orders", icon: <ReceiptIcon className="size-5" /> },
+  {
+    key: "settings",
+    href: "/settings",
+    icon: <SettingsIcon className="size-5" />,
+  },
 ];
 
 /** Count bubble shared by the cart and favourites tabs. */

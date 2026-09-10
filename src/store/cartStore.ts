@@ -45,9 +45,12 @@ interface CartState {
       promo?: AppliedPromo;
     },
   ) => PlacedOrder;
-  /** Merges every line of `orderNumber` into the live cart (quantities add up). */
+  /**
+   * Puts the cart into the state that order was placed in. Idempotent —
+   * see the implementation for why that matters.
+   */
   repeatOrder: (orderNumber: string) => void;
-  /** Merges every line from the most recent order into the live cart. */
+  /** Repeats the most recent order. */
   repeatLastOrder: () => void;
   /** Drops the whole order history (the live cart is untouched). */
   clearOrders: () => void;
@@ -330,15 +333,36 @@ export const useCartStore = create<CartState>()(
         return order;
       },
 
+      /**
+       * Restores the order's lines at exactly the quantities it was placed
+       * with, leaving anything else already in the cart alone.
+       *
+       * It SETS those quantities rather than adding to them, which makes the
+       * button idempotent: tapping "repeat" three times leaves the same three
+       * steaks in the cart, not nine. Adding was the obvious first
+       * implementation and the wrong one — "repeat this order" describes a
+       * destination, not an increment, and a button that silently multiplies
+       * an order every time it is pressed is a way to ship someone food they
+       * did not want.
+       */
       repeatOrder: (orderNumber) => {
         if (get().isLocked) return;
-        const { orders, addItem } = get();
-        const order = orders.find((it) => it.orderNumber === orderNumber);
+        const order = get().orders.find((it) => it.orderNumber === orderNumber);
         if (!order) return;
-        for (const item of order.items) {
-          const { quantity, ...line } = item;
-          addItem(line, quantity);
-        }
+
+        set((state) => {
+          const fromOrder = new Set(order.items.map((item) => item.id));
+          const untouched = state.items.filter((it) => !fromOrder.has(it.id));
+          const restored = order.items.flatMap((item) => {
+            const quantity = normalizeCartQuantity(item.quantity);
+            if (quantity === null) return [];
+            // `fromCatalogLine` takes the quantity separately, and a CartItem
+            // is a CartLine plus that field, so passing the item straight
+            // through is fine.
+            return [fromCatalogLine(item, quantity)];
+          });
+          return { items: [...untouched, ...restored] };
+        });
       },
 
       repeatLastOrder: () => {

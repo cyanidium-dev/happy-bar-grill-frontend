@@ -11,3 +11,14 @@ export const navLinks = [
 ] as const;
 
 export type NavLink = (typeof navLinks)[number];
+
+/**
+ * The app's personal screens. On phones these are the bottom navigation; the
+ * footer repeats them above `lg`, where there is no bottom bar and they would
+ * otherwise have no entry point at all.
+ */
+export const accountLinks = [
+  { href: "/favorites", key: "favorites" },
+  { href: "/orders", key: "orders" },
+  { href: "/settings", key: "settings" },
+] as const;

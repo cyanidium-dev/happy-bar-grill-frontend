@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Montserrat } from "next/font/google";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -10,6 +10,9 @@ import Footer from "@/components/shared/footer/Footer";
 import ScrollProgress from "@/components/shared/scroll/ScrollProgress";
 import ScrollRefresh from "@/components/shared/scroll/ScrollRefresh";
 import BackToTop from "@/components/shared/scroll/BackToTop";
+import BottomNav from "@/components/shared/bottomNav/BottomNav";
+import InstallPrompt from "@/components/pwa/InstallPrompt";
+import ServiceWorkerRegistrar from "@/components/pwa/ServiceWorkerRegistrar";
 import {
   defaultSocialImageUrl,
   OG_LOCALE,
@@ -24,6 +27,23 @@ const montserrat = Montserrat({
   weight: ["300", "400", "500", "600", "700", "800"],
   display: "swap",
 });
+
+/**
+ * `viewportFit: "cover"` lets the page paint under the iPhone's rounded
+ * corners and home indicator, which is what makes the installed app look
+ * native rather than letter-boxed. Everything pinned to the bottom edge pays
+ * for it with an explicit `env(safe-area-inset-bottom)`.
+ *
+ * `themeColor` tints the status bar and the Android task-switcher card to
+ * match the header, and is intentionally the same value as the manifest's.
+ */
+export const viewport: Viewport = {
+  themeColor: "#002755",
+  colorScheme: "light",
+  viewportFit: "cover",
+  width: "device-width",
+  initialScale: 1,
+};
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -45,6 +65,20 @@ export async function generateMetadata({
 
   return {
     metadataBase: new URL(SITE_URL),
+    manifest: "/manifest.webmanifest",
+    appleWebApp: {
+      capable: true,
+      title: t("site.name"),
+      // The status bar sits over the page, so the header's navy shows through.
+      statusBarStyle: "black-translucent",
+    },
+    icons: {
+      icon: [
+        { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+        { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+      ],
+      apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
+    },
     title: {
       default: t("site.title"),
       // Page titles render as "<page> | Vtiha".
@@ -92,7 +126,15 @@ export default async function RootLayout({ children, params }: LayoutProps) {
       lang={locale}
       className={`${montserrat.variable} ${findSansPro.variable} h-full antialiased scrollbar-brand`}
     >
-      <body className="flex min-h-full flex-col">
+      {/* The bottom navigation is `fixed`, so the page reserves its height
+          here. The variable is 0 above `lg`, where the bar is hidden. */}
+      <body
+        className="flex min-h-full flex-col"
+        style={{
+          paddingBottom:
+            "calc(var(--bottom-nav-height) + env(safe-area-inset-bottom))",
+        }}
+      >
         <NextIntlClientProvider>
           <ScrollProgress />
           <ScrollRefresh />
@@ -118,6 +160,9 @@ export default async function RootLayout({ children, params }: LayoutProps) {
           </main>
           <Footer />
           <BackToTop label={t("backToTop")} />
+          <BottomNav />
+          <InstallPrompt />
+          <ServiceWorkerRegistrar />
         </NextIntlClientProvider>
       </body>
     </html>

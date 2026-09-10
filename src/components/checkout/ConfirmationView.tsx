@@ -5,7 +5,11 @@ import { useTranslations } from "next-intl";
 import Container from "@/components/shared/container/Container";
 import Button from "@/components/shared/buttons/Button";
 import CheckIcon from "@/components/shared/icons/CheckIcon";
-import { useCartHydrated, useCartStore } from "@/store/cartStore";
+import {
+  selectLastOrder,
+  useCartHydrated,
+  useCartStore,
+} from "@/store/cartStore";
 
 /**
  * Post-order screen. Reads the last placed order from the persisted store
@@ -15,7 +19,7 @@ export default function ConfirmationView() {
   const t = useTranslations("Confirmation");
   const tp = useTranslations("Product");
   const hydrated = useCartHydrated();
-  const order = useCartStore((s) => s.lastOrder);
+  const order = useCartStore(selectLastOrder);
 
   if (!hydrated) {
     return <Container className="min-h-[40vh] pb-16 pt-10 md:pb-20 md:pt-14" />;

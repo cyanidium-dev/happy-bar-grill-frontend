@@ -11,10 +11,15 @@ import {
 
 export type { MetadataKey };
 
-/** Checkout, confirmation and legal pages stay out of the search index. */
+/** Checkout, personal and legal pages stay out of the search index. */
 const NOINDEX_METADATA_KEYS = new Set<MetadataKey>([
   "checkout",
   "confirmation",
+  // Personal, device-local screens: their content is whatever is in this
+  // browser's localStorage, so there is nothing stable for a crawler to index.
+  "favorites",
+  "orders",
+  "offline",
   "privacy",
   "offer",
 ]);
@@ -69,6 +74,12 @@ function pathForMetadataKey(key: MetadataKey): string {
       return "/checkout";
     case "confirmation":
       return "/confirmation";
+    case "favorites":
+      return "/favorites";
+    case "orders":
+      return "/orders";
+    case "offline":
+      return "/offline";
     case "privacy":
       return "/privacy";
     case "offer":

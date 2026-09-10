@@ -1,6 +1,6 @@
 import "server-only";
 import { createHash } from "node:crypto";
-import type { CartItem } from "@/types/cart";
+import type { AppliedPromo, CartItem } from "@/types/cart";
 
 const TTL_MS = 30 * 60 * 1000;
 const UUID_RE =
@@ -20,6 +20,8 @@ export class IdempotencyConflictError extends Error {
 export type OrderSuccessBody = {
   orderNumber: string;
   items: CartItem[];
+  subtotal: number;
+  promo?: AppliedPromo;
   total: number;
 };
 
@@ -51,6 +53,10 @@ export function orderFingerprint(body: unknown): string {
 
   const canonical = {
     locale: typeof data.locale === "string" ? data.locale : "",
+    // Part of the intent: retrying the same basket with a different code must
+    // not replay the previous, differently-priced result.
+    promoCode:
+      typeof data.promoCode === "string" ? data.promoCode.trim().toUpperCase() : "",
     customer: {
       name: customer.name ?? "",
       phone: customer.phone ?? "",

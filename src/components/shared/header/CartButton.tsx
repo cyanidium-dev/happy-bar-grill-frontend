@@ -8,9 +8,9 @@ import {
   useCartStore,
 } from "@/store/cartStore";
 import {
-  CART_FLY_TARGET_ID,
   cartBumpProps,
   cartBumpRootProps,
+  cartFlyTargetProps,
 } from "@/lib/cartFly";
 import { cn } from "@/utils/cn";
 
@@ -35,7 +35,7 @@ export default function CartButton({
   return (
     <button
       type="button"
-      id={CART_FLY_TARGET_ID}
+      {...cartFlyTargetProps}
       {...cartBumpRootProps}
       onClick={onOpen}
       aria-label={label}

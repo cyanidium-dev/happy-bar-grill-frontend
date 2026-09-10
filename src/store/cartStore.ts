@@ -2,18 +2,26 @@ import { useSyncExternalStore } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type {
+  AppliedPromo,
   CartItem,
   CartLine,
-  LastOrder,
   OrderCustomer,
+  PlacedOrder,
 } from "@/types/cart";
 import { MAX_CART_QUANTITY, normalizeCartQuantity } from "@/utils/cartQuantity";
 import { cartLineId, dishSlugOf, parseCartLineId } from "@/utils/cartLine";
 
+/**
+ * How many past orders to keep. The history is a re-ordering convenience, not
+ * an archive — and it lives in localStorage, which is a few megabytes shared
+ * with everything else on the origin.
+ */
+export const MAX_ORDER_HISTORY = 20;
+
 interface CartState {
   items: CartItem[];
-  /** Persisted snapshot of the most recently placed order (for confirmation). */
-  lastOrder: LastOrder | null;
+  /** Placed orders, newest first. Capped at `MAX_ORDER_HISTORY`. */
+  orders: PlacedOrder[];
   /** When true, quantity/add/remove are no-ops (checkout request in flight). */
   isLocked: boolean;
   lockCart: () => void;
@@ -24,15 +32,25 @@ interface CartState {
   removeItem: (id: string) => void;
   clear: () => void;
   /**
-   * Snapshots a server-verified order into `lastOrder`, empties the cart,
-   * and returns the order. Totals/lines must come from `/api/orders`.
+   * Snapshots a server-verified order onto the front of `orders`, empties the
+   * cart, and returns the order. Totals/lines must come from `/api/orders`.
    */
   placeOrder: (
     customer: OrderCustomer,
-    verified: { orderNumber: string; items: CartItem[]; total: number },
-  ) => LastOrder;
-  /** Merges every line from `lastOrder` into the live cart (quantities add up). */
+    verified: {
+      orderNumber: string;
+      items: CartItem[];
+      subtotal: number;
+      total: number;
+      promo?: AppliedPromo;
+    },
+  ) => PlacedOrder;
+  /** Merges every line of `orderNumber` into the live cart (quantities add up). */
+  repeatOrder: (orderNumber: string) => void;
+  /** Merges every line from the most recent order into the live cart. */
   repeatLastOrder: () => void;
+  /** Drops the whole order history (the live cart is untouched). */
+  clearOrders: () => void;
 }
 
 /** Finite, non-negative catalog price; `null` for NaN, negatives, non-numbers. */
@@ -82,47 +100,96 @@ function sanitizeCartItems(items: CartItem[]): CartItem[] {
   });
 }
 
-function sanitizeLastOrder(raw: unknown): LastOrder | null {
+function finiteAmount(value: unknown): number | null {
+  if (typeof value !== "number" || !Number.isFinite(value) || value < 0) {
+    return null;
+  }
+  return value;
+}
+
+function sanitizePromo(raw: unknown): AppliedPromo | undefined {
+  if (!raw || typeof raw !== "object") return undefined;
+  const promo = raw as Partial<AppliedPromo>;
+  const amount = finiteAmount(promo.amount);
+  if (typeof promo.code !== "string" || !promo.code.trim() || amount === null) {
+    return undefined;
+  }
+  return { code: promo.code.trim().toUpperCase(), amount };
+}
+
+function sanitizeOrder(raw: unknown): PlacedOrder | null {
   if (!raw || typeof raw !== "object") return null;
-  const order = raw as Partial<LastOrder>;
+  const order = raw as Partial<PlacedOrder>;
   if (typeof order.orderNumber !== "string" || !order.orderNumber) return null;
+
+  const items = sanitizeCartItems(order.items ?? []);
+  const promo = sanitizePromo(order.promo);
+
+  // Pre-promo snapshots (v1) carried no `subtotal`; recompute it from lines so
+  // history rows can show a discount breakdown without special-casing them.
+  const subtotal =
+    finiteAmount(order.subtotal) ??
+    items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
   return {
-    ...order,
     orderNumber: order.orderNumber,
-    items: sanitizeCartItems(order.items ?? []),
-    total:
-      typeof order.total === "number" && Number.isFinite(order.total)
-        ? order.total
-        : 0,
-    customer: order.customer as LastOrder["customer"],
+    items,
+    subtotal,
+    promo,
+    total: finiteAmount(order.total) ?? Math.max(0, subtotal - (promo?.amount ?? 0)),
+    customer: order.customer as PlacedOrder["customer"],
     createdAt: typeof order.createdAt === "string" ? order.createdAt : "",
   };
 }
 
-type PersistedCart = Pick<CartState, "items" | "lastOrder">;
+function sanitizeOrders(raw: unknown): PlacedOrder[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .flatMap((entry) => {
+      const order = sanitizeOrder(entry);
+      return order ? [order] : [];
+    })
+    .slice(0, MAX_ORDER_HISTORY);
+}
+
+type PersistedCart = Pick<CartState, "items" | "orders">;
 
 function toPersistedCart(raw: unknown): PersistedCart {
   const stored =
     raw && typeof raw === "object" ? (raw as Partial<PersistedCart>) : {};
   return {
     items: sanitizeCartItems(stored.items ?? []),
-    lastOrder: sanitizeLastOrder(stored.lastOrder),
+    orders: sanitizeOrders(stored.orders ?? []),
   };
 }
 
 /**
  * Bump this when `PersistedCart` changes, and add a `fromVersion < N` step in
  * `migrateCart`. Stored snapshots without `version` are treated as `0`.
+ *
+ * v1 → v2: the single `lastOrder` became the `orders` history list.
  */
-export const CART_PERSIST_VERSION = 1;
+export const CART_PERSIST_VERSION = 2;
 
 function migrateCart(
   persistedState: unknown,
   fromVersion: number,
 ): PersistedCart {
-  // v0 snapshots (no version / zustand default 0) are normalized here.
-  // When bumping CART_PERSIST_VERSION, add `if (fromVersion < N) { ... }`.
-  void fromVersion;
+  const stored =
+    persistedState && typeof persistedState === "object"
+      ? (persistedState as Record<string, unknown>)
+      : {};
+
+  if (fromVersion < 2) {
+    // Promote the one remembered order into the new history list so an
+    // existing customer's "repeat order" button survives the upgrade.
+    const migrated = sanitizeOrder(stored.lastOrder);
+    return {
+      items: sanitizeCartItems((stored.items as CartItem[]) ?? []),
+      orders: migrated ? [migrated] : [],
+    };
+  }
+
   return toPersistedCart(persistedState);
 }
 
@@ -154,7 +221,7 @@ function fromCatalogLine(
 
 /**
  * Cart store (zustand + localStorage persistence, synced across tabs). Holds
- * the live cart and the last placed order. UI reads counts/totals via the
+ * the live cart and the order history. UI reads counts/totals via the
  * selectors below; guard rendered counts with `useCartHydrated` to avoid
  * SSR/client mismatches.
  */
@@ -162,7 +229,7 @@ export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
-      lastOrder: null,
+      orders: [],
       isLocked: false,
 
       lockCart: () => set({ isLocked: true }),
@@ -240,26 +307,47 @@ export const useCartStore = create<CartState>()(
       },
 
       placeOrder: (customer, verified) => {
-        const order: LastOrder = {
+        const order: PlacedOrder = {
           orderNumber: verified.orderNumber,
           items: verified.items,
+          subtotal: verified.subtotal,
+          promo: verified.promo,
           total: verified.total,
           customer,
           createdAt: new Date().toISOString(),
         };
-        set({ lastOrder: order, items: [], isLocked: false });
+        set((state) => ({
+          // A retried request that resolves twice must not duplicate the row.
+          orders: [
+            order,
+            ...state.orders.filter(
+              (it) => it.orderNumber !== order.orderNumber,
+            ),
+          ].slice(0, MAX_ORDER_HISTORY),
+          items: [],
+          isLocked: false,
+        }));
         return order;
       },
 
-      repeatLastOrder: () => {
+      repeatOrder: (orderNumber) => {
         if (get().isLocked) return;
-        const { lastOrder, addItem } = get();
-        if (!lastOrder) return;
-        for (const item of lastOrder.items) {
+        const { orders, addItem } = get();
+        const order = orders.find((it) => it.orderNumber === orderNumber);
+        if (!order) return;
+        for (const item of order.items) {
           const { quantity, ...line } = item;
           addItem(line, quantity);
         }
       },
+
+      repeatLastOrder: () => {
+        const last = get().orders[0];
+        if (!last) return;
+        get().repeatOrder(last.orderNumber);
+      },
+
+      clearOrders: () => set({ orders: [] }),
     }),
     {
       name: "vtiha-cart",
@@ -267,7 +355,7 @@ export const useCartStore = create<CartState>()(
       migrate: migrateCart,
       partialize: (state) => ({
         items: state.items,
-        lastOrder: state.lastOrder,
+        orders: state.orders,
       }),
       merge: (persisted, current) => {
         const stored = toPersistedCart(persisted);
@@ -286,6 +374,12 @@ export const selectCartCount = (state: CartState) =>
 
 export const selectCartTotal = (state: CartState) =>
   state.items.reduce((sum, it) => sum + it.price * it.quantity, 0);
+
+/** Most recently placed order, or `null` before the first one. */
+export const selectLastOrder = (state: CartState): PlacedOrder | null =>
+  state.orders[0] ?? null;
+
+export const selectOrderCount = (state: CartState) => state.orders.length;
 
 /**
  * Keep sibling tabs in sync. `storage` fires only in *other* windows when

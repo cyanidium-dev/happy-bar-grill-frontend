@@ -13,6 +13,7 @@ import MobileMenu from "./MobileMenu";
 import CartModal from "@/components/cart/CartModal";
 import LastOrderModal from "@/components/cart/LastOrderModal";
 import { navLinks } from "@/config/navigation";
+import { useUiStore } from "@/store/uiStore";
 import { PHONE, PHONE_HREF } from "@/constants/contacts";
 import { cn } from "@/utils/cn";
 
@@ -40,14 +41,31 @@ export default function Header({ className }: { className?: string }) {
     pathname === "/delivery" ||
     pathname === "/about";
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false);
-  const [lastOrderOpen, setLastOrderOpen] = useState(false);
+  /**
+   * Overlay state lives in a store, not here: the bottom navigation opens the
+   * same cart panel from the other end of the screen, and modelling one
+   * "which panel is open" value makes it impossible for two to be open at once.
+   */
+  const overlay = useUiStore((s) => s.overlay);
+  const openOverlay = useUiStore((s) => s.open);
+  const closeOverlay = useUiStore((s) => s.close);
+  const open = overlay === "menu";
+  const cartOpen = overlay === "cart";
+  const lastOrderOpen = overlay === "lastOrder";
   const headerRef = useRef<HTMLElement>(null);
   // Solid navy-dark on non-hero pages always; on hero pages only after scroll.
   const solid = !isHeroPage || scrolled;
   // White chrome over the hero, and on the solid bar everywhere else.
   const onDark = isHeroPage || solid;
+
+  /**
+   * Any navigation dismisses the open panel. Individual links used to do this
+   * for themselves, which meant every new link was one `onClick` away from
+   * leaving the cart hanging over the next page.
+   */
+  useEffect(() => {
+    closeOverlay();
+  }, [pathname, closeOverlay]);
 
   useEffect(() => {
     /**
@@ -160,27 +178,15 @@ export default function Header({ className }: { className?: string }) {
             <HeaderCartActions
               cartLabel={th("cart")}
               lastOrderLabel={th("lastOrder")}
-              onOpenCart={() => {
-                setOpen(false);
-                setLastOrderOpen(false);
-                setCartOpen(true);
-              }}
-              onOpenLastOrder={() => {
-                setOpen(false);
-                setCartOpen(false);
-                setLastOrderOpen(true);
-              }}
+              onOpenCart={() => openOverlay("cart")}
+              onOpenLastOrder={() => openOverlay("lastOrder")}
             />
 
             <button
               type="button"
               aria-label={open ? th("closeMenu") : th("openMenu")}
               aria-expanded={open}
-              onClick={() => {
-                setCartOpen(false);
-                setLastOrderOpen(false);
-                setOpen((v) => !v);
-              }}
+              onClick={() => (open ? closeOverlay() : openOverlay("menu"))}
               className="flex size-6 flex-col items-center justify-center gap-1.5 lg:hidden"
             >
               <span
@@ -209,16 +215,12 @@ export default function Header({ className }: { className?: string }) {
         </Container>
       </div>
 
-      <MobileMenu open={open} onClose={() => setOpen(false)} />
-      <CartModal open={cartOpen} onClose={() => setCartOpen(false)} />
+      <MobileMenu open={open} onClose={closeOverlay} />
+      <CartModal open={cartOpen} onClose={closeOverlay} />
       <LastOrderModal
         open={lastOrderOpen}
-        onClose={() => setLastOrderOpen(false)}
-        onOpenCart={() => {
-          setOpen(false);
-          setLastOrderOpen(false);
-          setCartOpen(true);
-        }}
+        onClose={closeOverlay}
+        onOpenCart={() => openOverlay("cart")}
       />
     </header>
   );

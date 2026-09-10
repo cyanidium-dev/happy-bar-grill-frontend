@@ -6,13 +6,14 @@ import ReceiptIcon from "@/components/shared/icons/ReceiptIcon";
 import CartButton from "./CartButton";
 import {
   selectCartCount,
+  selectLastOrder,
   useCartHydrated,
   useCartStore,
 } from "@/store/cartStore";
 import {
-  CART_FLY_TARGET_ID,
   cartBumpProps,
   cartBumpRootProps,
+  cartFlyTargetProps,
 } from "@/lib/cartFly";
 import { cn } from "@/utils/cn";
 
@@ -35,7 +36,7 @@ export default function HeaderCartActions({
   onOpenLastOrder,
 }: HeaderCartActionsProps) {
   const hydrated = useCartHydrated();
-  const lastOrder = useCartStore((s) => s.lastOrder);
+  const lastOrder = useCartStore(selectLastOrder);
   const count = useCartStore(selectCartCount);
   const showCount = hydrated && count > 0;
 
@@ -75,7 +76,7 @@ export default function HeaderCartActions({
 
         <button
           type="button"
-          id={CART_FLY_TARGET_ID}
+          {...cartFlyTargetProps}
           onClick={onOpenCart}
           aria-label={cartLabel}
           className={cn(

@@ -47,7 +47,12 @@ export default function QuickAddButton({
       className={cn("pointer-events-auto", className)}
       onClick={(event) => {
         if (isLocked) return;
-        const card = event.currentTarget.closest("article");
+        // `article` covers the catalog cards; `[data-fly-origin]` lets other
+        // layouts (the favourites list, order history) opt their row in so the
+        // flight starts from the photo instead of from the button.
+        const card = event.currentTarget.closest(
+          "[data-fly-origin], article",
+        );
         const photo = card?.querySelector("img");
         flyToCart(photo ?? event.currentTarget, line.image, () => {
           flushSync(() => addItem(line));

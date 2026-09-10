@@ -1,9 +1,11 @@
 import "server-only";
 import { MIN_ORDER_AMOUNT } from "@/constants/contacts";
 import { routing, type Locale } from "@/i18n/routing";
+import { applyPromoCode, type PromoError } from "@/lib/orders/promoCodes";
 import { client } from "@/sanity/lib/client";
 import { DISHES_BY_SLUGS_QUERY } from "@/sanity/lib/queries";
 import type {
+  AppliedPromo,
   CartItem,
   DeliveryType,
   OrderCustomer,
@@ -16,10 +18,14 @@ import { cartLineId, parseCartLineId } from "@/utils/cartLine";
 import { isPersonName } from "@/utils/personName";
 import { isUaPhoneE164 } from "@/utils/phone";
 
+export type OrderErrorCode =
+  | "invalid"
+  | "unavailable"
+  | "minOrder"
+  | PromoError;
+
 export class OrderError extends Error {
-  constructor(
-    public readonly code: "invalid" | "unavailable" | "minOrder",
-  ) {
+  constructor(public readonly code: OrderErrorCode) {
     super(code);
     this.name = "OrderError";
   }
@@ -48,6 +54,11 @@ export type ResolvedOrder = {
   items: CartItem[];
   /** Ukrainian names for the kitchen Telegram message. */
   telegramItems: CartItem[];
+  /** Line total before any discount. */
+  subtotal: number;
+  /** Verified discount, when a valid promo code was supplied. */
+  promo?: AppliedPromo;
+  /** Payable amount — `subtotal` minus the promo discount. */
   total: number;
 };
 
@@ -240,17 +251,25 @@ function matchDish(
   return matches.length === 1 ? matches[0] : undefined;
 }
 
-/**
- * Builds an order from client-supplied ids/quantities and customer fields.
- * Prices, names and availability always come from live Sanity documents.
- */
-export async function resolveOrder(body: unknown): Promise<ResolvedOrder> {
-  const data = asRecord(body);
-  if (!data) throw new OrderError("invalid");
+export type ResolvedLines = {
+  items: CartItem[];
+  telegramItems: CartItem[];
+  /** Line total from live Sanity prices, before any discount. */
+  subtotal: number;
+};
 
-  const customer = parseCustomer(data.customer);
-  const lines = parseLines(data.items);
-  const locale = parseLocale(data.locale);
+/**
+ * Prices a basket of client-supplied ids/quantities against live Sanity
+ * documents. Shared by order placement and the promo-code preview, so a
+ * discount is always quoted against the same numbers the order will use —
+ * a preview that disagreed with checkout would be worse than no preview.
+ */
+export async function resolveCartLines(
+  rawItems: unknown,
+  rawLocale: unknown,
+): Promise<ResolvedLines> {
+  const lines = parseLines(rawItems);
+  const locale = parseLocale(rawLocale);
   const slugs = [...new Set(lines.map((line) => line.slug))];
 
   const dishes = await client.fetch<OrderDish[]>(
@@ -285,14 +304,52 @@ export async function resolveOrder(body: unknown): Promise<ResolvedOrder> {
     telegramItems.push(toCartItem(dish, line.quantity, telegramName));
   }
 
-  const total = items.reduce(
+  const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
 
-  if (customer.deliveryType === "delivery" && total < MIN_ORDER_AMOUNT) {
+  return { items, telegramItems, subtotal };
+}
+
+/**
+ * Builds an order from client-supplied ids/quantities and customer fields.
+ * Prices, names and availability always come from live Sanity documents.
+ */
+export async function resolveOrder(body: unknown): Promise<ResolvedOrder> {
+  const data = asRecord(body);
+  if (!data) throw new OrderError("invalid");
+
+  const customer = parseCustomer(data.customer);
+  const { items, telegramItems, subtotal } = await resolveCartLines(
+    data.items,
+    data.locale,
+  );
+
+  /**
+   * The minimum basket is checked against the *pre-discount* subtotal. Testing
+   * the discounted total instead would let any promo code walk an order under
+   * the delivery minimum, which is the one thing the minimum exists to prevent.
+   */
+  if (customer.deliveryType === "delivery" && subtotal < MIN_ORDER_AMOUNT) {
     throw new OrderError("minOrder");
   }
 
-  return { customer, items, telegramItems, total };
+  let promo: AppliedPromo | undefined;
+  if (data.promoCode !== undefined && data.promoCode !== null && data.promoCode !== "") {
+    const result = applyPromoCode(
+      data.promoCode,
+      subtotal,
+      customer.deliveryType,
+    );
+    // A bad code fails the order rather than being silently dropped: the
+    // customer saw a discounted total on the checkout screen and must not be
+    // charged the full amount without being told.
+    if (!result.ok) throw new OrderError(result.error);
+    promo = result.promo;
+  }
+
+  const total = subtotal - (promo?.amount ?? 0);
+
+  return { customer, items, telegramItems, subtotal, promo, total };
 }

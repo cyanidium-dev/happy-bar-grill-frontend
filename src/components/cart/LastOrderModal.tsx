@@ -4,7 +4,11 @@ import { useEffect } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { useCartHydrated, useCartStore } from "@/store/cartStore";
+import {
+  selectLastOrder,
+  useCartHydrated,
+  useCartStore,
+} from "@/store/cartStore";
 import ReceiptIcon from "@/components/shared/icons/ReceiptIcon";
 import CloseIcon from "@/components/shared/icons/CloseIcon";
 import Container from "@/components/shared/container/Container";
@@ -31,7 +35,7 @@ export default function LastOrderModal({
   const t = useTranslations("LastOrder");
   const tp = useTranslations("Product");
   const hydrated = useCartHydrated();
-  const lastOrder = useCartStore((s) => s.lastOrder);
+  const lastOrder = useCartStore(selectLastOrder);
   const repeatLastOrder = useCartStore((s) => s.repeatLastOrder);
   const isLocked = useCartStore((s) => s.isLocked);
 

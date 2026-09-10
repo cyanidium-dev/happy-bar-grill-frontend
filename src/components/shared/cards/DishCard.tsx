@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import Badge from "@/components/shared/badges/Badge";
 import CardMedia from "@/components/shared/cards/CardMedia";
 import DishDescription from "@/components/shared/cards/DishDescription";
+import FavoriteButton from "@/components/shared/cards/FavoriteButton";
 import QuickAddButton from "@/components/shared/cards/QuickAddButton";
 import type { Dish } from "@/types/content";
 import { cn } from "@/utils/cn";
@@ -40,6 +41,7 @@ export default async function DishCard({
 }) {
   const t = await getTranslations("Product");
   const href = `/menu/${dish.categorySlug}/${dish.slug}`;
+  const line = cartLineFromDish(dish);
 
   return (
     <article
@@ -93,6 +95,7 @@ export default async function DishCard({
                 {t(`tags.${dish.tag}`)}
               </Badge>
             )}
+            <FavoriteButton line={line} className="absolute right-2 top-2" />
           </div>
         </div>
 
@@ -113,10 +116,7 @@ export default async function DishCard({
             </span>
           </div>
 
-          <QuickAddButton
-            line={cartLineFromDish(dish)}
-            label={t("addToCart")}
-          />
+          <QuickAddButton line={line} label={t("addToCart")} />
         </div>
       </div>
     </article>

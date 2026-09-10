@@ -11,6 +11,8 @@ const DARK_FOOTER_ROUTES = [
   "/offer",
   "/checkout",
   "/confirmation",
+  "/favorites",
+  "/orders",
 ] as const;
 
 /**

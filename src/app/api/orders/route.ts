@@ -70,6 +70,8 @@ export async function POST(request: NextRequest) {
             orderNumber,
             customer: order.customer,
             items: order.telegramItems,
+            subtotal: order.subtotal,
+            promo: order.promo,
             total: order.total,
           }),
         );
@@ -77,6 +79,8 @@ export async function POST(request: NextRequest) {
         return {
           orderNumber,
           items: order.items,
+          subtotal: order.subtotal,
+          promo: order.promo,
           total: order.total,
         };
       },

@@ -23,6 +23,9 @@ export type MetadataKey =
   | "blog"
   | "checkout"
   | "confirmation"
+  | "favorites"
+  | "orders"
+  | "offline"
   | "privacy"
   | "offer"
   | "notFound";

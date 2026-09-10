@@ -60,7 +60,7 @@ export default function BackToTop({ label }: { label: string }) {
       type="button"
       aria-label={label}
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className="invisible fixed bottom-5 right-5 z-40 grid size-11 place-items-center rounded-full bg-navy-dark text-white shadow-card-hover opacity-0 transition-colors duration-300 xl:hover:bg-red xl:bottom-8 xl:right-8"
+      className="invisible fixed bottom-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom)+1.25rem)] right-5 z-40 grid size-11 place-items-center rounded-full bg-navy-dark text-white shadow-card-hover opacity-0 transition-colors duration-300 xl:hover:bg-red xl:bottom-8 xl:right-8"
     >
       <svg
         viewBox="0 0 24 24"

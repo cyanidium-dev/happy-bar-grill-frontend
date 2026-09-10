@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type ReactNode } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import Container from "@/components/shared/container/Container";
@@ -9,16 +9,26 @@ import Button from "@/components/shared/buttons/Button";
 import CartItemRow from "@/components/cart/CartItemRow";
 import SwiperWrapper from "@/components/shared/swiper/SwiperWrapper";
 import PhoneField from "./PhoneField";
+import PromoCodeField from "./PromoCodeField";
 import TimeSlotSelect from "./TimeSlotSelect";
 import { MIN_ORDER_AMOUNT, venueAddress } from "@/constants/contacts";
 import type { Locale } from "@/i18n/routing";
-import { OrderRequestError, submitOrder } from "@/lib/telegram/client";
+import {
+  OrderRequestError,
+  submitOrder,
+  type OrderErrorCode,
+} from "@/lib/telegram/client";
 import {
   selectCartTotal,
   useCartHydrated,
   useCartStore,
 } from "@/store/cartStore";
-import type { DeliveryType, OrderTimeMode, PaymentMethod } from "@/types/cart";
+import type {
+  AppliedPromo,
+  DeliveryType,
+  OrderTimeMode,
+  PaymentMethod,
+} from "@/types/cart";
 import { isDeliveryAddress } from "@/utils/address";
 import { isPersonName } from "@/utils/personName";
 import { isUaSubscriberDigits } from "@/utils/phone";
@@ -57,6 +67,12 @@ export default function CheckoutView({
   const total = useCartStore(selectCartTotal);
   const placeOrder = useCartStore((s) => s.placeOrder);
 
+  /** Ids + quantities, the only basket representation the server accepts. */
+  const basketLines = useMemo(
+    () => items.map(({ id, quantity }) => ({ id, quantity })),
+    [items],
+  );
+
   const payments: { value: PaymentMethod; label: string }[] = [
     { value: "cash", label: t("paymentCash") },
     { value: "card", label: t("paymentCard") },
@@ -73,9 +89,8 @@ export default function CheckoutView({
     comment: "",
   });
   const [errors, setErrors] = useState<Partial<Record<Fields, string>>>({});
-  const [submitError, setSubmitError] = useState<
-    "submit" | "unavailable" | "minOrder" | null
-  >(null);
+  const [promo, setPromo] = useState<AppliedPromo | null>(null);
+  const [submitError, setSubmitError] = useState<OrderErrorCode | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submittingRef = useRef(false);
 
@@ -150,6 +165,8 @@ export default function CheckoutView({
     if (!validate()) return;
 
     const snapshot = useCartStore.getState();
+    // Re-read from the store rather than the render-time `lines`: a second tab
+    // may have changed the basket while this form sat open.
     const lines = snapshot.items.map(({ id, quantity }) => ({ id, quantity }));
     if (lines.length === 0) return;
 
@@ -188,7 +205,10 @@ export default function CheckoutView({
         locale,
         customer,
         lines,
-        ensureOrderIdempotencyKey(JSON.stringify({ customer, items: lines })),
+        ensureOrderIdempotencyKey(
+          JSON.stringify({ customer, items: lines, promo: promo?.code ?? "" }),
+        ),
+        promo?.code,
       );
       clearOrderIdempotencyKey();
       placeOrder(customer, verified);
@@ -196,9 +216,12 @@ export default function CheckoutView({
     } catch (error) {
       useCartStore.getState().unlockCart();
       submittingRef.current = false;
-      setSubmitError(
-        error instanceof OrderRequestError ? error.code : "submit",
-      );
+      const code =
+        error instanceof OrderRequestError ? error.code : "submit";
+      // The server rejected the code itself — drop it so the summary stops
+      // promising a discount the order will not get.
+      if (code.startsWith("promo") || code.endsWith("Promo")) setPromo(null);
+      setSubmitError(code);
       setIsSubmitting(false);
     }
   };
@@ -218,7 +241,12 @@ export default function CheckoutView({
   const isScheduled = isPickup && values.timeMode === "scheduled";
   const timeSlots = getAvailableTimeSlots("pickup");
   const remainingToMin = Math.max(0, MIN_ORDER_AMOUNT - total);
+  /**
+   * The delivery minimum is judged on the pre-discount basket, matching the
+   * server. Otherwise a promo code could carry an order under the minimum.
+   */
   const belowMinDelivery = isDelivery && remainingToMin > 0;
+  const payable = Math.max(0, total - (promo?.amount ?? 0));
 
   const deliveryOptions: { value: DeliveryType; label: string }[] = [
     { value: "delivery", label: t("deliveryOption") },
@@ -488,11 +516,42 @@ export default function CheckoutView({
                   <CartItemRow key={item.id} item={item} />
                 ))}
               </ul>
-              <div className="mt-6 flex items-center justify-between border-t border-navy/10 pt-5">
-                <span className="text-16med text-graphite">{t("total")}</span>
-                <span className="text-20bold text-navy">
-                  {total} {tp("currency")}
-                </span>
+              <PromoCodeField
+                formToken={formToken}
+                locale={locale}
+                items={basketLines}
+                deliveryType={values.deliveryType}
+                promo={promo}
+                onChange={setPromo}
+              />
+
+              <div className="mt-6 flex flex-col gap-2 border-t border-navy/10 pt-5">
+                {promo && (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <span className="text-14reg text-graphite">
+                        {t("subtotal")}
+                      </span>
+                      <span className="text-14med text-graphite">
+                        {total} {tp("currency")}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-14reg text-olive">
+                        {t("discount")}
+                      </span>
+                      <span className="text-14med text-olive">
+                        &minus;{promo.amount} {tp("currency")}
+                      </span>
+                    </div>
+                  </>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="text-16med text-graphite">{t("total")}</span>
+                  <span className="text-20bold text-navy">
+                    {payable} {tp("currency")}
+                  </span>
+                </div>
               </div>
               {belowMinDelivery && (
                 <p className="mt-3 text-14reg text-red" role="status">

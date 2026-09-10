@@ -45,11 +45,30 @@ export type OrderCustomer = {
   comment?: string;
 };
 
-export type LastOrder = {
+/** A promo code as applied by the server. Never trusted from the client. */
+export type AppliedPromo = {
+  /** Normalized (upper-case) code. */
+  code: string;
+  /** Absolute discount in currency units, already subtracted from `total`. */
+  amount: number;
+};
+
+export type PlacedOrder = {
   orderNumber: string;
   items: CartItem[];
+  /** Line total before any discount. */
+  subtotal: number;
+  /** Discount applied by the server, if the order carried a valid promo code. */
+  promo?: AppliedPromo;
+  /** Payable amount — `subtotal` minus `promo.amount`. */
   total: number;
   customer: OrderCustomer;
   /** ISO timestamp of when the order was placed. */
   createdAt: string;
 };
+
+/**
+ * @deprecated Kept as an alias so existing imports keep compiling; the store
+ * now holds a list of `PlacedOrder`s. Prefer `PlacedOrder` in new code.
+ */
+export type LastOrder = PlacedOrder;

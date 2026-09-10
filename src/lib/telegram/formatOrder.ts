@@ -1,5 +1,10 @@
 import { ADDRESS } from "@/constants/contacts";
-import type { CartItem, OrderCustomer, PaymentMethod } from "@/types/cart";
+import type {
+  AppliedPromo,
+  CartItem,
+  OrderCustomer,
+  PaymentMethod,
+} from "@/types/cart";
 import { escapeHtml } from "./escapeHtml";
 import { TG } from "./icons";
 
@@ -44,16 +49,38 @@ function formatCartItems(items: CartItem[]): string {
     .join("\n");
 }
 
+/**
+ * Sum lines for the kitchen. With no promo code this stays a single
+ * "Сума" line, exactly as before — the breakdown only appears when there is
+ * something to explain, so the everyday message doesn't get longer.
+ */
+function formatTotals(
+  subtotal: number,
+  total: number,
+  promo?: AppliedPromo,
+): string {
+  if (!promo) return `\n\n${TG.total} <b>Сума:</b> ${total} грн`;
+  return (
+    `\n\n${TG.total} <b>Сума без знижки:</b> ${subtotal} грн\n` +
+    `${TG.promo} <b>Промокод:</b> ${escapeHtml(promo.code)} (−${promo.amount} грн)\n` +
+    `${TG.total} <b>До сплати:</b> ${total} грн`
+  );
+}
+
 /** HTML-текст повідомлення про нове замовлення для Telegram. */
 export function formatOrderTelegramMessage({
   orderNumber,
   customer,
   items,
+  subtotal,
+  promo,
   total,
 }: {
   orderNumber: string;
   customer: OrderCustomer;
   items: CartItem[];
+  subtotal: number;
+  promo?: AppliedPromo;
   total: number;
 }): string {
   return (
@@ -70,6 +97,6 @@ export function formatOrderTelegramMessage({
       : "") +
     `\n${TG.cart} <b>Страви:</b>\n` +
     formatCartItems(items) +
-    `\n\n${TG.total} <b>Сума:</b> ${total} грн`
+    formatTotals(subtotal, total, promo)
   );
 }

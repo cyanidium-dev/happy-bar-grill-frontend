@@ -8,8 +8,35 @@
  * call `flyToCart` from an add-to-cart handler.
  */
 
-/** `id` on the header cart button — the animation's destination. */
-export const CART_FLY_TARGET_ID = "cart-fly-target";
+/**
+ * Marks a cart button as a landing site for the flight.
+ *
+ * There is deliberately more than one on a page — the header keeps its cart on
+ * every breakpoint while the bottom navigation adds one on phones — so this is
+ * an attribute rather than an `id`, and `resolveFlyTarget` picks whichever is
+ * actually on screen. Duplicating an `id` would have made the flight land on
+ * the hidden desktop button on mobile, i.e. off-screen.
+ */
+export const cartFlyTargetProps = { "data-cart-fly-target": "" } as const;
+
+/**
+ * The visible cart button, or `null` when none is rendered.
+ *
+ * Visibility is decided by measuring: a button hidden with `lg:hidden` still
+ * exists in the DOM but reports a zero-sized rect, and one scrolled out of the
+ * viewport is a valid target (the header is fixed, so this rarely happens) but
+ * a zero-sized one never is.
+ */
+export function resolveFlyTarget(): HTMLElement | null {
+  const candidates = document.querySelectorAll<HTMLElement>(
+    "[data-cart-fly-target]",
+  );
+  for (const candidate of candidates) {
+    const rect = candidate.getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0) return candidate;
+  }
+  return null;
+}
 
 /**
  * Spread onto the header cart root so the post-flight bump can find the
@@ -61,7 +88,7 @@ export function flyToCart(
     return;
   }
 
-  const target = document.getElementById(CART_FLY_TARGET_ID);
+  const target = resolveFlyTarget();
   if (!target) {
     onArrive?.();
     return;

@@ -26,6 +26,31 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  /**
+   * The service worker script must never be served from a cache, or a deploy
+   * can leave users pinned to an old worker (and therefore an old app shell)
+   * indefinitely. `updateViaCache: "none"` at registration covers the browser's
+   * own SW cache; this covers every proxy in between.
+   */
+  async headers() {
+    return [
+      {
+        source: "/sw.js",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-cache, no-store, must-revalidate",
+          },
+          {
+            key: "Content-Type",
+            value: "application/javascript; charset=utf-8",
+          },
+          // Lets a worker served from /sw.js control the whole origin.
+          { key: "Service-Worker-Allowed", value: "/" },
+        ],
+      },
+    ];
+  },
   // Avoid app/sitemap.xml and app/robots.txt folders — they collide with
   // Next.js metadata conventions and break Turbopack (handler is not a function).
   async rewrites() {

@@ -11,4 +11,5 @@ export const TG = {
   message: "💬",
   cart: "🛒",
   total: "💰",
+  promo: "🏷️",
 } as const;

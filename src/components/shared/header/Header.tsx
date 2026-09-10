@@ -119,9 +119,21 @@ export default function Header({ className }: { className?: string }) {
         className,
       )}
     >
+      {/*
+        `pt-[env(safe-area-inset-top)]` matters once the site is installed:
+        `viewport-fit=cover` plus a translucent status bar means the page draws
+        underneath the clock and battery, and without this the logo sits behind
+        them. The inset is 0 in a normal browser tab, so this changes nothing
+        there. Because the bar's own background covers the padding, the notch
+        area is navy rather than a white strip.
+
+        `--header-height` is measured from this element's `offsetHeight`, so
+        the extra padding is already accounted for by everything that reserves
+        space below the header.
+      */}
       <div
         className={cn(
-          "py-3 border-b border-transparent transition-[background-color,backdrop-filter,box-shadow,border-color] duration-500 ease-out",
+          "py-3 pt-[calc(0.75rem+env(safe-area-inset-top))] border-b border-transparent transition-[background-color,backdrop-filter,box-shadow,border-color] duration-500 ease-out",
           solid ? "bg-navy-dark" : "bg-transparent backdrop-blur-0",
         )}
       >

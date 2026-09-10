@@ -235,6 +235,23 @@
    ========================================================================== */
 
 @layer base {
+  /**
+   * The canvas colour, which is what fills everything the page body does not:
+   * the notch and home-indicator insets that `viewport-fit=cover` lets us draw
+   * into, and the rubber-band overscroll at either end of a scroll.
+   *
+   * Without this, `body`'s white background propagates to the canvas and those
+   * strips render white — which reads as a gap above the header and below the
+   * bottom navigation rather than as part of the app. Navy is the colour of
+   * both bars, so the chrome now runs edge to edge.
+   *
+   * `body` keeps its own background below, which is what actually covers the
+   * page area; this only shows where `body` does not reach.
+   */
+  html {
+    background-color: var(--color-navy-dark);
+  }
+
   body {
     background: var(--background);
     color: var(--foreground);

@@ -160,6 +160,24 @@ export default function BottomNav() {
          mobile menu dims this along with the rest of the page. */
       className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-navy-dark pb-[env(safe-area-inset-bottom)] lg:hidden"
     >
+      {/*
+        Skirt below the bar.
+
+        iOS positions `fixed` elements against the layout viewport, but its
+        toolbar shrinks the *visual* one. As the toolbar slides in and out
+        Safari shifts this bar to keep it on screen, and for the length of that
+        transition a strip of the page shows between the bar and the bottom of
+        the screen. Painting navy past the bar's own edge means that strip is
+        the bar's colour instead of a hole with the menu scrolling through it.
+
+        It never affects layout: a `fixed` element's overflow does not extend
+        the document, so this adds no scrollable area.
+      */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-full h-32 bg-navy-dark"
+      />
+
       <div className="mx-auto grid h-16 max-w-md grid-cols-5 items-center px-1">
         {LEFT_TABS.map((tab) => (
           <NavTab

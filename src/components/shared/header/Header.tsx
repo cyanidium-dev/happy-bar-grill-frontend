@@ -133,10 +133,23 @@ export default function Header({ className }: { className?: string }) {
       */}
       <div
         className={cn(
-          "py-3 pt-[calc(0.75rem+env(safe-area-inset-top))] border-b border-transparent transition-[background-color,backdrop-filter,box-shadow,border-color] duration-500 ease-out",
+          "relative py-3 pt-[calc(0.75rem+env(safe-area-inset-top))] border-b border-transparent transition-[background-color,backdrop-filter,box-shadow,border-color] duration-500 ease-out",
           solid ? "bg-navy-dark" : "bg-transparent backdrop-blur-0",
         )}
       >
+        {/*
+          Skirt above the bar — the mirror of the one under the bottom
+          navigation. When Safari's address bar slides in it pushes this
+          header down, and the page it was covering shows in the gap above.
+
+          `bg-inherit` rather than a fixed colour so the skirt is navy exactly
+          when the bar is, and transparent over a hero, where seeing the page
+          above the header is the intended look.
+        */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-full h-32 bg-inherit"
+        />
         <Container className="relative flex items-center gap-3">
           <Logo className="h-9 md:h-12 xl:h-16" />
           <nav className="ml-8 hidden lg:block xl:ml-12">

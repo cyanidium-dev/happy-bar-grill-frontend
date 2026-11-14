@@ -9,7 +9,7 @@ export async function fetchSchemaJsonLd(
   if (!url?.trim()) return null;
 
   try {
-    const res = await fetch(url, { next: { revalidate: 60 } });
+    const res = await fetch(url, { next: { revalidate: 86400 } }); // asset URL changes on re-upload, so a daily refresh is enough
     if (!res.ok) return null;
 
     const parsed: unknown = await res.json();
